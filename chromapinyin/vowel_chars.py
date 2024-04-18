@@ -43,8 +43,6 @@ VOWEL_TO_TONE_NUM = {
 	"ǖ": 1, "ǘ": 2, "ǚ": 3, "ǜ": 4,
 }
 
- # TODO: move to split_pinyin
-
 def is_pinyin_vowel(char):
 	return char in [vowel for line in VOWELS for vowel in line]
 

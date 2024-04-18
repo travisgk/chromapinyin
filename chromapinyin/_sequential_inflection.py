@@ -1,16 +1,18 @@
 # sequential_inflection.py
 # ---
 # this file defines a function used to make inflections
-# follow the tone sandhi in Mandarin.
+# follow the 2-2-3 rule in Mandarin.
 # this is an approximation; regional variance is bound to differ.
 #
-from .syllable import is_neutral_inflection, TO_INFLECTION
+from ._inflection import TO_INFLECTION
+
+_PRINT_APPLY_RULE_DEBUG = False
 
 # modifies the given list of inflections groupings
 # to follow the sequential inflection rule, 
 # most commonly seen in the 2-2-3 pattern in sequential low tones.
 def apply_rule(inflections, src_inflection, to_inflection):
-	NONE = TO_INFLECTION["none"] # indicates the tone doesn't factor into the rule
+	NONE = TO_INFLECTION["none"] # indicates a tone that is irrelevant
 	UNDETERMINED = 99 # indicates a tone which will be determined
 
 	# creates a mark-up list.
@@ -18,7 +20,11 @@ def apply_rule(inflections, src_inflection, to_inflection):
 		[UNDETERMINED if inflection == src_inflection else NONE for inflection in word] 
 		for word in inflections
 	]
-	print_markup_clause(0, markup_clause, src_inflection, to_inflection)
+	if all(mark == NONE for word in markup_clause for mark in word):
+		return
+
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(0, markup_clause, src_inflection, to_inflection)
 
 	# 1) if the inflection is the last occurrence
 	#    in-a-row in the overall clause, then it remains <src_inflection>.
@@ -67,15 +73,16 @@ def apply_rule(inflections, src_inflection, to_inflection):
 							inflections[i + 1][0] == NONE
 							and (
 								i + 2 >= len(markup_clause)
-								or is_neutral_inflection(inflections[i + 2][0])
+								or _is_neutral_inflection(inflections[i + 2][0])
+								# UNCERTAIN: or if inflections[i + 2] == TO_INFLECTION['none']
 							)
 						)
 					)
 				)
 			):
 				markup_clause[i][j] = src_inflection
-	print_markup_clause(1, markup_clause, src_inflection, to_inflection)
-
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(1, markup_clause, src_inflection, to_inflection)
 
 	# 2) in a series of UNDETERMINED marks under one multisyllable word,
 	#    every UNDETERMINED tone in the series is marked as <to_inflection>,
@@ -86,14 +93,15 @@ def apply_rule(inflections, src_inflection, to_inflection):
 			for j in range(len(word) - 1):
 				if markup_clause[i][j] == UNDETERMINED:
 					markup_clause[i][j] = to_inflection
-	print_markup_clause(2, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(2, markup_clause, src_inflection, to_inflection)
 
 	# 3) a series of two or more UNDETERMINED monosyllable tones are filled:
 	#    <to...>, <src...>, <to...>, <to...>, <src...>
 	#    <to...>, <src...>,          <to...>, <src...>
 	#    depending on if the series' length is odd or even respectively.
 	#
-	monosyllable_series = find_series_of_monosyllables(
+	monosyllable_series = _find_series_of_monosyllables(
 		markup_clause, [src_inflection, to_inflection, UNDETERMINED]
 	)
 	for current_series in monosyllable_series:
@@ -113,7 +121,8 @@ def apply_rule(inflections, src_inflection, to_inflection):
 				)
 
 			changes = not changes
-	print_markup_clause(3, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(3, markup_clause, src_inflection, to_inflection)
 
 	# 4) an UNDETERMINED mark will become <to_inflection> if
 	#    the inflection that comes before or after it is <src_inflection>
@@ -158,7 +167,8 @@ def apply_rule(inflections, src_inflection, to_inflection):
 					markup_clause[i][j] = to_inflection
 				else:
 					markup_clause[i][j] = src_inflection
-	print_markup_clause(4, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(4, markup_clause, src_inflection, to_inflection)
 
 	# 5) evaluating right-to-left, if one of the two rightward marks
 	#    of an UNDETERMINED mark is <src_inflection>, 
@@ -209,7 +219,8 @@ def apply_rule(inflections, src_inflection, to_inflection):
 							if markup_clause[i + 2][0] == to_inflection
 							else to_inflection
 						)
-	print_markup_clause(5, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(5, markup_clause, src_inflection, to_inflection)
 
 	# 6) if a series of three monosyllables is composed of 
 	#    <to_inflection> or <src_inflection>,
@@ -242,7 +253,8 @@ def apply_rule(inflections, src_inflection, to_inflection):
 			and (w_0 == 0 or inflections[w_0 - 1][-1] == NONE)
 		):
 			markup_clause[w_0][s_0] = to_inflection
-	print_markup_clause(6, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(6, markup_clause, src_inflection, to_inflection)
 
 	# 7) if a series of four monosyllables is composed of
 	#    <to_inflection> or <src_inflection>,
@@ -278,19 +290,27 @@ def apply_rule(inflections, src_inflection, to_inflection):
 			and (w_0 == 0 or inflections[w_0 - 1][-1] == NONE)
 			and (
 				w_3 + 1 >= len(markup_clause)
-				or len(markup_clause[w_3 + 1]) > 1
+				or len(markup_clause[w_3 + 1]) == 1
 			)
 		):
 			markup_clause[w_0][s_0] = src_inflection
 			markup_clause[w_1][s_1] = to_inflection
-	print_markup_clause(7, markup_clause, src_inflection, to_inflection)
+	if _PRINT_APPLY_RULE_DEBUG:
+		_print_markup_clause(7, markup_clause, src_inflection, to_inflection)
+
+	# copies inflections to the given original <inflections> list,
+	# only if the inflection in the <markup_clause> was determined.
+	for i, word in enumerate(markup_clause):
+		for j in range(len(word)):
+			if markup_clause[i][j] not in [UNDETERMINED, NONE]:
+				inflections[i][j] = word[j]
 
 # returns a list of groupings of tuples that indicate a series of
 # monosyllables composed of the given <active_inflections>, 
 # where each tuple represents
 # the index in the given <markup_clause> list
 # and the subindex in the given <markup_clause> list.
-def find_series_of_monosyllables(markup_clause, active_inflections):
+def _find_series_of_monosyllables(markup_clause, active_inflections):
 	monosyllable_series = [[]]
 	for i, word in enumerate(markup_clause):
 		current_series = monosyllable_series[-1];
@@ -335,7 +355,13 @@ def find_series_of_monosyllables(markup_clause, active_inflections):
 				current_series.append([(i, len(word) - 1)]) # starts new series
 	return monosyllable_series
 
-def print_markup_clause(rule_num, markup_clause, src_inflection, to_inflection):
+def _is_neutral_inflection(inflection_num):
+	return (
+		inflection_num == TO_INFLECTION["neutral"]
+		or inflection_num in _TO_INFLECTED_NEUTRAL.items()
+	)
+
+def _print_markup_clause(rule_num, markup_clause, src_inflection, to_inflection):
 	MARK = {
 		TO_INFLECTION["none"]:  "█",
 		src_inflection: "•",

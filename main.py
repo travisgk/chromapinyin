@@ -1,62 +1,74 @@
 from chromapinyin.vowel_chars import (
 	get_tone_num, strip_tone_marker, place_tone_marker
 )
-from chromapinyin.syllable import create_syllable_dict
-import chromapinyin.sequential_inflection
-import chromapinyin.to_syllable_list
+import chromapinyin.syllables
 
 def main():
 	sample_list = "shén me shí hòu".split()
 	for syllable in sample_list:
 		tone_num = get_tone_num(syllable)
 		stripped = strip_tone_marker(syllable)
-		print(place_tone_marker(stripped, tone_num))
+		print(place_tone_marker(stripped, tone_num), end=" ")
+	print("\n")
 
-	syllable = create_syllable_dict("我", "wǒ", 3)
-	print(syllable)
-
+	hanzi = "老板想买哪种水果。"
 	pinyin = "lǎobǎn xiǎng mǎi nǎ zhǒng shuǐguǒ."
 	inflections = [[3, 3], [3], [3], [3], [3], [3, 3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
 
+	hanzi = "李老板想找你演讲。"
 	pinyin = "lǐ lǎobǎn xiǎng zhǎo nǐ yǎnjiǎng."
 	inflections = [[3], [3, 3], [3], [3], [3], [3, 3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
 
+	hanzi = "我比你小。"
 	pinyin = "wǒ bǐ nǐ xiǎo."
 	inflections = [[3], [3], [3], [3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
 
+	hanzi = "我买与散。"
 	pinyin = "wǒ mǎi yǔsǎn."
 	inflections = [[3], [3], [3, 3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
 
-	pinyin = "wǒ yě xiǎng mǎi ba xiǎo yǔsǎn."
-	inflections = [[3], [3], [3], [3], [0], [3], [3, 3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
-	print("\n")
-
+	hanzi = "我很好。"
 	pinyin = "wǒ hěn hǎo."
 	inflections = [[3], [3], [3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
 
+	hanzi = "很勇敢。"
 	pinyin = "hěn yǒnggǎn."
 	inflections = [[3], [3, 3]]
-	chromapinyin.sequential_inflection.apply_rule(inflections, 3, 2)
-	print(chromapinyin.to_syllable_list.split_pinyin(pinyin))
+	syllables = chromapinyin.syllables.create_list(hanzi, pinyin)
+	for word in syllables:
+		for syllable in word:
+			print(syllable["hanzi"], end="")
+		print("\n", end="")
 	print("\n")
-
-	
 
 main()

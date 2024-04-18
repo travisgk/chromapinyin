@@ -1,5 +1,5 @@
 import os
-from .vowel_chars import strip_tone_marker
+from ._vowel_chars import strip_tone_marker
 
 ADD_TONE_MARKERS_TO_IPA = False
 ADD_TONE_MARKERS_TO_ZHUYIN = True

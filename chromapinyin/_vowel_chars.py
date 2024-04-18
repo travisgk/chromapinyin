@@ -1,9 +1,5 @@
-# tone_marker.py
-# ---
-# this file contains constants for punctuation and vowels,
-# as well as functions relating to pinyin vowels and their tone markers.
+# _vowel_chars.py
 #
-
 VOWELS = [
 	"AĀÁǍÀ", "aāáǎà",
 	"OŌÓǑÒ", "oōóǒò",

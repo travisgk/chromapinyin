@@ -1,5 +1,5 @@
 import re
-from .vowel_chars import get_tone_num, is_pinyin_E, is_pinyin_vowel
+from ._vowel_chars import get_tone_num, is_pinyin_E, is_pinyin_vowel
 from ._inflection import TO_INFLECTION, create_syllable_dict
 from ._punctuation_marks import PUNCTUATION
 import chromapinyin._sequential_inflection

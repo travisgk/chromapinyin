@@ -3,6 +3,11 @@ A python script for creating HTML tables of various Mandarin transcriptions (IPA
 These can be created by giving the program text in hanzi and its corresponding pinyin.
 The program will take the necessary tone changes into account.
 
+## Installation
+```
+pip install pillow
+```
+
 ## Getting syllable information
 ```
 import chromapinyin
@@ -37,3 +42,9 @@ For example, ```syllables[0][0]``` is a dictionary object with the following key
 - ```"zhuyin_root": "ㄙㄢ"```
 - ```"zhuyin_suffix": "ˇ"```
 - ```"zhuyin": "ㄙㄢˇ"```
+<br>
+
+## Resources
+chromapinyin includes a compressed ```_makemeahanzi.zip``` under the ```_chroma_res``` directory that contains the SVG animations sourced from the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master).
+<br>
+The produced HTML can make use of glyph animations if the SVGs are extracted to ```_chroma_res/_makemeahanzi```.

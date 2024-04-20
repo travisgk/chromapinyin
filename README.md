@@ -22,18 +22,18 @@ The ```syllables``` list will contain four lists, with each list representing a 
 The contained word list is occupied by dictionary objects which each represent a syllable.
 <br>
 For example, ```syllables[0][0]``` is a dictionary object with the following keys:
-- ```"hanzi": "我"```
-- ```"pinyin": "wǒ"```
+- ```"hanzi": "伞"```
+- ```"pinyin": "sǎn"```
 - ```"tone": "low"```
 - ```"tone_num": 3```
-- ```"spoken_tone": "rising"```
-- ```"spoken_tone_num": 2```
-- ```"inflection": "rising_low"```
-- ```"inflection_num": 12```
-- ```"ipa_root": "u̯ɔ"```
-- ```"ipa_suffix": "˧˥"```
-- ```"ipa": "u̯ɔ˧˥"```
+- ```"spoken_tone": "low"```
+- ```"spoken_tone_num": 3```
+- ```"inflection": "full_low"```
+- ```"inflection_num": 6```
+- ```"ipa_root": "san"```
+- ```"ipa_suffix": "˨˩˦"```
+- ```"ipa": "san˨˩˦"```
 - ```"zhuyin_prefix": ""```
-- ```"zhuyin_root": "ㄨㄛ"```
-- ```"zhuyin_suffix": "ˊ"```
-- ```"zhuyin": "ㄨㄛˊ"```
+- ```"zhuyin_root": "ㄙㄢ"```
+- ```"zhuyin_suffix": "ˇ"```
+- ```"zhuyin": "ㄙㄢˇ"```

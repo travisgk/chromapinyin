@@ -22,7 +22,6 @@ The ```syllables``` list will contain four lists, with each list representing a 
 - ```syllables[2]``` will contain two syllables corresponding to "yǔ" and "sǎn"
 - ```syllables[3]``` will contain one "syllable" corresponding to the "."
 <br>
-<br>
 
 The contained word list is occupied by dictionary objects which each represent a syllable.
 <br>

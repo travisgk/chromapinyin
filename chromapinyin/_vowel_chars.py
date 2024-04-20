@@ -1,6 +1,20 @@
 # _vowel_chars.py
 #
-VOWELS = [
+
+from ._punctuation_marks import PUNCTUATION
+
+_NONE_TONE_NUM = 0
+_HIGH_TONE_NUM = 1
+_RISING_TONE_NUM = 2
+_LOW_TONE_NUM = 3
+_FALLING_TONE_NUM = 4
+_NEUTRAL_TONE_NUM = 5
+
+_PRIMARY_TONES = [
+	_HIGH_TONE_NUM, _RISING_TONE_NUM, _LOW_TONE_NUM, _FALLING_TONE_NUM,
+]
+
+_VOWELS = [
 	"AĀÁǍÀ", "aāáǎà",
 	"OŌÓǑÒ", "oōóǒò",
 	"EĒÉĚÈ", "eēéěè",
@@ -9,7 +23,7 @@ VOWELS = [
 	"ÜǕǗǙǛ", "üǖǘǚǜ",
 ]
 
-TONE_TO_TONELESS = {
+_TONE_TO_TONELESS = {
 	"Ā": "A", "Á": "A", "Ǎ": "A", "À": "A",
 	"ā": "a", "á": "a", "ǎ": "a", "à": "a",
 	"Ō": "O", "Ó": "O", "Ǒ": "O", "Ò": "O",
@@ -24,7 +38,7 @@ TONE_TO_TONELESS = {
 	"ǖ": "ü", "ǘ": "ü", "ǚ": "ü", "ǜ": "ü",
 }
 
-VOWEL_TO_TONE_NUM = {
+_VOWEL_TO_TONE_NUM = {
 	"Ā": 1, "Á": 2, "Ǎ": 3, "À": 4,
 	"ā": 1, "á": 2, "ǎ": 3, "à": 4,
 	"Ō": 1, "Ó": 2, "Ǒ": 3, "Ò": 4,
@@ -40,18 +54,33 @@ VOWEL_TO_TONE_NUM = {
 }
 
 def is_pinyin_vowel(char):
-	return char in [vowel for line in VOWELS for vowel in line]
+	return char in [vowel for line in _VOWELS for vowel in line]
 
 def is_pinyin_E(char):
-	return char in [vowel for line in VOWELS[4:6] for vowel in line]
+	return char in [vowel for line in _VOWELS[4:6] for vowel in line]
+
+# returns a number indicating the pinyin syllable's tone.
+# 0 for none, 1 for high, 2 for rising, 3 for low, 4 for falling, 5 for neutral.
+def get_tone_num(syllable_str):
+	if syllable_str[0] in PUNCTUATION:
+		return _NONE_TONE_NUM
+	for char in syllable_str:
+		tone_num = _VOWEL_TO_TONE_NUM.get(char)
+		if tone_num is not None:
+			return tone_num
+	return _NEUTRAL_TONE_NUM
+
+# returns a syllable string with all accent marks removed.
+def strip_tone_marker(syllable_str):
+	return ''.join([_TONE_TO_TONELESS.get(char, char) for char in syllable_str])
 
 # returns the given pinyin syllable string with an applied tone marker.
 def place_tone_marker(syllable_str, tone_num):
-	if not 1 <= tone_num <= 4:
+	if not tone_num in _PRIMARY_TONES:
 		return syllable_str
 
 	for i, char in enumerate(syllable_str):
-		for line in VOWELS:
+		for line in _VOWELS:
 			if char not in line:
 				continue
 				
@@ -70,16 +99,3 @@ def place_tone_marker(syllable_str, tone_num):
 			# otherwise, the tone marker goes above the first found vowel.
 			return syllable_str[:i] + line[tone_num] + syllable_str[i + 1 :]
 	return syllable_str
-
-# returns a syllable string with all accent marks removed.
-def strip_tone_marker(syllable_str):
-	return ''.join([TONE_TO_TONELESS.get(char, char) for char in syllable_str])
-
-# returns a number indicating the pinyin syllable's tone.
-# 0 for none, 1 for high, 2 for rising, 3 for low, and 4 for falling.
-def get_tone_num(syllable_str):
-	for char in syllable_str:
-		tone_num = VOWEL_TO_TONE_NUM.get(char)
-		if tone_num is not None:
-			return tone_num
-	return 0

@@ -7,11 +7,11 @@ import chromapinyin._sequential_inflection
 _CLAUSE_BREAKS = "。，！？；：、．.,!-?;:"
 
 _NORMAL_TONES = {
-	TO_INFLECTION["neutral"],
 	TO_INFLECTION["high"],
 	TO_INFLECTION["rising"],
 	TO_INFLECTION["low"],
 	TO_INFLECTION["falling"],
+	TO_INFLECTION["neutral"],
 }
 
 # returns a list of groupings (lists) of dictionary objects.
@@ -91,16 +91,16 @@ def create_list(hanzi_str, pinyin_str):
 				# checks if the inflection of "yi" should change.
 				next_inflection = flat_inflections[i + 1]
 				if next_inflection == TO_INFLECTION["falling"]:
-					flat_inflections[i] = TO_INFLECTION["yi_rising"]
+					flat_inflections[i] = TO_INFLECTION["rising_yi"]
 				elif next_inflection in _NORMAL_TONES:
 					# next inflection is high, rising, or low.
-					flat_inflections[i] = TO_INFLECTION["yi_falling"]
+					flat_inflections[i] = TO_INFLECTION["falling_yi"]
 			elif (
 				hanzi_list[h] == "不" 
 				and next_inflection == TO_INFLECTION["falling"]
 			):
 				# bu must change inflection.
-				flat_inflections[i] = TO_INFLECTION["bu_rising"]
+				flat_inflections[i] = TO_INFLECTION["rising_bu"]
 
 		i += 1
 		h += 1
@@ -113,12 +113,14 @@ def create_list(hanzi_str, pinyin_str):
 			inflections[i][j] = flat_inflections[flat_index]
 			flat_index += 1
 
+	# applies 2-2-3 rule.
 	chromapinyin._sequential_inflection.apply_rule(
 		inflections, 
 		TO_INFLECTION["low"],
 		TO_INFLECTION["rising_low"]
 	)
 
+	# applies rule to make falling tones cut short.
 	chromapinyin._sequential_inflection.apply_rule(
 		inflections, 
 		TO_INFLECTION["falling"],
@@ -186,8 +188,9 @@ def create_list(hanzi_str, pinyin_str):
 	return syllable_results
 
 # sets the inflection of the neutral tone 
-# within <flat_inflections> at <current_index> based
-# on the inflection at index at <current_index> - <offset_backward>.
+# within <flat_inflections> at <current_index>
+# to its inflected counterpart, based on the tone that
+# comes <offset_backward> element(s) before <current_index>.
 def _inflect_neutral(current_index, offset_backward, flat_inflections):
 	i = current_index
 	prev_i = current_index - offset_backward
@@ -203,6 +206,8 @@ def _inflect_neutral(current_index, offset_backward, flat_inflections):
 		# the current inflection just repeats it.
 		flat_inflections[i] = flat_inflections[prev_i]
 
+# returns a list of units, 
+# with each unit (word) containing strings of pinyin syllables.
 def split_pinyin(pinyin_str):
 	results = []
 
@@ -226,7 +231,10 @@ def split_pinyin(pinyin_str):
 		for unit_str in units:
 			_word_unit_to_syllables(results, unit_str)
 	return results
-			
+
+# processes the given <unit_str> and breaks it down
+# into syllables and appends the unit
+# to the <results> list of units.	
 def _word_unit_to_syllables(results, unit_str):
 	if unit_str[0] in PUNCTUATION:
 		# adds punctuation.
@@ -258,7 +266,9 @@ def _word_unit_to_syllables(results, unit_str):
 				unit_str = _break_down_unit_str(results, unit_str, i)
 				break
 
-# returns what the given <unit_str> should be set equal to.
+# returns what remains of the given <unit_str> 
+# after trying to break a left section of the string
+# and adding it to the given <results> list of units.
 def _break_down_unit_str(results, unit_str, i):
 	if not any(is_pinyin_vowel(letter) for letter in unit_str[i:]):
 		# (e)bbb..|

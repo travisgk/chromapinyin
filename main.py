@@ -8,13 +8,35 @@ def main():
 		print(chromapinyin.place_tone_marker(stripped, tone_num), end=" ")
 	print("\n")
 
-	hanzi = "老板想买哪种水果。"
-	pinyin = "lǎobǎn xiǎng mǎi nǎ zhǒng shuǐguǒ."
-	inflections = [[3, 3], [3], [3], [3], [3], [3, 3]]
+	hanzi = "我买雨伞。"
+	pinyin = "wǒ mǎi yǔsǎn."
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False
+	)
+
+	hanzi = "我比你小。"
+	pinyin = "wǒ bǐ nǐ xiǎo."
+	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False
+	)
+
+	'''
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", "pinyin"], generate_css=True, vertical=True
+	)
+
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", "pinyin"], generate_css=False
+	)
+
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", "pinyin"], generate_css=False, vertical=True
+	)
 	for word in syllables:
 		for syllable in word:
-			print(syllable["hanzi"], end="")
+			print(syllable["zhuyin"], end="")
 		print("\n", end="")
 	print("\n")
 
@@ -38,7 +60,7 @@ def main():
 		print("\n", end="")
 	print("\n")
 
-	hanzi = "我买与散。"
+	hanzi = "我买雨伞。"
 	pinyin = "wǒ mǎi yǔsǎn."
 	inflections = [[3], [3], [3, 3]]
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
@@ -67,5 +89,6 @@ def main():
 			print(syllable["hanzi"], end="")
 		print("\n", end="")
 	print("\n")
+	'''
 
 main()

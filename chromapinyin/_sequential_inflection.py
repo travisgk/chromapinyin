@@ -4,9 +4,9 @@
 # follow the 2-2-3 rule in Mandarin.
 # this is an approximation; regional variance is bound to differ.
 #
-from ._inflection import TO_INFLECTION
+from ._inflection import TO_INFLECTION, _TO_INFLECTED_NEUTRAL, _NEUTRAL_TONE_NUM
 
-_PRINT_APPLY_RULE_DEBUG = False
+_PRINT_APPLY_RULE_DEBUG = True
 
 # modifies the given list of inflections groupings
 # to follow the sequential inflection rule, 
@@ -17,8 +17,11 @@ def apply_rule(inflections, src_inflection, to_inflection):
 
 	# creates a mark-up list.
 	markup_clause = [
-		[UNDETERMINED if inflection == src_inflection else NONE for inflection in word] 
-		for word in inflections
+		[
+			UNDETERMINED 
+			if inflection == src_inflection 
+			else NONE for inflection in word
+		] for word in inflections
 	]
 	if all(mark == NONE for word in markup_clause for mark in word):
 		return
@@ -63,20 +66,13 @@ def apply_rule(inflections, src_inflection, to_inflection):
 				(i == len(markup_clause) - 1 and j == len(word) - 1)
 				or (j + 1 < len(word) and word[j + 1] != UNDETERMINED)
 				or (
-					i < len(markup_clause) - 1
-					and(
-						(
-							j == len(word) - 1
-							and markup_clause[i + 1][0] == NONE
-						)
-						or (
-							inflections[i + 1][0] == NONE
-							and (
-								i + 2 >= len(markup_clause)
-								or _is_neutral_inflection(inflections[i + 2][0])
-								# UNCERTAIN: or if inflections[i + 2] == TO_INFLECTION['none']
-							)
-						)
+					j == len(word) - 1
+					and i + 1 < len(markup_clause)
+					and inflections[i + 1][0] != UNDETERMINED
+					and (
+						i + 2 >= len(markup_clause)
+						or _is_neutral_inflection(inflections[i + 2][0])
+						# UNCERTAIN: or if inflections[i + 2] == TO_INFLECTION['none']
 					)
 				)
 			):
@@ -290,7 +286,13 @@ def apply_rule(inflections, src_inflection, to_inflection):
 			and (w_0 == 0 or inflections[w_0 - 1][-1] == NONE)
 			and (
 				w_3 + 1 >= len(markup_clause)
-				or len(markup_clause[w_3 + 1]) == 1
+				or (
+					len(markup_clause[w_3 + 1]) == 1
+					and markup_clause[w_3 + 1][0] == NONE
+				)
+				or (
+					markup_clause[w_3 + 1][0] != to_inflection
+				)
 			)
 		):
 			markup_clause[w_0][s_0] = src_inflection
@@ -357,8 +359,8 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 
 def _is_neutral_inflection(inflection_num):
 	return (
-		inflection_num == TO_INFLECTION["neutral"]
-		or inflection_num in _TO_INFLECTED_NEUTRAL.items()
+		inflection_num == _NEUTRAL_TONE_NUM
+		or inflection_num in _TO_INFLECTED_NEUTRAL.values()
 	)
 
 def _print_markup_clause(rule_num, markup_clause, src_inflection, to_inflection):

@@ -44,4 +44,4 @@ For example, ```syllables[0][0]``` is a dictionary object with the following key
 <br>
 
 ## Resources
-SVG animations sourced from the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master) can be exported to ```_chroma_res/_makemeahanzi``` in order to let the HTML source these glyph animations.
+SVG animations from the ```svgs``` directory in the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master) can be downloaded and exported to ```_chroma_res/_makemeahanzi``` in order to let the HTML source these glyph animations.

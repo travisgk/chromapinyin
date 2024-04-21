@@ -44,6 +44,4 @@ For example, ```syllables[0][0]``` is a dictionary object with the following key
 <br>
 
 ## Resources
-chromapinyin includes a compressed ```_makemeahanzi.zip``` under the ```_chroma_res``` directory that contains the SVG animations sourced from the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master).
-<br>
-The produced HTML can make use of glyph animations if the SVGs are extracted to ```_chroma_res/_makemeahanzi```.
+SVG animations sourced from the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master) can be exported to ```_chroma_res/_makemeahanzi``` in order to let the HTML source these glyph animations.

@@ -5,16 +5,16 @@ _CHROMA_TONES = None
 
 def set_to_default():
 	global _inflection_to_RGB
-	HIGH_COLOR = (255, 145, 0)
+	HIGH_COLOR = (255, 157, 18)
 	RISING_COLOR = (0, 190, 36)
 	LOW_COLOR = (0, 87, 190)
-	FALLING_COLOR = (235, 127, 182)
+	FALLING_COLOR = (176, 111, 219)
 	NEUTRAL_COLOR = (128, 128, 128)
 
 	_set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_inflection_to_RGB[TO_INFLECTION["rising_low"]] = (0, 172, 255)
+	_inflection_to_RGB[TO_INFLECTION["rising_low"]] = (7, 169, 250)
 	_rebuild_colors()
 
 def set_to_dummit():

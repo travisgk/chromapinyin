@@ -8,6 +8,13 @@ def main():
 		print(chromapinyin.place_tone_marker(stripped, tone_num), end=" ")
 	print("\n")
 
+	hanzi = "我比你小。"
+	pinyin = "wǒ bǐ nǐ xiǎo."
+	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, ["hanzi", ("pinyin", "merge_punctuation"), "vertical_zhuyin"], generate_css=False, vertical=True
+	)
+
 	hanzi = "我买雨伞。"
 	pinyin = "wǒ mǎi yǔsǎn."
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
@@ -15,11 +22,11 @@ def main():
 		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False
 	)
 
-	hanzi = "我比你小。"
-	pinyin = "wǒ bǐ nǐ xiǎo."
+	hanzi = "我很好。"
+	pinyin = "wǒ hěn hǎo."
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
 	html, css = chromapinyin.create_stylized_sentence(
-		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False
+		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False, vertical=True
 	)
 
 	'''

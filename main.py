@@ -1,7 +1,7 @@
 import chromapinyin
 
 def main():
-	sample_list = "shén me shí hòu".split()
+	'''sample_list = "shén me shí hòu".split()
 	for syllable in sample_list:
 		tone_num = chromapinyin.get_tone_num(syllable)
 		stripped = chromapinyin.strip_tone_marker(syllable)
@@ -12,24 +12,41 @@ def main():
 	pinyin = "wǒ bǐ nǐ xiǎo."
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
 	html, css = chromapinyin.create_stylized_sentence(
-		syllables, ["hanzi", ("pinyin", "merge_punctuation"), "vertical_zhuyin"], generate_css=False, vertical=True
-	)
+		syllables, 
+		[("pinyin", "merge_punctuation"), "hanzi_with_zhuyin"], 
+		generate_css=False, 
+		exclude_punctuation=True
+	)'''
 
-	hanzi = "我买雨伞。"
-	pinyin = "wǒ mǎi yǔsǎn."
+	hanzi = "李老板想找你演讲。"
+	pinyin = "lǐ lǎobǎn xiǎng zhǎo nǐ yǎnjiǎng."
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
 	html, css = chromapinyin.create_stylized_sentence(
-		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False
+		syllables, 
+		["hanzi_with_zhuyin", ("pinyin", "merge_punctuation")], 
+		generate_css=False
 	)
 
-	hanzi = "我很好。"
-	pinyin = "wǒ hěn hǎo."
-	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
-	html, css = chromapinyin.create_stylized_sentence(
-		syllables, ["hanzi", ("pinyin", "merge_punctuation")], generate_css=False, vertical=True
-	)
+	print("\n<br>\n<br>")
 
 	'''
+	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		["hanzi", "pinyin"], 
+		generate_css=False
+	)
+
+	print("\n<br>\n<br>")
+
+	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		["hanzi", "pinyin"], 
+		generate_css=False,
+		vertical=True
+	)
+
 	html, css = chromapinyin.create_stylized_sentence(
 		syllables, ["hanzi", "pinyin"], generate_css=True, vertical=True
 	)

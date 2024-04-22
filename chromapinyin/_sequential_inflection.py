@@ -6,7 +6,7 @@
 #
 from ._inflection import TO_INFLECTION, _TO_INFLECTED_NEUTRAL, _NEUTRAL_TONE_NUM
 
-_PRINT_APPLY_RULE_DEBUG = True
+_PRINT_APPLY_RULE_DEBUG = False
 
 # modifies the given list of inflections groupings
 # to follow the sequential inflection rule, 

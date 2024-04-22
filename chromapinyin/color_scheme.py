@@ -33,7 +33,6 @@ def _set_inflection_to_RGB(
 	HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR
 ):
 	global _inflection_to_RGB
-	print(_mid_RGB(LOW_COLOR, RISING_COLOR))
 	_inflection_to_RGB = {
 		TO_INFLECTION["none"]: (0, 0, 0), # punctuation
 		TO_INFLECTION["neutral"]: NEUTRAL_COLOR,

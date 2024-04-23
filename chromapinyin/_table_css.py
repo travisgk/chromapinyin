@@ -13,8 +13,10 @@ __all__ = [
 	"_CHROMA_HALF_PAD",
 	"_CHROMA_VERTICAL_TEXT",
 	"_CHROMA_VERTICAL_ZHUYIN_ROOT",
-	"_CHROMA_VERTICAL_SINGLE_ZHUYIN_MARKER",
-	"_CHROMA_VERTICAL_MULTI_ZHUYIN_MARKER",
+	"_CHROMA_VERTICAL_ZHUYIN_MARKER",
+	"_CHROMA_ONE_ZHUYIN_DIV",
+	"_CHROMA_TWO_ZHUYIN_DIV",
+	"_CHROMA_THREE_ZHUYIN_DIV",
 	"_CHROMA_LEFT_ALIGN",
 	"_CHROMA_RIGHT_ALIGN",
 	"_CHROMA_TOP_ALIGN",
@@ -27,7 +29,8 @@ _PINYIN_FONT_SIZE = "13px"
 _IPA_FONT_SIZE = "13px"
 _ZHUYIN_FONT_SIZE = "13px"
 _SUB_ZHUYIN_ROOT_FONT_SIZE = "13px"
-_SUB_ZHUYIN_MARK_FONT_SIZE = "13px"
+_SUB_ZHUYIN_MARK_FONT_SIZE = "21px"
+_VERTICAL_ZHUYIN_HEIGHT = "56px"
 
 _CHROMA_TABLE = {
 	"class": "chroma-table",
@@ -53,6 +56,7 @@ _CHROMA_HANZI = {
 	"class": "chroma-hanzi",
 	"style": (
 		f"font-size: {_HANZI_FONT_SIZE};",
+		"padding:1px;",
 	),
 }
 
@@ -93,7 +97,7 @@ _CHROMA_VERTICAL_ZHUYIN_TABLE = {
 		"cellpadding = \"0\";",
 		"cellspacing = \"0\";",
 		"border = \"0\";",
-		"background-color: #0000ff;",
+		#"background-color: #0000ff;",
 	),
 }
 
@@ -105,7 +109,7 @@ _CHROMA_ZHUYIN_BY_HANZI_TD = {
 		"padding-right: 0;",
 		"padding-bottom: 0;",
 		"padding-left: 0;",
-		"background-color: #009900;",
+		#"background-color: #009900;",
 	),
 }
 
@@ -117,7 +121,8 @@ _CHROMA_NESTED_VERTICAL_ZHUYIN_TABLE = {
 		"cellpadding = \"0\";",
 		"cellspacing = \"0\";",
 		"border = \"0\";",
-		"background-color: #005555;",
+		"padding-top: 0%;",
+		#"background-color: #991100;",
 	),
 }
 
@@ -147,6 +152,9 @@ _CHROMA_VERTICAL_TEXT = {
 		"writing-mode: vertical-lr;",
 		"text-orientation: upright;",
 		"white-space: nowrap;",
+		#"background-color: #bbbb00;",
+		#"padding-top: 10px;",
+		#"padding-bottom: 10px;",
 	),
 }
 
@@ -158,32 +166,50 @@ _CHROMA_VERTICAL_ZHUYIN_ROOT = {
 		"width: 0%;",
 		"margin: 0;",
 		"padding: 0;",
-		"background-color: #33bb99;",
+		#"background-color: #33bb99;",
 	),
 }
 
-_CHROMA_VERTICAL_SINGLE_ZHUYIN_MARKER = {
-	"class": "chroma-vertical-single-zhuyin-marker",
+_CHROMA_VERTICAL_ZHUYIN_MARKER = {
+	"class": "chroma-vertical-zhuyin-marker",
 	"style": (
-		f"font-size: {_SUB_ZHUYIN_MARK_FONT_SIZE};",
-		"vertical-align: top;",
-		"padding-top: 12%;",
+		"vertical-align: bottom;",
 		"width: 0%;",
+		f"height: {_VERTICAL_ZHUYIN_HEIGHT};",
 		"margin: 0;",
 		"padding: 0;",
-		"background-color: #990099;",
+		#"background-color: #555555;",
 	),
 }
 
-_CHROMA_VERTICAL_MULTI_ZHUYIN_MARKER = {
-	"class": "chroma-vertical-multi-zhuyin-marker",
+_CHROMA_ONE_ZHUYIN_DIV = {
+	"class": "chroma-one-zhuyin-div",
 	"style": (
 		f"font-size: {_SUB_ZHUYIN_MARK_FONT_SIZE};",
-		"vertical-align: bottom;",
-		"padding-bottom: 8px;",
-		"width: 0%;",
-		"background-color: #330099;",
-	),
+		"padding: 0;",
+		"margin-bottom: 0px;",
+		#"background-color: #0000bb;",
+	)
+}
+
+_CHROMA_TWO_ZHUYIN_DIV = {
+	"class": "chroma-two-zhuyin-div",
+	"style": (
+		f"font-size: {_SUB_ZHUYIN_MARK_FONT_SIZE};",
+		"padding: 0;",
+		"margin-bottom: 11px;",
+		#"background-color: #0000cc;",
+	)
+}
+
+_CHROMA_THREE_ZHUYIN_DIV = {
+	"class": "chroma-three-zhuyin-div",
+	"style": (
+		f"font-size: {_SUB_ZHUYIN_MARK_FONT_SIZE};",
+		"padding: 0;",
+		"margin-bottom: 5px;",
+		#"background-color: #0000dd;",
+	)
 }
 
 _CHROMA_LEFT_ALIGN = {

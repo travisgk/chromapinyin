@@ -294,6 +294,31 @@ def _return_vertical_zhuyin_table(
 	result += _HTML_line("<tr>", 1)
 	half_pad_styling = _embed_styling([_CHROMA_HALF_PAD], generate_css)
 
+	# gets cell contents and styling.
+	zhuyin_no_mark = (
+		syllable["zhuyin_prefix"] + syllable["zhuyin_root"]
+	).strip()
+	zhuyin_mark = syllable["zhuyin_suffix"]
+
+	class_styling = _embed_styling(
+		[_CHROMA_VERTICAL_ZHUYIN_ROOT], generate_css
+	)
+	span_styling = _embed_styling(
+		[_CHROMA_VERTICAL_TEXT], generate_css
+	)
+	vert_table_styling = _embed_styling(
+		[_CHROMA_VERTICAL_ZHUYIN_MARKER], generate_css
+	)
+
+	mark_div_styling = None
+	if len(zhuyin_no_mark) == 1:
+		mark_div_styling = _CHROMA_ONE_ZHUYIN_DIV
+	elif len(zhuyin_no_mark) == 2:
+		mark_div_styling = _CHROMA_TWO_ZHUYIN_DIV
+	else:
+		mark_div_styling = _CHROMA_THREE_ZHUYIN_DIV
+	mark_styling = _embed_styling([mark_div_styling], generate_css)
+
 	if grouped and len(syllable_list[i]) > 1:
 		# a grouped polysyllable may need aligning.
 		if j == 0:
@@ -305,27 +330,6 @@ def _return_vertical_zhuyin_table(
 			# a half padding <td> is inserted on the left.
 			styling = _embed_styling([_CHROMA_HALF_PAD], generate_css)
 			result += _HTML_line(f"<td {styling}></td>")
-
-		# gets cell contents and styling.
-		zhuyin_no_mark = (
-			syllable["zhuyin_prefix"] + syllable["zhuyin_root"]
-		).strip()
-		zhuyin_mark = syllable["zhuyin_suffix"]
-
-		class_styling = _embed_styling(
-			[_CHROMA_VERTICAL_ZHUYIN_ROOT], generate_css
-		)
-		span_styling = _embed_styling(
-			[_CHROMA_VERTICAL_TEXT], generate_css
-		)
-		mark_styling = _embed_styling(
-			[
-				_CHROMA_VERTICAL_SINGLE_ZHUYIN_MARKER
-				if len(zhuyin_no_mark) == 1
-				else _CHROMA_VERTICAL_MULTI_ZHUYIN_MARKER
-			],
-			generate_css
-		)
 		
 		# adds the primary content cells to the nested table.
 		if include_hanzi:
@@ -348,7 +352,9 @@ def _return_vertical_zhuyin_table(
 		result += _HTML_line(f"{zhuyin_no_mark}")
 		result += _HTML_line("</span>", -1)
 		result += _HTML_line("</td>", -1)
-		result += _HTML_line(f"<td {mark_styling}>{zhuyin_mark}</td>")
+		result += _HTML_line(f"<td {vert_table_styling}>", 1)
+		result += _HTML_line(f"<div {mark_styling}>{zhuyin_mark}</div>")
+		result += _HTML_line("</td>", -1)
 
 		# closes embedded hanzi table.
 		if include_hanzi:
@@ -369,25 +375,6 @@ def _return_vertical_zhuyin_table(
 	else:
 		# half-padding <td>s are inserted on both sides to align center.
 		# gets cell contents and styling.
-		zhuyin_no_mark = (
-			syllable["zhuyin_prefix"] + syllable["zhuyin_root"]
-		).strip()
-		zhuyin_mark = syllable["zhuyin_suffix"]
-
-		class_styling = _embed_styling(
-			[_CHROMA_VERTICAL_ZHUYIN_ROOT], generate_css
-		)
-		span_styling = _embed_styling(
-			[_CHROMA_VERTICAL_TEXT], generate_css
-		)
-		mark_styling = _embed_styling(
-			[
-				_CHROMA_VERTICAL_SINGLE_ZHUYIN_MARKER
-				if len(zhuyin_no_mark) == 1
-				else _CHROMA_VERTICAL_MULTI_ZHUYIN_MARKER
-			],
-			generate_css
-		)
 		result += _HTML_line(f"<td {half_pad_styling}></td>")
 
 		# adds the primary content cells to the nested table.
@@ -411,7 +398,9 @@ def _return_vertical_zhuyin_table(
 		result += _HTML_line(zhuyin_no_mark)
 		result += _HTML_line("</span>", -1)
 		result += _HTML_line("</td>", -1)
-		result += _HTML_line(f"<td {mark_styling}>{zhuyin_mark}</td>")
+		result += _HTML_line(f"<td {vert_table_styling}>", 1)
+		result += _HTML_line(f"<div {mark_styling}>{zhuyin_mark}</div>")
+		result += _HTML_line("</td>", -1)
 
 		if include_hanzi:
 			result += _HTML_line("</tr>", -1)

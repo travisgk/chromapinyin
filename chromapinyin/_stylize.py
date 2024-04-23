@@ -99,9 +99,6 @@ def create_stylized_sentence(
 			html_table += _HTML_line("</tr>")
 
 	html_table += _HTML_line("</table>", -1)
-
-	print(html_table)
-	print(css)
 	return html_table, css
 
 # returns the HTML representing a table cell as a <td> element.
@@ -339,7 +336,8 @@ def _return_vertical_zhuyin_table(
 				[_CHROMA_NESTED_VERTICAL_ZHUYIN_TABLE], generate_css
 			)
 			hanzi = syllable["hanzi"]
-			result += _HTML_line(f"<td>{hanzi}</td>")
+			if len(hanzi) > 0:
+				result += _HTML_line(f"<td>{hanzi}</td>")
 			result += _HTML_line(f"<td {td_styling}>", 1)
 			result += _HTML_line(f"<table {table_styling}>", 1)
 			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
@@ -401,7 +399,8 @@ def _return_vertical_zhuyin_table(
 				[_CHROMA_NESTED_VERTICAL_ZHUYIN_TABLE], generate_css
 			)
 			hanzi = syllable["hanzi"]
-			result += _HTML_line(f"<td>{hanzi}</td>")
+			if len(hanzi) > 0:
+				result += _HTML_line(f"<td>{hanzi}</td>")
 			result += _HTML_line(f"<td {td_styling}>", 1)
 			result += _HTML_line(f"<table {table_styling}>", 1)
 			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
@@ -456,6 +455,7 @@ def _return_additional_punctuation(
 		and category_name in ["pinyin", "ipa", "hanzi_with_zhuyin"]
 		and "merge_punctuation" in category
 		and syllable["inflection_num"] == 0
+		and syllable["pinyin"] != "'"
 	):
 		return result, True
 

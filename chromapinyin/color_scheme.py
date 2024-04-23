@@ -34,6 +34,7 @@ def _set_inflection_to_RGB(
 ):
 	global _inflection_to_RGB
 	_inflection_to_RGB = {
+		TO_INFLECTION["apostrophe"]: (0, 0, 0),
 		TO_INFLECTION["none"]: (0, 0, 0), # punctuation
 		TO_INFLECTION["neutral"]: NEUTRAL_COLOR,
 		TO_INFLECTION["high"]: HIGH_COLOR,

@@ -1,7 +1,8 @@
-import os
+from ._transcription import _pinyin_to_zhuyin_and_ipa
 from ._punctuation_marks import PUNCTUATION
 from ._vowel_chars import (
 	strip_tone_marker,
+	_APOSTROPHE_TONE_NUM,
 	_NONE_TONE_NUM,
 	_HIGH_TONE_NUM,
 	_RISING_TONE_NUM,
@@ -15,6 +16,7 @@ from ._vowel_chars import (
 # so, tones range [-1, 4] and act the same as inflections,
 # while anything above that range can only be referred to as an inflection.
 TO_INFLECTION = {
+	"apostrophe": _APOSTROPHE_TONE_NUM,
 	"none": _NONE_TONE_NUM, # punctuation
 	"high": _HIGH_TONE_NUM,
 	"rising": _RISING_TONE_NUM,
@@ -41,6 +43,7 @@ _TO_INFLECTED_NEUTRAL = {
 }
 
 _INFLECTION_TO_TONE = {
+	TO_INFLECTION["apostrophe"]: TO_INFLECTION["none"],
 	TO_INFLECTION["none"]: TO_INFLECTION["none"],
 	TO_INFLECTION["neutral"]: TO_INFLECTION["neutral"],
 	TO_INFLECTION["high"]: TO_INFLECTION["high"],
@@ -60,6 +63,7 @@ _INFLECTION_TO_TONE = {
 }
 
 _INFLECTION_TO_SPOKEN_TONE = {
+	TO_INFLECTION["apostrophe"]: TO_INFLECTION["none"],
 	TO_INFLECTION["none"]: TO_INFLECTION["none"],
 	TO_INFLECTION["neutral"]: TO_INFLECTION["neutral"],
 	TO_INFLECTION["high"]: TO_INFLECTION["high"],
@@ -141,58 +145,44 @@ def create_syllable_dict(hanzi, pinyin, inflection_num):
 
 	stripped_pinyin = strip_tone_marker(syllable["pinyin"])
 	first_letter = stripped_pinyin[0]
-	if first_letter in PUNCTUATION and hanzi[0] in PUNCTUATION:
+	if first_letter in PUNCTUATION:
 		syllable["ipa"] = first_letter
-		syllable["zhuyin"] = hanzi[0]
+		if len(hanzi) > 0 and hanzi[0] in PUNCTUATION:
+			syllable["zhuyin"] = hanzi[0]
+		else:
+			syllable["zhuyin"] = ""
 		return syllable
 
 	if not first_letter in "abcdefghjklmnopqrstwxyz":
 		return syllable
 
-	script_dir = os.path.dirname(os.path.realpath(__file__))
-	file_name = os.path.join(
-		script_dir, "transcription/_phonemes_" + first_letter + ".txt"
+	zhuyin_root, ipa_root = _pinyin_to_zhuyin_and_ipa(stripped_pinyin)
+
+	# transcribes pinyin into IPA.
+	syllable["ipa_root"] = ipa_root
+	syllable["ipa_suffix"] = _INFLECTION_TO_IPA_SUFFIX.get(
+		inflection_num, ""
 	)
+	syllable["ipa"] = ipa_root + syllable["ipa_suffix"]
+
+	# transcribes pinyin into zhuyin.
+	zhuyin_prefix = ""
+	zhuyin_suffix = ""
+	if spoken_tone_num == _RISING_TONE_NUM:
+		zhuyin_suffix = "ˊ"
+	elif spoken_tone_num == _LOW_TONE_NUM:
+		zhuyin_suffix = "ˇ"
+	elif spoken_tone_num == _FALLING_TONE_NUM:
+		zhuyin_suffix = "ˋ"
+	elif (
+		spoken_tone_num == _NEUTRAL_TONE_NUM 
+		or spoken_tone_num in _TO_INFLECTED_NEUTRAL.values()
+	):
+		zhuyin_prefix = "˙"
 	
-	if not os.path.isfile(file_name):
-		print(f"Could not find {file_name}.")
-
-		return syllable
-
-	with open(file_name, "r", encoding="utf-8") as file:
-		for line in file:
-			contents = line.rstrip().split("\t")
-			pinyin, ipa_root, zhuyin_root = contents
-			if stripped_pinyin != pinyin:
-				continue
-
-			# transcribes pinyin into IPA.
-			syllable["ipa_root"] = ipa_root
-			syllable["ipa_suffix"] = _INFLECTION_TO_IPA_SUFFIX.get(
-				inflection_num, ""
-			)
-			syllable["ipa"] = ipa_root + syllable["ipa_suffix"]
-
-			# transcribes pinyin into zhuyin.
-			zhuyin_prefix = ""
-			zhuyin_suffix = ""
-			if spoken_tone_num == _RISING_TONE_NUM:
-				zhuyin_suffix = "ˊ"
-			elif spoken_tone_num == _LOW_TONE_NUM:
-				zhuyin_suffix = "ˇ"
-			elif spoken_tone_num == _FALLING_TONE_NUM:
-				zhuyin_suffix = "ˋ"
-			elif (
-				spoken_tone_num == _NEUTRAL_TONE_NUM 
-				or spoken_tone_num in _INFLECTION_TO_SPOKEN_TONE.values()
-			):
-				zhuyin_prefix = "˙"
-			
-			syllable["zhuyin_prefix"] = zhuyin_prefix
-			syllable["zhuyin_root"] = zhuyin_root
-			syllable["zhuyin_suffix"] = zhuyin_suffix
-			syllable["zhuyin"] = zhuyin_prefix + zhuyin_root + zhuyin_suffix
-
-			break
+	syllable["zhuyin_prefix"] = zhuyin_prefix
+	syllable["zhuyin_root"] = zhuyin_root
+	syllable["zhuyin_suffix"] = zhuyin_suffix
+	syllable["zhuyin"] = zhuyin_prefix + zhuyin_root + zhuyin_suffix
 			
 	return syllable

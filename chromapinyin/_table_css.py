@@ -126,6 +126,8 @@ _CHROMA_FULL_PAD = {
 	"style": (
 		"width: 100%;",
 		"height: 100%;",
+		"margin: 0;",
+		"padding: 0;",
 	),
 }
 
@@ -134,6 +136,8 @@ _CHROMA_HALF_PAD = {
 	"style": (
 		"width: 50%;",
 		"height: 50%;",
+		"margin: 0;",
+		"padding: 0;",
 	),
 }
 
@@ -152,6 +156,8 @@ _CHROMA_VERTICAL_ZHUYIN_ROOT = {
 		f"font-size: {_SUB_ZHUYIN_ROOT_FONT_SIZE};",
 		"vertical-align: center;",
 		"width: 0%;",
+		"margin: 0;",
+		"padding: 0;",
 		"background-color: #33bb99;",
 	),
 }
@@ -163,6 +169,8 @@ _CHROMA_VERTICAL_SINGLE_ZHUYIN_MARKER = {
 		"vertical-align: top;",
 		"padding-top: 12%;",
 		"width: 0%;",
+		"margin: 0;",
+		"padding: 0;",
 		"background-color: #990099;",
 	),
 }

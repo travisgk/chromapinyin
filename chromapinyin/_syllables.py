@@ -1,10 +1,16 @@
 import re
-from ._vowel_chars import get_tone_num, is_pinyin_E, is_pinyin_vowel
-from ._inflection import TO_INFLECTION, create_syllable_dict
-from ._punctuation_marks import PUNCTUATION
+from ._vowel_chars import (
+	get_tone_num, 
+	is_pinyin_E, 
+	is_pinyin_vowel, 
+	_APOSTROPHE_TONE_NUM, 
+	_NONE_TONE_NUM
+)
+from ._inflection import TO_INFLECTION, create_syllable_dict, _TO_INFLECTED_NEUTRAL
+from ._punctuation_marks import PUNCTUATION, CLAUSE_BREAKS
 import chromapinyin._sequential_inflection
 
-_CLAUSE_BREAKS = "。，！？；：、．.,!-?;:"
+
 
 _NORMAL_TONES = {
 	TO_INFLECTION["high"],
@@ -50,10 +56,11 @@ def create_list(hanzi_str, pinyin_str):
 	i = 0 # inflection index
 	h = 0 # hanzi index
 
+	VOICELESS = [_NONE_TONE_NUM, _APOSTROPHE_TONE_NUM]
 	while i < len(flat_inflections) and h < len(hanzi_list):
 		if (
 			hanzi_list[h] not in PUNCTUATION 
-			and flat_inflections[i] == TO_INFLECTION["none"]
+			and flat_inflections[i] in VOICELESS
 		):
 			# current hanzi is not puncuation
 			# but the current inflection is punctuation.
@@ -61,13 +68,13 @@ def create_list(hanzi_str, pinyin_str):
 			continue
 
 		elif hanzi_list[h] in PUNCTUATION:
-			if flat_inflections[i] != TO_INFLECTION["none"]:
+			if flat_inflections[i] not in VOICELESS:
 				# current hanzi is punctuation
 				# but the current inflection is not punctuation.
 				h += 1
 				continue
 
-			if flat_inflections[i] == TO_INFLECTION["none"]:
+			if flat_inflections[i] in VOICELESS:
 				# current hanzi is punctuation
 				# and the current inflection is punctuation as well.
 				i += 1
@@ -77,19 +84,19 @@ def create_list(hanzi_str, pinyin_str):
 		# hanzi and inflection are both not punctuation.
 		if flat_inflections[i] == TO_INFLECTION["neutral"]:
 			# neutral tone changes.
-			if i - 1 >= 0 and flat_inflections[i - 1] != TO_INFLECTION["none"]:
+			if i - 1 >= 0 and flat_inflections[i - 1] not in VOICELESS:
 				# previous inflection is not punctuation.
 				_inflect_neutral(i, 1, flat_inflections)
 
-			elif i - 2 >= 0 and flat_inflections[i - 2] != TO_INFLECTION["none"]:
+			elif i - 2 >= 0 and flat_inflections[i - 2] not in VOICELESS:
 				# previous inflection is punctuation 
 				# but the inflection before that isn't.
 				_inflect_neutral(i, 2, flat_inflections)
 
 		elif i + 1 < len(flat_inflections):
+			next_inflection = flat_inflections[i + 1]
 			if hanzi_list[h] == "一":
 				# checks if the inflection of "yi" should change.
-				next_inflection = flat_inflections[i + 1]
 				if next_inflection == TO_INFLECTION["falling"]:
 					flat_inflections[i] = TO_INFLECTION["rising_yi"]
 				elif next_inflection in _NORMAL_TONES:
@@ -144,7 +151,7 @@ def create_list(hanzi_str, pinyin_str):
 			and (
 				i + 1 >= len(inflections)
 				or(
-					inflections[i + 1][0] == TO_INFLECTION["none"]
+					inflections[i + 1][0] == _APOSTROPHE_TONE_NUM
 					and (
 						i + 2 >= len(inflections) 
 						or not is_neutral_tone(inflections[i + 2][0])
@@ -170,7 +177,7 @@ def create_list(hanzi_str, pinyin_str):
 			if (
 				h < len(hanzi_list) 
 				and hanzi_list[h] not in PUNCTUATION 
-				and inflection == TO_INFLECTION["none"]
+				and inflection in [_NONE_TONE_NUM, _APOSTROPHE_TONE_NUM]
 			):
 				# current hanzi is not punctuation
 				# but the current inflection is punctuation.
@@ -185,6 +192,7 @@ def create_list(hanzi_str, pinyin_str):
 				)
 				h += 1
 			i += 1
+
 	return syllable_results
 
 # sets the inflection of the neutral tone 
@@ -199,9 +207,9 @@ def _inflect_neutral(current_index, offset_backward, flat_inflections):
 	if flat_inflections[prev_i] in _NORMAL_TONES:
 		# the previous inflection is a normal tone.
 		# sets current inflection to the corresponding neutral.
-		flat_inflections[i] = TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
+		flat_inflections[i] = _TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
 
-	elif flat_inflections[prev_i] in TO_INFLECTED_NEUTRAL.items():
+	elif flat_inflections[prev_i] in _TO_INFLECTED_NEUTRAL.items():
 		# <prev_inflection> is an inflected neutral.
 		# the current inflection just repeats it.
 		flat_inflections[i] = flat_inflections[prev_i]
@@ -211,9 +219,9 @@ def _inflect_neutral(current_index, offset_backward, flat_inflections):
 def split_pinyin(pinyin_str):
 	results = []
 
-	# breaks <pinyin_str> into a list, with <_CLAUSE_BREAKS>
+	# breaks <pinyin_str> into a list, with <CLAUSE_BREAKS>
 	# becoming their own elements.
-	words = re.findall(r"[\w']+|[" + _CLAUSE_BREAKS + "]", pinyin_str)
+	words = re.findall(r"[\w']+|[" + CLAUSE_BREAKS + "]", pinyin_str)
 
 	for word in words:
 		units = []
@@ -230,6 +238,7 @@ def split_pinyin(pinyin_str):
 		results.append([])
 		for unit_str in units:
 			_word_unit_to_syllables(results, unit_str)
+
 	return results
 
 # processes the given <unit_str> and breaks it down

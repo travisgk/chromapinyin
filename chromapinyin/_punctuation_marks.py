@@ -1,1 +1,3 @@
-PUNCTUATION = "'’。，！？；：（）、．—～.,!-?;:"
+APOSTROPHES = "'’"
+PUNCTUATION = APOSTROPHES + "。，！？；：（）、．—～.,!-?;:"
+CLAUSE_BREAKS = "。，！？；：、．.,!-?;:"

@@ -1,8 +1,9 @@
 # _vowel_chars.py
 #
 
-from ._punctuation_marks import PUNCTUATION
+from ._punctuation_marks import PUNCTUATION, APOSTROPHES
 
+_APOSTROPHE_TONE_NUM = -1
 _NONE_TONE_NUM = 0
 _HIGH_TONE_NUM = 1
 _RISING_TONE_NUM = 2
@@ -62,6 +63,8 @@ def is_pinyin_E(char):
 # returns a number indicating the pinyin syllable's tone.
 # 0 for none, 1 for high, 2 for rising, 3 for low, 4 for falling, 5 for neutral.
 def get_tone_num(syllable_str):
+	if syllable_str[0] in APOSTROPHES:
+		return _APOSTROPHE_TONE_NUM
 	if syllable_str[0] in PUNCTUATION:
 		return _NONE_TONE_NUM
 	for char in syllable_str:

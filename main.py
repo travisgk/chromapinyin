@@ -37,28 +37,64 @@ def main():
 		{"hanzi": "对不起。 我不会说中文。", "pinyin": "duìbùqǐ. wǒ bù huì shuō zhōngwén."}
 	]
 
+	phrase = {"hanzi": "长安。", "pinyin": "cháng'ān."}
+	syllables = chromapinyin.create_syllable_list(
+		phrase["hanzi"], phrase["pinyin"]
+	)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		[
+			["hanzi", "ipa"], 
+			[("pinyin", "merge_punctuation",),],
+		], 
+		generate_css=False,
+		vertical=True
+	)
+	print(html)
+	print("\n<br>\n<br>")
 
-	for phrase in phrases:
-		syllables = chromapinyin.create_syllable_list(
-			phrase["hanzi"], phrase["pinyin"]
-		)
-		#broken_pinyin = chromapinyin._syllables.split_pinyin(phrase["pinyin"])
-		#print(broken_pinyin)
-		html, css = chromapinyin.create_stylized_sentence(
-			syllables, 
-			["hanzi", ("pinyin", "merge_punctuation")], 
-			generate_css=False
-		)
-		print(html)
-		print("<br>\n<br>")
+	'''html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		[
+			["hanzi", "ipa",], 
+			[("pinyin", "merge_punctuation",),],
+		], 
+		generate_css=True,
+		vertical=False
+	)
+	print(html)
 
-		html, css = chromapinyin.create_stylized_sentence(
-			syllables, ["hanzi_with_zhuyin"], generate_css=False
-		)
-		print(html)
-		print("<br>\n<br>")
+	
+	phrase = {"hanzi": "很高兴认识你。", "pinyin": "hěn gāoxìng rènshi nǐ."}
+	syllables = chromapinyin.create_syllable_list(
+		phrase["hanzi"], phrase["pinyin"]
+	)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		[
+			["hanzi",],
+			["zhuyin",],
+		],
+		generate_css=True,
+		vertical=True
+	)
+	print(html)
+	print("<br>\n<br>")
 
-	'''
+	phrase = {"hanzi": "我也很好。", "pinyin": "wǒ yě hěn hǎo."}
+	syllables = chromapinyin.create_syllable_list(
+		phrase["hanzi"], phrase["pinyin"]
+	)
+	html, css = chromapinyin.create_stylized_sentence(
+		syllables, 
+		[["vertical_zhuyin", ("pinyin"), "hanzi"]], 
+		generate_css=True,
+		vertical=True
+	)
+	print(html)
+	print("\n<br>\n<br>")
+
+	
 	syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
 	html, css = chromapinyin.create_stylized_sentence(
 		syllables, 

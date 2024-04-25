@@ -57,15 +57,17 @@ def _rebuild_colors():
 	global _CHROMA_TONES
 	_CHROMA_TONES = {
 		inflection: {
-			"class": f"chroma-tone-{inflection_str}",
+			"class": "chroma-tone-" + inflection_str.replace("_", "-"),
 			"style": (f"color: {_RGB_to_hex(_inflection_to_RGB[inflection])};",),
 		} for inflection_str, inflection in TO_INFLECTION.items()
 	}
 
+# returns an RGB tuple that's interpolated between two given colors.
 def _mid_RGB(a_RGB, b_RGB, factor=0.5):
 	d_RGB = tuple([b_RGB[i] - a_RGB[i] for i in range(3)])
 	return tuple([int(a_RGB[i] + d_RGB[i] * factor) for i in range(3)])
 
+# returns a string of an RGB tuple converted to a hex code.
 def _RGB_to_hex(rgb):
 	return '#{:02x}{:02x}{:02x}'.format(*rgb)
 

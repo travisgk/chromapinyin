@@ -1,420 +1,487 @@
+import math
 from ._inflection import TO_INFLECTION
-from ._punctuation_marks import PUNCTUATION
-from ._vowel_chars import _NEUTRAL_TONE_NUM, get_tone_num, strip_tone_marker
+from ._punctuation_marks import APOSTROPHES, CLAUSE_BREAKS, PUNCTUATION
 from ._table_css import *
+from ._vowel_chars import (
+	_APOSTROPHE_TONE_NUM, _NONE_TONE_NUM, get_tone_num, strip_tone_marker
+)
 from .color_scheme import _CHROMA_TONES
-
-# takes a source syllable list
-#
-# takes a list of table categories: "hanzi", "hanzi_with_vertical_zhuyin", "pinyin", "pinyin_with_nums", "pinyin_no_tones", "ipa", "zhuyin", "vertical_zhuyin", "pitch_chart"
-# if given as a tuple, "group_punctuation" is an additional option that can be included,
-# as well as "no_color", "color_by_tone", "color_by_spoken_tone", "color_by_inflection".
-# "exclude_punctuation" will be ignored for "hanzi", "hanzi_with_vertical_zhuyin", and "zhuyin".
-#
-# takes a bool to determine if the table should be rendered horizontally or vertically.
-#
-# takes a bool to determine if "word" units should be grouped together by aligning.
-#
-# takes a bool to determine if stylings should be given in CSS or put inline
-#
-
-# returns a list of groupings (lists) of dictionary objects.
-# each dictionary object represents a syllable,
-# which has the keys as defined in chromapinyin.inflection.py:
-#
-# "hanzi": the syllable written in hanzi.
-# "pinyin": the syllable written in pinyin.
-# "ipa": the syllable transcribed in the international phonetic alphabet.
-# "zhuyin": the syllable transcribed in zhuyin.
 
 _n_tabs = 0
 
-# returns the <html_table> and the <css> as a tuple.
 def create_stylized_sentence(
-	syllable_list,
-	categories,
+	word_list,
+	categories_2D,
 	generate_css,
 	vertical=False,
 	grouped=True,
-	exclude_punctuation=False
+	exclude_punctuation=False,
+	break_line_with_clauses=True,
+	max_n_line_syllables=5
 ):
 	global _n_tabs
 	_n_tabs = 0
-	html_table = _HTML_line(
-		f"<table {_embed_styling([_CHROMA_TABLE], generate_css)}>"
+
+	word_lines = [[],]
+
+	for word_i, word in enumerate(word_list):
+		# embeds alignment to the syllable dictionaries.
+		for syllable_i, syllable in enumerate(word):
+			if grouped and len(word) > 1:
+				if syllable_i == 0:
+					word_list[word_i][syllable_i]["alignment"] = "start"
+				elif syllable_i == len(word) - 1:
+					word_list[word_i][syllable_i]["alignment"] = "end"
+				else:
+					word_list[word_i][syllable_i]["alignment"] = "center"
+			else:
+				word_list[word_i][syllable_i]["alignment"] = "center"
+
+		if word[0]["hanzi"] in CLAUSE_BREAKS:
+			# clause breaks are appended with its previous word,
+			# so their own iterations are skipped.
+			if break_line_with_clauses and word_i < len(word_list) - 1:
+				word_lines.append([])
+			continue
+
+		# determines the number of syllables in the next word.
+		n_apostrophes = len(
+			[0 for syllable in word if syllable["pinyin"] in APOSTROPHES]
+		)
+		next_n_syllables = len(word) - n_apostrophes
+
+		# adds an additional syllable if the next syllable is a clause break.
+		next_word = (
+			word_list[word_i + 1] if word_i + 1 < len(word_list) else None
+		)
+		next_word_is_clause_break = False
+		if next_word and next_word[0]["hanzi"] in CLAUSE_BREAKS:
+			next_n_syllables += len(word_list[word_i + 1])
+			next_word_is_clause_break = True
+
+		# determines how the number of syllables the current line will have
+		# if the current <word> (and possibly a clause breaker) is added.
+		# then, a new line is created if that number of syllables
+		# exceeds the maximum amount of syllables per line.
+		n_line_syllables = sum([len(word) for word in word_lines[-1]])
+		prospective_n_line_syllables = n_line_syllables + next_n_syllables
+		if prospective_n_line_syllables > max_n_line_syllables:
+			word_lines.append([])
+
+		# appends the current <word> (and possibly a clause breaker) 
+		# to the current line.
+		word_lines[-1].append(word)
+		if next_word_is_clause_break:
+			word_lines[-1].append(next_word)
+
+	# breaks the <word_lines> into a 2D table of syllables.
+	syllable_run = max(
+		[sum([len(word) for word in line]) for line in word_lines]
 	)
-	_n_tabs += 1
-	css = ""
-	
+	n_lines = len(word_lines)
+	n_cols = n_lines if vertical else syllable_run
+	n_rows = syllable_run if vertical else n_lines
+	syllable_table = [[None for _ in range(n_cols)] for _ in range(n_rows)]
+	row, col = 0, 0
 	if vertical:
-		for i, word in enumerate(syllable_list):
-			for j, syllable in enumerate(word):
-				html_table += _HTML_line("<tr>")
-				_n_tabs = 2
-				
-				if (
-					exclude_punctuation 
-					and syllable["inflection_num"] == TO_INFLECTION["none"]
-				):
-					continue
-
-				for category in categories:
-					html_table += _return_td(
-						syllable_list,
-						category,
-						i,
-						j,
-						generate_css,
-						vertical,
-						grouped
-					)
-
-				_n_tabs = 1
-				html_table += _HTML_line("</tr>")
+		for line in word_lines:
+			for word in line:
+				for syllable in word:
+					syllable_table[row][col] = syllable
+					row += 1
+			col += 1
+			row = 0
 
 	else:
-		for category in categories:
-			html_table += _HTML_line("<tr>")
-			_n_tabs = 2
+		for line in word_lines:
+			for word in line:
+				for syllable in word:
+					syllable_table[row][col] = syllable
+					col += 1
+			row += 1
+			col = 0
 
-			for i, word in enumerate(syllable_list):
-				for j, syllable in enumerate(word):
-					if (
-						exclude_punctuation 
-						and syllable["inflection_num"] == TO_INFLECTION["none"]
-					):
-						continue
-
-					html_table += _return_td(
-						syllable_list,
-						category,
-						i,
-						j,
-						generate_css,
-						vertical,
-						grouped
-					)
-
-			_n_tabs = 1
-			html_table += _HTML_line("</tr>")
-
-	html_table += _HTML_line("</table>", -1)
-	return html_table, css
-
-# returns the HTML representing a table cell as a <td> element.
-def _return_td(
-	syllable_list,
-	category,
-	i,
-	j,
-	generate_css,
-	vertical,
-	grouped
-):
-	global _n_tabs
-	result = ""
-	word = syllable_list[i]
-	syllable = word[j]
-	category_is_tuple = isinstance(category, tuple)
-	category_name = category[0] if category_is_tuple else category
-	style_classes = [_CHROMA_TD, _CATEGORY_TO_TD_STYLE[category_name]]
-
-	# adds an aligning styling to push groups together.
-	if grouped and len(word) > 1:
-		if j == 0:
-			style_classes.append(
-				_CHROMA_BOTTOM_ALIGN if vertical else _CHROMA_RIGHT_ALIGN
-			)
-		elif j == len(word) - 1:
-			style_classes.append(
-				_CHROMA_TOP_ALIGN if vertical else _CHROMA_LEFT_ALIGN
-			)
-
-	styling = _embed_styling(style_classes, generate_css)
-	
-	result += _HTML_line(f"<td {styling}>", 1)
-
-	# gets the HTML to go inside the <td>.
-	result += _return_cell_contents(
-		syllable_list,
-		category,
-		category_is_tuple,
-		i,
-		j,
-		generate_css,
-		vertical,
-		grouped
+	result = _HTML_line(
+		f"<table {_embed_styling([_CHROMA_TABLE], generate_css)}>", 1
 	)
+	css = ""
 
-	# closes all tags and returns the complete <td>...</td> element.
-	result += _HTML_line("</td>", -1)
-	return result
-
-# returns the HTML that goes inside a <td> element.
-def _return_cell_contents(
-	syllable_list,
-	category,
-	category_is_tuple,
-	i,
-	j,
-	generate_css,
-	vertical,
-	grouped
-):
-	category_name = category[0] if category_is_tuple else category
-	syllable = syllable_list[i][j]
-	additional_punctuation = ""
-	
-	additional_punctuation, return_blank = _return_additional_punctuation(
-		syllable_list, category, category_is_tuple, i, j, generate_css
-	)
-	if return_blank:
-		return ""
-	
-	global _n_tabs
-	result = ""
-
-	# determines color styling by tone.
-	# by default the syllables are colored by inflection.
-	color_css = None
-	if category_is_tuple:
-		if "color_by_tone" in category:
-			color_css = _CHROMA_TONES[syllable["tone_num"]]
-		elif "color_by_spoken_tone" in category:
-			color_css = _CHROMA_TONES[syllable["spoken_tone_num"]]
-		elif "no_color" not in category:
-			color_css = _CHROMA_TONES[syllable["inflection_num"]]
-	else:
-		color_css = _CHROMA_TONES[syllable["inflection_num"]]
-		p = syllable["pinyin"]
-		inf = syllable["inflection_num"]
-
-	# opens a span that gives the text contents color.
-	if color_css:
-		styling = _embed_styling([color_css], generate_css)
-		result += _HTML_line(f"<span {styling}>", 1)
-
-	# returns the formatted hanzi immediately
-	if category_name == "hanzi":
-		result += _HTML_line(syllable["hanzi"])
-		result += _HTML_line("</span>", -1)
-		return result
-
-	if category_name == "pinyin":
-		pinyin_str = ""
-		if category_is_tuple:
-			if "with_nums" in category:
-				pinyin_str += strip_tone_marker(syllable["pinyin"])
-				if syllable["tone_num"] != _NEUTRAL_TONE_NUM:
-					pinyin_str += str(syllable["tone_num"])
-			elif "no_tones" in category:
-				pinyin_str += strip_tone_marker(syllable["pinyin"])
-			else:
-				pinyin_str += syllable["pinyin"]
-		else:
-			pinyin_str += syllable["pinyin"]
-		result += _HTML_line(pinyin_str + additional_punctuation)
-		
-	elif category_name == "ipa":
-		ipa_str = ""
-		if category_is_tuple:
-			if "with_nums" in category:
-				ipa_str += syllable["ipa_root"]
-				if syllable["tone_num"] != _NEUTRAL_TONE_NUM:
-					ipa_str += str(syllable["tone_num"])
-			elif "no_tones" in category:
-				ipa_str += syllable["ipa_root"]
-			else:
-				ipa_str += syllable["ipa"]
-		else:
-			ipa_str = syllable["ipa"]
-		result += _HTML_line(ipa_str + additional_punctuation)
-
-	elif category_name == "zhuyin":
-		zhuyin_str = ""
-		if category_is_tuple:
-			if "with_nums" in category:
-				zhuyin_str += syllable["zhuyin_root"]
-				if syllable["tone_num"] != _NEUTRAL_TONE_NUM:
-					zhuyin_str += str(syllable["tone_num"])
-			elif "no_tones" in category:
-				zhuyin_str += syllable["zhuyin_root"]
-		else:
-			zhuyin_str += syllable["zhuyin"]
-		result += _HTML_line(zhuyin_str)
-
-	elif category_name == "vertical_zhuyin":
-		result += _return_vertical_zhuyin_table(
-			syllable_list,
-			category,
-			category_is_tuple,
-			i,
-			j,
-			generate_css,
-			grouped,
-			include_hanzi=False
+	for syllable_row in syllable_table:
+		result += _return_syllable_row_HTML(
+			syllable_row, categories_2D, generate_css, vertical
 		)
-
-	elif category_name == "hanzi_with_zhuyin":
-		result += _return_vertical_zhuyin_table(
-			syllable_list,
-			category,
-			category_is_tuple,
-			i,
-			j,
-			generate_css,
-			grouped,
-			include_hanzi=True
-		)
-
-	# closes color span.
-	if color_css:
-		result += _HTML_line("</span>", -1)
-
-	#
-	return result
-
-# returns the HTML for a complete nested <table>
-# that displays vertical zhuyin, with the option
-# to include the corresponding hanzi to the right of it.
-def _return_vertical_zhuyin_table(
-	syllable_list,
-	category,
-	category_is_tuple,
-	i,
-	j,
-	generate_css,
-	grouped,
-	include_hanzi
-):
-	global _n_tabs
-	syllable = syllable_list[i][j]
-	styling = _embed_styling([_CHROMA_VERTICAL_ZHUYIN_TABLE], generate_css)
-	result = _HTML_line(f"<table {styling}>", 1)
-	result += _HTML_line("<tr>", 1)
-	half_pad_styling = _embed_styling([_CHROMA_HALF_PAD], generate_css)
-
-	# gets cell contents and styling.
-	zhuyin_no_mark = (
-		syllable["zhuyin_prefix"] + syllable["zhuyin_root"]
-	).strip()
-	zhuyin_mark = syllable["zhuyin_suffix"]
-
-	class_styling = _embed_styling(
-		[_CHROMA_VERTICAL_ZHUYIN_ROOT], generate_css
-	)
-	span_styling = _embed_styling(
-		[_CHROMA_VERTICAL_TEXT], generate_css
-	)
-	vert_table_styling = _embed_styling(
-		[_CHROMA_VERTICAL_ZHUYIN_MARKER], generate_css
-	)
-
-	mark_div_styling = None
-	if len(zhuyin_no_mark) == 1:
-		mark_div_styling = _CHROMA_ONE_ZHUYIN_DIV
-	elif len(zhuyin_no_mark) == 2:
-		mark_div_styling = _CHROMA_TWO_ZHUYIN_DIV
-	else:
-		mark_div_styling = _CHROMA_THREE_ZHUYIN_DIV
-	mark_styling = _embed_styling([mark_div_styling], generate_css)
-
-	if grouped and len(syllable_list[i]) > 1:
-		# a grouped polysyllable may need aligning.
-		if j == 0:
-			# a full padding <td> is inserted on the left.
-			styling = _embed_styling([_CHROMA_FULL_PAD], generate_css)
-			result += _HTML_line(f"<td {styling}></td>")
-
-		elif not j == len(syllable_list[i]) - 1:
-			# a half padding <td> is inserted on the left.
-			styling = _embed_styling([_CHROMA_HALF_PAD], generate_css)
-			result += _HTML_line(f"<td {styling}></td>")
-		
-		# adds the primary content cells to the nested table.
-		if include_hanzi:
-			td_styling = _embed_styling(
-				[_CHROMA_ZHUYIN_BY_HANZI_TD], generate_css
-			)
-			table_styling = _embed_styling(
-				[_CHROMA_NESTED_VERTICAL_ZHUYIN_TABLE], generate_css
-			)
-			hanzi = syllable["hanzi"]
-			if len(hanzi) > 0:
-				result += _HTML_line(f"<td>{hanzi}</td>")
-			result += _HTML_line(f"<td {td_styling}>", 1)
-			result += _HTML_line(f"<table {table_styling}>", 1)
-			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
-			result += _HTML_line("<tr>", 1)
-
-		result += _HTML_line(f"<td {class_styling}>", 1)
-		result += _HTML_line(f"<span {span_styling}>", 1)
-		result += _HTML_line(f"{zhuyin_no_mark}")
-		result += _HTML_line("</span>", -1)
-		result += _HTML_line("</td>", -1)
-		result += _HTML_line(f"<td {vert_table_styling}>", 1)
-		result += _HTML_line(f"<div {mark_styling}>{zhuyin_mark}</div>")
-		result += _HTML_line("</td>", -1)
-
-		# closes embedded hanzi table.
-		if include_hanzi:
-			result += _HTML_line("</tr>", -1)
-			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
-			result += _HTML_line("</table>", -1)
-			result += _HTML_line("</td>", -1)
-
-		if j == len(syllable_list[i]) - 1:
-			# a full padding <td> is inserted on the right.
-			styling = _embed_styling([_CHROMA_FULL_PAD], generate_css)
-			result += _HTML_line(f"<td {styling}></td>")
-
-		elif not j == 0:
-			# a half padding <td> is inserted on the right.
-			result += _HTML_line(f"<td {half_pad_styling}></td>")
-		
-	else:
-		# half-padding <td>s are inserted on both sides to align center.
-		# gets cell contents and styling.
-		result += _HTML_line(f"<td {half_pad_styling}></td>")
-
-		# adds the primary content cells to the nested table.
-		if include_hanzi:
-			td_styling = _embed_styling(
-				[_CHROMA_ZHUYIN_BY_HANZI_TD], generate_css
-			)
-			table_styling = _embed_styling(
-				[_CHROMA_NESTED_VERTICAL_ZHUYIN_TABLE], generate_css
-			)
-			hanzi = syllable["hanzi"]
-			if len(hanzi) > 0:
-				result += _HTML_line(f"<td>{hanzi}</td>")
-			result += _HTML_line(f"<td {td_styling}>", 1)
-			result += _HTML_line(f"<table {table_styling}>", 1)
-			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
-			result += _HTML_line("<tr>", 1)
-			
-		result += _HTML_line(f"<td {class_styling}>", 1)
-		result += _HTML_line(f"<span {span_styling}>", 1)
-		result += _HTML_line(zhuyin_no_mark)
-		result += _HTML_line("</span>", -1)
-		result += _HTML_line("</td>", -1)
-		result += _HTML_line(f"<td {vert_table_styling}>", 1)
-		result += _HTML_line(f"<div {mark_styling}>{zhuyin_mark}</div>")
-		result += _HTML_line("</td>", -1)
-
-		if include_hanzi:
-			result += _HTML_line("</tr>", -1)
-			result += _HTML_line(f"<tr><td {half_pad_styling}></td></tr>")
-			result += _HTML_line("</table>", -1)
-			result += _HTML_line("</td>", -1)
-		result += _HTML_line(f"<td {half_pad_styling}></td>")
-
-	result += _HTML_line("</tr>", -1)
+	
 	result += _HTML_line("</table>", -1)
 
+	return result, css
+
+def _return_syllable_row_HTML(
+	syllable_row, categories_2D, generate_css, vertical
+):
+	syllable_cells_width = max([len(row) for row in categories_2D])
+	syllable_cells_height = len(categories_2D)
+	result = ""
+
+	for categories_row in categories_2D:
+		result += _HTML_line(
+			f"<tr {_embed_styling([_CHROMA_TR], generate_css)}>", 1
+		)
+		for syllable_i, syllable in enumerate(syllable_row):
+			if not syllable or syllable["pinyin"] in APOSTROPHES:
+				# skips None elements of the <syllable_row>
+				# or elements that are solely a pinyin apostrophe.
+				continue
+
+			for category_i in range(syllable_cells_width):
+				if category_i >= len(categories_row):
+					result += _HTML_line("<td></td>")
+					continue
+
+				category = categories_row[category_i]
+				add_punct, return_blank = _return_additional_punctuation(
+					syllable_row, category, syllable_i, generate_css
+				)
+
+				if return_blank:
+					result += _HTML_line("<td></td>")
+					continue
+
+				result += _return_syllable_td_HTML(
+					syllable, category, generate_css, vertical, add_punct
+				)
+		result += _HTML_line("</tr>", -1)
+
 	return result
 
+def _return_additional_punctuation(
+	syllable_row, category, syllable_i, generate_css
+):
+	category_is_tuple = isinstance(category, tuple)
+	result = ""
+	current_cell_is_blank = False
+	if not category_is_tuple:
+		# merging punctuation is not used,
+		# so no additional punctuation is returned.
+		return result, current_cell_is_blank
+
+	category_name = category[0] if category_is_tuple else category
+	PUNCTUATION_NUMS = [_APOSTROPHE_TONE_NUM, _NONE_TONE_NUM]
+	if category_name in ["pinyin", "ipa"] and "merge_punctuation" in category:
+		inflection_num = syllable_row[syllable_i]["inflection_num"]
+		if inflection_num in PUNCTUATION_NUMS:
+			# merging punctuation is used,
+			# but the current syllable is punctuation,
+			# then the cell contents will be blank
+			current_cell_is_blank = True
+			return result, current_cell_is_blank
+	else:
+		# merging punctuation is not used.
+		return result, current_cell_is_blank
+
+	#
+	if (
+		syllable_i + 1 < len(syllable_row)
+		and syllable_row[syllable_i + 1]
+		and syllable_row[syllable_i + 1]["inflection_num"] in PUNCTUATION_NUMS
+	):
+		additional_punctuation = syllable_row[syllable_i + 1]["pinyin"]
+
+		# a particular span is added around the punctuation.
+		styling_classes = []
+		if additional_punctuation in APOSTROPHES:
+			if "no_color" not in category:
+				color_css = _CHROMA_TONES[TO_INFLECTION["apostrophe"]]
+				styling_classes.append(color_css)
+			styling_classes.append(_CHROMA_APOSTROPHE_OFFSET)
+
+		else:
+			if "no_color" not in category:
+				color_css = _CHROMA_TONES[TO_INFLECTION["none"]]
+				styling_classes.append(color_css)
+
+		if len(styling_classes) > 0:
+			styling = _embed_styling(styling_classes, generate_css)
+			result += f"<span {styling}>{additional_punctuation}</span>"
+		else:
+			result += additional_punctuation
+	return result, current_cell_is_blank
+
+
+def _return_syllable_td_HTML(
+	syllable, category, generate_css, vertical, add_punct
+):
+	if category is None:
+		return _HTML_line("<td></td>")
+
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	result = ""
+	
+	if category_name == "hanzi":
+		result += _return_hanzi_contents(
+			syllable, category, generate_css, vertical
+		)
+
+	elif category_name == "pinyin":
+		result += _return_pinyin_contents(
+			syllable, category, generate_css, vertical, add_punct
+		)
+
+	elif category_name == "zhuyin":
+		result += _return_zhuyin_contents(
+			syllable, category, generate_css, vertical
+		)
+
+	elif category_name == "vertical_zhuyin":
+		result += _return_vertical_zhuyin_contents(
+			syllable, category, generate_css, vertical
+		)
+
+	elif category_name == "ipa":
+		result += _return_ipa_contents(
+			syllable, category, generate_css, vertical, add_punct
+		)
+
+	elif category_name == "pitch_chart":
+		result += ""
+
+	return result
+
+def _return_hanzi_contents(syllable, category, generate_css, vertical):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	alignment = syllable["alignment"]
+
+	# opens the <td> element.
+	td_styling_classes = [_CATEGORY_TO_TD_STYLE[category_name],]
+	if vertical:
+		td_styling_classes.append(_return_td_align_style(alignment, vertical))
+	td_styling = _embed_styling(td_styling_classes, generate_css)
+	result = _HTML_line(f"<td {td_styling}>", 1)
+
+	# opens the <div> container element.
+	div_styling_classes = [_CHROMA_DIV_HANZI_CONTAINER,]
+	if not vertical:
+		div_styling_classes.append(_return_div_h_align_style(alignment))
+	div_styling = _embed_styling(div_styling_classes, generate_css)
+	result += _HTML_line(f"<div {div_styling}>", 1)
+
+	# opens and closes the <span> container element.
+	color_css = _CHROMA_TONES[syllable["inflection_num"]]
+	span_styling_classes = [color_css, _CHROMA_HANZI_OFFSET,]
+	span_styling = _embed_styling(span_styling_classes, generate_css)
+	hanzi = syllable["hanzi"]
+	result += _HTML_line(f"<span {span_styling}>{hanzi}</span>")
+
+	# closes elements.
+	result += _HTML_line("</div>", -1)
+	result += _HTML_line("</td>", -1)
+
+	return result
+
+def _return_pinyin_contents(
+	syllable, category, generate_css, vertical, add_punct
+):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	alignment = syllable["alignment"]
+
+	# opens the <td> element.
+	td_styling_classes = [_CATEGORY_TO_TD_STYLE[category_name],]
+	td_styling_classes.append(_return_td_align_style(alignment, vertical))
+	td_styling = _embed_styling(td_styling_classes, generate_css)
+	result = _HTML_line(f"<td {td_styling}>", 1)
+
+	# opens and closes the <span> container element.
+	color_css = _CHROMA_TONES[syllable["inflection_num"]]
+	span_styling = _embed_styling([color_css,], generate_css)
+	pinyin = syllable["pinyin"]
+	result += _HTML_line(f"<span {span_styling}>{pinyin}</span>" + add_punct)
+
+	# closes elements.
+	result += _HTML_line("</td>", -1)
+
+	return result
+
+def _return_zhuyin_contents(syllable, category, generate_css, vertical):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	alignment = syllable["alignment"]
+
+	# opens the <td> element.
+	td_styling_classes = [_CATEGORY_TO_TD_STYLE[category_name],]
+	td_styling_classes.append(_return_td_align_style(alignment, vertical))
+	td_styling = _embed_styling(td_styling_classes, generate_css)
+	result = _HTML_line(f"<td {td_styling}>", 1)
+
+	# opens and closes the <span> container element.
+	span_line = ""
+	color_css = _CHROMA_TONES[syllable["inflection_num"]]
+	span_styling = _embed_styling([color_css,], generate_css)
+	span_line += f"<span {span_styling}>"
+
+	prefix = syllable["zhuyin_prefix"]
+	if len(prefix) > 0:
+		span_styling = _embed_styling([_CHROMA_ZHUYIN_PREFIX,], generate_css)
+		span_line += f"<span {span_styling}>{prefix}</span>"
+	
+	root = syllable["zhuyin_root"]
+	span_styling = _embed_styling([_CHROMA_ZHUYIN_ROOT,], generate_css)
+	span_line += f"<span {span_styling}>{root}</span>"
+
+	suffix = syllable["zhuyin_suffix"]
+	if len(suffix) > 0:
+		span_styling = _embed_styling([_CHROMA_ZHUYIN_SUFFIX,], generate_css)
+		span_line += f"<span {span_styling}>{suffix}</span>"
+	
+	span_line += "</span>"
+
+	result += _HTML_line(span_line)
+
+	# closes elements.
+	result += _HTML_line("</td>", -1)
+
+	return result
+
+def _return_vertical_zhuyin_contents(
+	syllable, category, generate_css, vertical
+):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	alignment = syllable["alignment"]
+
+	# opens the <td> element.
+	td_styling_classes = [_CATEGORY_TO_TD_STYLE[category_name],]
+	if vertical:
+		td_styling_classes.append(_return_td_align_style(alignment, vertical))
+	td_styling = _embed_styling(td_styling_classes, generate_css)
+	result = _HTML_line(f"<td {td_styling}>", 1)
+
+	# opens the <div> container element.
+	div_styling = _embed_styling([_CHROMA_DIV_ZHUYIN_CONTAINER,], generate_css)
+	result += _HTML_line(f"<div {div_styling}>", 1)
+
+	# opens the nested <table> element.
+	table_styling = _embed_styling([_CHROMA_TABLE,], generate_css)
+	result += _HTML_line(f"<table {table_styling}>", 1)
+
+	# opens the nested <tr> and <td> elements.
+	nested_styling = _embed_styling([_CHROMA_NESTED_ZHUYIN], generate_css)
+	result += _HTML_line(f"<tr {nested_styling}>", 1)
+
+	# creates the spans for the prefix and root.
+	result += _HTML_line(f"<td {nested_styling}>", 1)
+	
+	color_css = _CHROMA_TONES[syllable["inflection_num"]]
+	color_styling = _embed_styling([color_css,], generate_css)
+	result += _HTML_line(f"<div {color_styling}>", 1)
+
+	span_line = ""
+	prefix = syllable["zhuyin_prefix"]
+	if len(prefix) > 0:
+		span_styling = _embed_styling(
+			[_CHROMA_ZHUYIN_PREFIX, _CHROMA_ZHUYIN_PREFIX_OFFSET,], generate_css
+		)
+		span_line += f"<span {span_styling}>{prefix}</span>"
+
+	root = syllable["zhuyin_root"]
+	span_styling = _embed_styling(
+		[_CHROMA_ZHUYIN_ROOT, _CHROMA_VERTICAL_ZHUYIN], generate_css
+	)
+	span_line += f"<span {span_styling}>{root}</span>"
+
+	result += _HTML_line(span_line)
+	result += _HTML_line("</div>", -1)
+	result += _HTML_line("</td>", -1)
+
+	# creates the spans for the suffix.
+	result += _HTML_line(f"<td {nested_styling}>", 1)
+	result += _HTML_line(f"<div {color_styling}>", 1)
+
+	span_line = ""
+	suffix = syllable["zhuyin_suffix"]
+	span_styling = _embed_styling(
+		[_CHROMA_ZHUYIN_SUFFIX, _CHROMA_ZHUYIN_SUFFIX_OFFSET,], generate_css
+	)
+	span_line += f"<span {span_styling}>{suffix}</span>"
+
+	result += _HTML_line(span_line)
+	result += _HTML_line("</div>", -1)
+	result += _HTML_line("</td>", -1)
+
+	# closes the rest of the elements.
+	result += _HTML_line("</tr>", -1)
+	result += _HTML_line("</table>", -1)
+	result += _HTML_line("</div>", -1)
+	result += _HTML_line("</td>", -1)
+
+	return result
+
+def _return_ipa_contents(
+	syllable, category, generate_css, vertical, add_punct
+):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	alignment = syllable["alignment"]
+
+	# opens the <td> element.
+	td_styling_classes = [_CATEGORY_TO_TD_STYLE[category_name],]
+	td_styling_classes.append(_return_td_align_style(alignment, vertical))
+	td_styling = _embed_styling(td_styling_classes, generate_css)
+	result = _HTML_line(f"<td {td_styling}>", 1)
+
+	# opens and closes the <span> container element.
+	color_css = _CHROMA_TONES[syllable["inflection_num"]]
+	span_styling = _embed_styling([color_css,], generate_css)
+	ipa_root = syllable["ipa_root"]
+	ipa_suffix = syllable["ipa_suffix"]
+	ipa = ipa_root + ipa_suffix
+	result += _HTML_line(f"<span {span_styling}>{ipa}</span>" + add_punct)
+
+	# closes elements.
+	result += _HTML_line("</td>", -1)
+
+	return result
+
+def _return_td_align_style(alignment, vertical):
+	if alignment == "start":
+		return _CHROMA_TD_ALIGN_BOTTOM if vertical else _CHROMA_TD_ALIGN_RIGHT
+	elif alignment == "end":
+		return _CHROMA_TD_ALIGN_TOP if vertical else _CHROMA_TD_ALIGN_LEFT
+	else:
+		return _CHROMA_TD_ALIGN_CENTER # UNCERTAIN
+
+def _return_div_h_align_style(alignment):
+	if alignment == "start":
+		return _CHROMA_DIV_PUSH_RIGHT
+	elif alignment == "end":
+		return _CHROMA_DIV_PUSH_LEFT
+	else:
+		return _CHROMA_DIV_PUSH_CENTER # UNCERTAIN
+
+# returns the text that goes after an HTML tag declaration
+# to indicate that tag's styling.
+def _embed_styling(style_dicts, uses_css):
+	if uses_css:
+		class_names = " ".join(
+			[style_dict["class"].split(".")[-1] for style_dict in style_dicts]
+		)
+		return f"class=\"{class_names}\""
+
+	return (
+		"style=\"" 
+		+ " ".join([
+			"".join(style_line.replace('"', '').split()) 
+			for style_dict in style_dicts 
+			for style_line in style_dict["style"]]
+		) 
+		+ "\""
+	)
+
 # returns a string of HTML formatting with the current tabulation applied.
+# <tab_inc> will increase/decrease the current tabulation after/before
+# the given <HTML> line depending on 
+# if <tab_inc> is positive/negative respectively.
 def _HTML_line(HTML, tab_inc=0):
 	global _n_tabs
 	if tab_inc < 0:
@@ -427,58 +494,4 @@ def _HTML_line(HTML, tab_inc=0):
 
 	else:
 		result = "\t" * _n_tabs + HTML + "\n"
-
 	return result
-
-# returns the punctuation HTML added on if merging is specified
-# and a boolean indicating if the current cell contents will be empty.
-def _return_additional_punctuation(
-	syllable_list, category, category_is_tuple, i, j, generate_css
-):
-	category_name = category[0] if category_is_tuple else category
-	syllable = syllable_list[i][j]
-	result = ""
-
-	if (
-		category_is_tuple
-		and category_name in ["pinyin", "ipa", "hanzi_with_zhuyin"]
-		and "merge_punctuation" in category
-		and syllable["inflection_num"] == 0
-		and syllable["pinyin"] != "'"
-	):
-		return result, True
-
-	if (
-		i + 1 < len(syllable_list)
-		and j == len(syllable_list[i]) - 1
-		and syllable_list[i + 1][0]["inflection_num"] == 0
-	):
-		# the next unit is punctuation, 
-		# so that is grouped with the current syllable.
-		additional_punctuation = syllable_list[i + 1][0]["pinyin"]
-		
-		# a coloring span is added around the punctuation.
-		if not(category_is_tuple and "no_color" in category):
-			color_css = _CHROMA_TONES[TO_INFLECTION["none"]]
-			styling = _embed_styling([color_css], generate_css)
-			result += f"<span {styling}>{additional_punctuation}</span>"
-		else:
-			result += additional_punctuation
-	return result, False
-
-# returns the text that goes after an HTML tag declaration
-# to indicate that tag's styling.
-def _embed_styling(style_dicts, uses_css):
-	if uses_css:
-		class_names = " ".join([style_dict["class"] for style_dict in style_dicts])
-		return f"class=\"{class_names}\""
-	
-	return (
-		"style=\"" 
-		+ " ".join([
-			"".join(style_line.replace('"', '').split()) 
-			for style_dict in style_dicts 
-			for style_line in style_dict["style"]]
-		) 
-		+ "\""
-	)

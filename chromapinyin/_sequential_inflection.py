@@ -77,11 +77,11 @@ def apply_rule(inflection_groups, stay_inflection, to_inflection):
 					j == len(word) - 1
 					and i + 1 < len(markup_clause)
 					and inflections[i + 1][0] != UNDETERMINED
-					#and (
-					#	i + 2 >= len(markup_clause)
-					#	or _is_neutral_inflection(inflections[i + 2][0])
-					#	# UNCERTAIN: or if inflections[i + 2] == TO_INFLECTION['none']
-					#)
+					and (
+						i + 2 >= len(markup_clause)
+						or _is_neutral_inflection(inflections[i + 2][0])
+						or inflections[i + 2] == TO_INFLECTION['none']
+					)
 				)
 			):
 				markup_clause[i][j] = stay_inflection

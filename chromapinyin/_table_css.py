@@ -191,29 +191,29 @@ _CHROMA_NESTED_ZHUYIN = {
 _CHROMA_ZHUYIN_PREFIX = {
 	"class": "chroma-zhuyin-prefix",
 	"style": (
-		f"font-size: {_ZHUYIN_PREFIX_FONT_SIZE}",
+		f"font-size: {_ZHUYIN_PREFIX_FONT_SIZE};",
 	),
 }
 
 _CHROMA_ZHUYIN_ROOT = {
 	"class": "chroma-zhuyin-root",
 	"style": (
-		f"font-size: {_ZHUYIN_ROOT_FONT_SIZE}",
+		f"font-size: {_ZHUYIN_ROOT_FONT_SIZE};",
 	),
 }
 
 _CHROMA_ZHUYIN_SUFFIX = {
 	"class": "chroma-zhuyin-suffix",
 	"style": (
-		f"font-size: {_ZHUYIN_SUFFIX_FONT_SIZE}",
+		f"font-size: {_ZHUYIN_SUFFIX_FONT_SIZE};",
 	),
 }
 
 _CHROMA_ZHUYIN_PREFIX_OFFSET = {
 	"class": "chroma-zhuyin-prefix-offset",
 	"style": (
-		"display: block;",
 		"position: relative;",
+		"display: block;",
 		"height: 5px;",
 		"top: -4px;",
 		"z-index: 3;"

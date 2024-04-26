@@ -17,7 +17,7 @@ def create_stylized_sentence(
 	grouped=True,
 	exclude_punctuation=False,
 	break_line_with_clauses=True,
-	max_n_line_syllables=5
+	max_n_line_syllables=9
 ):
 	global _n_tabs
 	_n_tabs = 0
@@ -118,6 +118,8 @@ def create_stylized_sentence(
 def _return_syllable_row_HTML(
 	syllable_row, categories_2D, generate_css, vertical
 ):
+	for row in categories_2D:
+		print(row)
 	syllable_cells_width = max([len(row) for row in categories_2D])
 	syllable_cells_height = len(categories_2D)
 	result = ""
@@ -134,6 +136,7 @@ def _return_syllable_row_HTML(
 
 			for category_i in range(syllable_cells_width):
 				if category_i >= len(categories_row):
+					print(f"{category_i} / {len(categories_row)}")
 					result += _HTML_line("<td></td>")
 					continue
 
@@ -143,7 +146,7 @@ def _return_syllable_row_HTML(
 				)
 
 				if return_blank:
-					result += _HTML_line("<td></td>")
+					result += _HTML_line("<td><!--additional_punct--></td>")
 					continue
 
 				result += _return_syllable_td_HTML(
@@ -244,6 +247,9 @@ def _return_syllable_td_HTML(
 
 	elif category_name == "pitch_chart":
 		result += ""
+
+	else:
+		result += "<td></td>"
 
 	return result
 

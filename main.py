@@ -19,39 +19,43 @@ def main():
 	)'''
 
 	phrases = [
-		#{"hanzi": "你好吗？" 			, "pinyin": "nǐhǎo ma?"},
-		#{"hanzi": "早上好"				, "pinyin": "zǎoshang hǎo."},
-		#{"hanzi": "晚上好"				, "pinyin": "wǎnshàng hǎo."},
-		#{"hanzi": "晚安"					, "pinyin": "wǎn'ān."},
-		#{"hanzi": "不太好"				, "pinyin": "bù tài hǎo."},
-		#{"hanzi": "你叫什么名字？"		, "pinyin": "nǐ jiào shénme míngzi?"},
-		#{"hanzi": "你多大？"				, "pinyin": "nǐ duōdà?"},
-		#{"hanzi": "你来自哪里？"			, "pinyin": "nǐ láizì nǎli?"},
-		#{"hanzi": "我来自中国"			, "pinyin": "wǒ láizì zhōngguó."},
-		#{"hanzi": "你是哪国人？"			, "pinyin": "nǐ shì nǎ guó rén?"},
-		#{"hanzi": "我是中国人"			, "pinyin": "wǒ shì zhōngguó rén."},
-		#{"hanzi": "很高兴认识你"			, "pinyin": "hěn gāoxìng rènshi nǐ."},
-		#{"hanzi": "不用谢"				, "pinyin": "bù yòng xiè."},
-		#{"hanzi": "不好意思"				, "pinyin": "bù hǎoyìsi."},
-		#{"hanzi": "对不起"				, "pinyin": "duìbuqǐ."},
-		{"hanzi": "对不起。 我不会说中文。", "pinyin": "duìbùqǐ. wǒ bù huì shuō zhōngwén."}
+		{"hanzi": "你好吗？" 			, "pinyin": "nǐhǎo ma?"},
+		
 	]
+	'''
+		{"hanzi": "早上好"				, "pinyin": "zǎoshang hǎo."},
+		{"hanzi": "晚上好"				, "pinyin": "wǎnshàng hǎo."},
+		{"hanzi": "晚安"					, "pinyin": "wǎn'ān."},
+		{"hanzi": "不太好"				, "pinyin": "bù tài hǎo."},
+		{"hanzi": "你叫什么名字？"		, "pinyin": "nǐ jiào shénme míngzi?"},
+		{"hanzi": "你多大？"				, "pinyin": "nǐ duōdà?"},
+		{"hanzi": "你来自哪里？"			, "pinyin": "nǐ láizì nǎli?"},
+		{"hanzi": "我来自中国"			, "pinyin": "wǒ láizì zhōngguó."},
+		{"hanzi": "你是哪国人？"			, "pinyin": "nǐ shì nǎ guó rén?"},
+		{"hanzi": "我是中国人"			, "pinyin": "wǒ shì zhōngguó rén."},
+		{"hanzi": "很高兴认识你"			, "pinyin": "hěn gāoxìng rènshi nǐ."},
+		{"hanzi": "不用谢"				, "pinyin": "bù yòng xiè."},
+		{"hanzi": "不好意思"				, "pinyin": "bù hǎoyìsi."},
+		{"hanzi": "对不起"				, "pinyin": "duìbuqǐ."},
+		{"hanzi": "对不起。 我不会说中文。"	, "pinyin": "duìbùqǐ. wǒ bù huì shuō zhōngwén."}
+		'''
 
-	phrase = {"hanzi": "长安。", "pinyin": "cháng'ān."}
-	syllables = chromapinyin.create_syllable_list(
-		phrase["hanzi"], phrase["pinyin"]
-	)
-	html, css = chromapinyin.create_stylized_sentence(
-		syllables, 
-		[
-			["hanzi", "ipa"], 
-			[("pinyin", "merge_punctuation",),],
-		], 
-		generate_css=False,
-		vertical=True
-	)
-	print(html)
-	print("\n<br>\n<br>")
+	for phrase in phrases:
+		syllables = chromapinyin.create_syllable_list(
+			phrase["hanzi"], phrase["pinyin"]
+		)
+		html, css = chromapinyin.create_stylized_sentence(
+			syllables, 
+			[
+				["hanzi", "vertical-zhuyin",], 
+				[("pinyin", "merge_punctuation",),],
+				["ipa",],
+			], 
+			generate_css=False,
+			vertical=False
+		)
+		print(html)
+		print("\n<br>\n<br>")
 
 	'''html, css = chromapinyin.create_stylized_sentence(
 		syllables, 

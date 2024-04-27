@@ -1,18 +1,18 @@
 # _vowel_chars.py
 #
 
-from ._punctuation_marks import PUNCTUATION, APOSTROPHES
+from ._punctuation_marks import APOSTROPHES, PUNCTUATION
 
-_APOSTROPHE_TONE_NUM = -1
-_NONE_TONE_NUM = 0
-_HIGH_TONE_NUM = 1
-_RISING_TONE_NUM = 2
-_LOW_TONE_NUM = 3
-_FALLING_TONE_NUM = 4
-_NEUTRAL_TONE_NUM = 5
+APOSTROPHE_TONE_NUM = -1
+PUNCTUATION_TONE_NUM = 0
+HIGH_TONE_NUM = 1
+RISING_TONE_NUM = 2
+LOW_TONE_NUM = 3
+FALLING_TONE_NUM = 4
+NEUTRAL_TONE_NUM = 5
 
 _PRIMARY_TONES = [
-	_HIGH_TONE_NUM, _RISING_TONE_NUM, _LOW_TONE_NUM, _FALLING_TONE_NUM,
+	HIGH_TONE_NUM, RISING_TONE_NUM, LOW_TONE_NUM, FALLING_TONE_NUM,
 ]
 
 _VOWELS = [
@@ -64,14 +64,14 @@ def is_pinyin_E(char):
 # 0 for none, 1 for high, 2 for rising, 3 for low, 4 for falling, 5 for neutral.
 def get_tone_num(syllable_str):
 	if syllable_str[0] in APOSTROPHES:
-		return _APOSTROPHE_TONE_NUM
+		return APOSTROPHE_TONE_NUM
 	if syllable_str[0] in PUNCTUATION:
-		return _NONE_TONE_NUM
+		return PUNCTUATION_TONE_NUM
 	for char in syllable_str:
 		tone_num = _VOWEL_TO_TONE_NUM.get(char)
 		if tone_num is not None:
 			return tone_num
-	return _NEUTRAL_TONE_NUM
+	return NEUTRAL_TONE_NUM
 
 # returns a syllable string with all accent marks removed.
 def strip_tone_marker(syllable_str):

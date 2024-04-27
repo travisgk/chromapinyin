@@ -1,14 +1,18 @@
 import re
-from ._vowel_chars import (
+from chromapinyin._syllable._vowel_chars import (
 	get_tone_num, 
 	is_pinyin_E, 
 	is_pinyin_vowel, 
-	_APOSTROPHE_TONE_NUM, 
-	_NONE_TONE_NUM
+	APOSTROPHE_TONE_NUM, 
+	PUNCTUATION_TONE_NUM
 )
-from ._inflection import TO_INFLECTION, create_syllable_dict, _TO_INFLECTED_NEUTRAL
-from ._punctuation_marks import PUNCTUATION, CLAUSE_BREAKS
-import chromapinyin._sequential_inflection
+from chromapinyin._syllable._inflection import (
+	TO_INFLECTION,
+	create_syllable_dict,
+	TO_INFLECTED_NEUTRAL
+)
+from chromapinyin._syllable._punctuation_marks import PUNCTUATION, CLAUSE_BREAKS
+from ._sequential_inflection import apply_rule as apply_sequential_rule
 
 
 
@@ -34,7 +38,7 @@ _NORMAL_TONES = {
 # "inflection_num": the number used by the program to refer to the inflection.
 # "ipa": the syllable transcribed in the international phonetic alphabet.
 # "zhuyin": the syllable transcribed in zhuyin.
-def create_list(hanzi_str, pinyin_str):
+def create_word_list(hanzi_str, pinyin_str):
 	# determines the groupings of initial inflections.
 	inflections = []
 	pinyin_list = split_pinyin(pinyin_str)
@@ -56,7 +60,7 @@ def create_list(hanzi_str, pinyin_str):
 	i = 0 # inflection index
 	h = 0 # hanzi index
 
-	VOICELESS = [_NONE_TONE_NUM, _APOSTROPHE_TONE_NUM]
+	VOICELESS = [PUNCTUATION_TONE_NUM, APOSTROPHE_TONE_NUM]
 	while i < len(flat_inflections) and h < len(hanzi_list):
 		if (
 			hanzi_list[h] not in PUNCTUATION 
@@ -121,14 +125,14 @@ def create_list(hanzi_str, pinyin_str):
 			flat_index += 1
 
 	# applies 2-2-3 rule.
-	chromapinyin._sequential_inflection.apply_rule(
+	apply_sequential_rule(
 		inflections, 
 		TO_INFLECTION["low"],
 		TO_INFLECTION["rising_low"]
 	)
 
 	# applies rule to make falling tones cut short.
-	chromapinyin._sequential_inflection.apply_rule(
+	apply_sequential_rule(
 		inflections, 
 		TO_INFLECTION["falling"],
 		TO_INFLECTION["half_falling"]
@@ -151,7 +155,7 @@ def create_list(hanzi_str, pinyin_str):
 			and (
 				i + 1 >= len(inflections)
 				or(
-					inflections[i + 1][0] == _APOSTROPHE_TONE_NUM
+					inflections[i + 1][0] == APOSTROPHE_TONE_NUM
 					and (
 						i + 2 >= len(inflections) 
 						or not is_neutral_tone(inflections[i + 2][0])
@@ -177,7 +181,7 @@ def create_list(hanzi_str, pinyin_str):
 			if (
 				h < len(hanzi_list) 
 				and hanzi_list[h] not in PUNCTUATION 
-				and inflection in [_NONE_TONE_NUM, _APOSTROPHE_TONE_NUM]
+				and inflection in [PUNCTUATION_TONE_NUM, APOSTROPHE_TONE_NUM]
 			):
 				# current hanzi is not punctuation
 				# but the current inflection is punctuation.
@@ -207,9 +211,9 @@ def _inflect_neutral(current_index, offset_backward, flat_inflections):
 	if flat_inflections[prev_i] in _NORMAL_TONES:
 		# the previous inflection is a normal tone.
 		# sets current inflection to the corresponding neutral.
-		flat_inflections[i] = _TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
+		flat_inflections[i] = TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
 
-	elif flat_inflections[prev_i] in _TO_INFLECTED_NEUTRAL.items():
+	elif flat_inflections[prev_i] in TO_INFLECTED_NEUTRAL.items():
 		# <prev_inflection> is an inflected neutral.
 		# the current inflection just repeats it.
 		flat_inflections[i] = flat_inflections[prev_i]

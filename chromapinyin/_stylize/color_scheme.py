@@ -1,7 +1,16 @@
-from ._inflection import TO_INFLECTION
+from chromapinyin._syllable._inflection import TO_INFLECTION
 
 _inflection_to_RGB = None
-_CHROMA_TONES = None
+_chroma_tones = None
+
+def get_inflection_RGB(inflection):
+	global _inflection_to_RGB
+	return _inflection_to_RGB[inflection]
+
+
+def get_inflection_color_style(inflection):
+	global _chroma_tones
+	return _chroma_tones[inflection]
 
 def set_to_default():
 	global _inflection_to_RGB
@@ -35,7 +44,7 @@ def _set_inflection_to_RGB(
 	global _inflection_to_RGB
 	_inflection_to_RGB = {
 		TO_INFLECTION["apostrophe"]: (0, 0, 0),
-		TO_INFLECTION["none"]: (0, 0, 0), # punctuation
+		TO_INFLECTION["punctuation"]: (0, 0, 0), # punctuation
 		TO_INFLECTION["neutral"]: NEUTRAL_COLOR,
 		TO_INFLECTION["high"]: HIGH_COLOR,
 		TO_INFLECTION["rising"]: RISING_COLOR,
@@ -54,8 +63,8 @@ def _set_inflection_to_RGB(
 	}
 
 def _rebuild_colors():
-	global _CHROMA_TONES
-	_CHROMA_TONES = {
+	global _chroma_tones
+	_chroma_tones = {
 		inflection: {
 			"class": "chroma-tone-" + inflection_str.replace("_", "-"),
 			"style": (f"color: {_RGB_to_hex(_inflection_to_RGB[inflection])};",),

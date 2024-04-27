@@ -125,7 +125,7 @@ _PINYIN_TO_FINAL = {
 	"yong": "iong",
 }
 
-def _pinyin_to_zhuyin_and_ipa(stripped_pinyin):
+def pinyin_to_zhuyin_and_ipa(stripped_pinyin):
 	exception_syllable = _ZHUYIN_EXCEPTIONS.get(stripped_pinyin)
 	if exception_syllable:
 		return exception_syllable

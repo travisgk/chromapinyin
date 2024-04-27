@@ -1,14 +1,14 @@
-from ._transcription import _pinyin_to_zhuyin_and_ipa
+from ._transcription import pinyin_to_zhuyin_and_ipa
 from ._punctuation_marks import PUNCTUATION
 from ._vowel_chars import (
 	strip_tone_marker,
-	_APOSTROPHE_TONE_NUM,
-	_NONE_TONE_NUM,
-	_HIGH_TONE_NUM,
-	_RISING_TONE_NUM,
-	_LOW_TONE_NUM,
-	_FALLING_TONE_NUM,
-	_NEUTRAL_TONE_NUM
+	APOSTROPHE_TONE_NUM,
+	PUNCTUATION_TONE_NUM,
+	HIGH_TONE_NUM,
+	RISING_TONE_NUM,
+	LOW_TONE_NUM,
+	FALLING_TONE_NUM,
+	NEUTRAL_TONE_NUM
 )
 
 # an "inflection" refers to a more precise pronunciation of the tone.
@@ -16,13 +16,13 @@ from ._vowel_chars import (
 # so, tones range [-1, 4] and act the same as inflections,
 # while anything above that range can only be referred to as an inflection.
 TO_INFLECTION = {
-	"apostrophe": _APOSTROPHE_TONE_NUM,
-	"none": _NONE_TONE_NUM, # punctuation
-	"high": _HIGH_TONE_NUM,
-	"rising": _RISING_TONE_NUM,
-	"low": _LOW_TONE_NUM,
-	"falling": _FALLING_TONE_NUM,
-	"neutral": _NEUTRAL_TONE_NUM,
+	"apostrophe": APOSTROPHE_TONE_NUM,
+	"punctuation": PUNCTUATION_TONE_NUM,
+	"high": HIGH_TONE_NUM,
+	"rising": RISING_TONE_NUM,
+	"low": LOW_TONE_NUM,
+	"falling": FALLING_TONE_NUM,
+	"neutral": NEUTRAL_TONE_NUM,
 	"full_low": 6, # a low tone at the end of a clause
 	"half_falling": 7,
 	"neutral_high": 8, # neutral following a high tone
@@ -35,7 +35,7 @@ TO_INFLECTION = {
 	"rising_bu": 15,
 }
 
-_TO_INFLECTED_NEUTRAL = {
+TO_INFLECTED_NEUTRAL = {
 	TO_INFLECTION["high"]: TO_INFLECTION["neutral_high"],
 	TO_INFLECTION["rising"]: TO_INFLECTION["neutral_rising"],
 	TO_INFLECTION["low"]: TO_INFLECTION["neutral_low"],
@@ -43,8 +43,8 @@ _TO_INFLECTED_NEUTRAL = {
 }
 
 _INFLECTION_TO_TONE = {
-	TO_INFLECTION["apostrophe"]: TO_INFLECTION["none"],
-	TO_INFLECTION["none"]: TO_INFLECTION["none"],
+	TO_INFLECTION["apostrophe"]: TO_INFLECTION["punctuation"],
+	TO_INFLECTION["punctuation"]: TO_INFLECTION["punctuation"],
 	TO_INFLECTION["neutral"]: TO_INFLECTION["neutral"],
 	TO_INFLECTION["high"]: TO_INFLECTION["high"],
 	TO_INFLECTION["rising"]: TO_INFLECTION["rising"],
@@ -62,16 +62,16 @@ _INFLECTION_TO_TONE = {
 	TO_INFLECTION["rising_bu"]: TO_INFLECTION["low"],
 }
 
-_INFLECTION_TO_SPOKEN_TONE = {
-	TO_INFLECTION["apostrophe"]: TO_INFLECTION["none"],
-	TO_INFLECTION["none"]: TO_INFLECTION["none"],
-	TO_INFLECTION["neutral"]: TO_INFLECTION["neutral"],
+INFLECTION_TO_SPOKEN_TONE = {
+	TO_INFLECTION["apostrophe"]: TO_INFLECTION["punctuation"],
+	TO_INFLECTION["punctuation"]: TO_INFLECTION["punctuation"],
+	TO_INFLECTION["neutral"]: TO_INFLECTION["neutral_low"], # defaults
 	TO_INFLECTION["high"]: TO_INFLECTION["high"],
 	TO_INFLECTION["rising"]: TO_INFLECTION["rising"],
 	TO_INFLECTION["low"]: TO_INFLECTION["low"],
 	TO_INFLECTION["falling"]: TO_INFLECTION["falling"],
-	TO_INFLECTION["full_low"]: TO_INFLECTION["low"],
-	TO_INFLECTION["half_falling"]: TO_INFLECTION["falling"],
+	TO_INFLECTION["full_low"]: TO_INFLECTION["full_low"],
+	TO_INFLECTION["half_falling"]: TO_INFLECTION["half_falling"],
 	TO_INFLECTION["neutral_high"]: TO_INFLECTION["neutral_high"],
 	TO_INFLECTION["neutral_rising"]: TO_INFLECTION["neutral_rising"],
 	TO_INFLECTION["neutral_low"]: TO_INFLECTION["neutral_low"],
@@ -100,7 +100,7 @@ _INFLECTION_TO_IPA_SUFFIX = {
 	TO_INFLECTION["neutral_falling"]: "꜌",
 }
 
-def _find_inflection_label(inflection_num):
+def find_inflection_label(inflection_num):
 	for key, value in TO_INFLECTION.items():
 		if inflection_num == value:
 			return key
@@ -124,15 +124,15 @@ def _find_inflection_label(inflection_num):
 # "zhuyin": the syllable transcribed in zhuyin.
 def create_syllable_dict(hanzi, pinyin, inflection_num):
 	tone_num = _INFLECTION_TO_TONE[inflection_num]
-	spoken_tone_num = _INFLECTION_TO_SPOKEN_TONE[inflection_num]
+	spoken_tone_num = INFLECTION_TO_SPOKEN_TONE[inflection_num]
 	syllable = {
 		"hanzi": hanzi,
 		"pinyin": pinyin,
-		"tone": _find_inflection_label(tone_num),
+		"tone": find_inflection_label(tone_num),
 		"tone_num": tone_num,
-		"spoken_tone": _find_inflection_label(spoken_tone_num),
+		"spoken_tone": find_inflection_label(spoken_tone_num),
 		"spoken_tone_num": spoken_tone_num,
-		"inflection": _find_inflection_label(inflection_num),
+		"inflection": find_inflection_label(inflection_num),
 		"inflection_num": inflection_num,
 		"ipa_root": "",
 		"ipa_suffix": "",
@@ -156,7 +156,7 @@ def create_syllable_dict(hanzi, pinyin, inflection_num):
 	if not first_letter in "abcdefghjklmnopqrstwxyz":
 		return syllable
 
-	zhuyin_root, ipa_root = _pinyin_to_zhuyin_and_ipa(stripped_pinyin)
+	zhuyin_root, ipa_root = pinyin_to_zhuyin_and_ipa(stripped_pinyin)
 
 	# transcribes pinyin into IPA.
 	syllable["ipa_root"] = ipa_root
@@ -168,15 +168,15 @@ def create_syllable_dict(hanzi, pinyin, inflection_num):
 	# transcribes pinyin into zhuyin.
 	zhuyin_prefix = ""
 	zhuyin_suffix = ""
-	if spoken_tone_num == _RISING_TONE_NUM:
+	if spoken_tone_num == RISING_TONE_NUM:
 		zhuyin_suffix = "ˊ"
-	elif spoken_tone_num == _LOW_TONE_NUM:
+	elif spoken_tone_num in [LOW_TONE_NUM, TO_INFLECTION["full_low"],]:
 		zhuyin_suffix = "ˇ"
-	elif spoken_tone_num == _FALLING_TONE_NUM:
+	elif spoken_tone_num in [FALLING_TONE_NUM, TO_INFLECTION["half_falling"],]:
 		zhuyin_suffix = "ˋ"
 	elif (
-		spoken_tone_num == _NEUTRAL_TONE_NUM 
-		or spoken_tone_num in _TO_INFLECTED_NEUTRAL.values()
+		spoken_tone_num == NEUTRAL_TONE_NUM 
+		or spoken_tone_num in TO_INFLECTED_NEUTRAL.values()
 	):
 		zhuyin_prefix = "˙"
 	

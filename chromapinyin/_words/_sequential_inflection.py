@@ -5,8 +5,12 @@
 # this is an approximation; regional variance is bound to differ.
 #
 
-from ._inflection import TO_INFLECTION, _TO_INFLECTED_NEUTRAL, _NEUTRAL_TONE_NUM
-from ._vowel_chars import _APOSTROPHE_TONE_NUM, _NONE_TONE_NUM
+from chromapinyin._syllable._inflection import (
+	TO_INFLECTION, TO_INFLECTED_NEUTRAL, NEUTRAL_TONE_NUM
+)
+from chromapinyin._syllable._vowel_chars import (
+	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
+)
 
 _PRINT_APPLY_RULE_DEBUG = False
 
@@ -14,8 +18,8 @@ _PRINT_APPLY_RULE_DEBUG = False
 # to follow the sequential inflection rule, 
 # most commonly seen in the 2-2-3 pattern in sequential low tones.
 def apply_rule(inflection_groups, stay_inflection, to_inflection):
-	NONE = _NONE_TONE_NUM # indicates a tone that is irrelevant
-	APOSTROPHE = _APOSTROPHE_TONE_NUM
+	NONE = PUNCTUATION_TONE_NUM # indicates a tone that is irrelevant
+	APOSTROPHE = APOSTROPHE_TONE_NUM
 	UNDETERMINED = 99 # indicates a tone which will be determined
 
 	# creates a list of inflections without apostrophes.
@@ -80,7 +84,7 @@ def apply_rule(inflection_groups, stay_inflection, to_inflection):
 					and (
 						i + 2 >= len(markup_clause)
 						or _is_neutral_inflection(inflections[i + 2][0])
-						or inflections[i + 2] == TO_INFLECTION['none']
+						or inflections[i + 2] == NONE
 					)
 				)
 			):
@@ -365,13 +369,13 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 
 def _is_neutral_inflection(inflection_num):
 	return (
-		inflection_num == _NEUTRAL_TONE_NUM
-		or inflection_num in _TO_INFLECTED_NEUTRAL.values()
+		inflection_num == NEUTRAL_TONE_NUM
+		or inflection_num in TO_INFLECTED_NEUTRAL.values()
 	)
 
 def _print_markup_clause(rule_num, markup_clause, stay_inflection, to_inflection):
 	MARK = {
-		TO_INFLECTION["none"]:  "█",
+		TO_INFLECTION["punctuation"]:  "█",
 		stay_inflection: "•",
 		to_inflection: "^"
 	}

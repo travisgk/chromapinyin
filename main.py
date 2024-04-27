@@ -1,4 +1,5 @@
 import chromapinyin
+from chromapinyin._stylize._pitch_graphs._pitch_graphs import save_inflection_graphs
 
 def main():
 	'''sample_list = "shén me shí hòu".split()
@@ -39,15 +40,16 @@ def main():
 		{"hanzi": "对不起"				, "pinyin": "duìbuqǐ."},
 		{"hanzi": "对不起。 我不会说中文。"	, "pinyin": "duìbùqǐ. wǒ bù huì shuō zhōngwén."}
 		'''
+	save_inflection_graphs()
 
 	for phrase in phrases:
-		syllables = chromapinyin.create_syllable_list(
+		word_list = chromapinyin.create_word_list(
 			phrase["hanzi"], phrase["pinyin"]
 		)
 		html, css = chromapinyin.create_stylized_sentence(
-			syllables, 
+			word_list, 
 			[
-				["hanzi", "vertical-zhuyin",], 
+				["hanzi", "vertical-zhuyin", "grouped",], 
 				[("pinyin", "merge_punctuation",),],
 				["ipa",],
 			], 

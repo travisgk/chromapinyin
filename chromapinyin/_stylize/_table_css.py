@@ -1,3 +1,12 @@
+# chromapinyin._stylize._table_css.py
+# ---
+# this file contains dictionary objects containing CSS information,
+# with each dictionary having a <"class"> name and a tuple
+# of strings that defines the class's <"style">.
+# 
+# user functions can be accessed to change font sizes, for example:
+# 	chromapinyin.set_pinyin_font_size("30px")
+
 __all__ = [
 	"CHROMA_DIV_PUSH_LEFT",
 	"CHROMA_DIV_PUSH_RIGHT",
@@ -10,32 +19,25 @@ __all__ = [
 	"CHROMA_TABLE",
 	"CHROMA_TR",
 	"CHROMA_TD",
-	"CHROMA_TD_HANZI",
-	"CHROMA_DIV_HANZI_CONTAINER",
-	"CHROMA_HANZI_OFFSET",
-	"CHROMA_TD_PINYIN",
-	"CHROMA_TD_ZHUYIN",
 	"CHROMA_DIV_ZHUYIN_CONTAINER",
 	"CHROMA_NESTED_ZHUYIN",
-	"CHROMA_ZHUYIN_PREFIX",
-	"CHROMA_ZHUYIN_ROOT",
-	"CHROMA_ZHUYIN_SUFFIX",
-	"CHROMA_ZHUYIN_PREFIX_OFFSET",
-	"CHROMA_ZHUYIN_SUFFIX_OFFSET",
 	"CHROMA_VERTICAL_ZHUYIN",
 	"CHROMA_APOSTROPHE_OFFSET",
-	"CHROMA_TD_IPA",
-	"CHROMA_TD_PITCH_GRAPH",
-	"CATEGORY_TO_TD_STYLE",
+	"get_content_style",
+	"category_to_td_style",
+	"set_font_sizes",
+	"get_content_style_values",
 ]
 
-_HANZI_FONT_SIZE = "64px"
-_HANZI_VERTICAL_OFFSET = "-20%";
-_PINYIN_FONT_SIZE = "13px"
-_ZHUYIN_PREFIX_FONT_SIZE = "21px"
-_ZHUYIN_ROOT_FONT_SIZE = "13px"
-_ZHUYIN_SUFFIX_FONT_SIZE = "21px"
-_IPA_FONT_SIZE = "13px"
+# constants are used for setting generic scaling of all components.
+_DEFAULT_HANZI_FONT_SIZE_PX = 64
+_DEFAULT_HANZI_VERTICAL_OFFSET_PERCENT = -20
+_DEFAULT_PINYIN_FONT_SIZE_PX = 13
+_DEFAULT_ZHUYIN_PREFIX_FONT_SIZE_PX = 21
+_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX = 13
+_DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX = 21
+_DEFAULT_IPA_FONT_SIZE_PX = 13
+_DEFAULT_PITCH_GRAPH_HEIGHT_PX = 100
 
 CHROMA_DIV_PUSH_LEFT = {
 	"class": "div.chroma-push-left",
@@ -125,43 +127,6 @@ CHROMA_TD = {
 	),
 }
 
-CHROMA_TD_HANZI = {
-	"class": "td.chroma-hanzi",
-	"style": (
-		"margin: 0;",
-		"padding: 1px;",
-		f"font-size: {_HANZI_FONT_SIZE};",
-	),
-}
-
-CHROMA_DIV_HANZI_CONTAINER = {
-	"class": "div.chroma-hanzi-container",
-	"style": (
-		"display: block;",
-		"overflow: hidden;",
-		"position: relative;",
-		f"height: {_HANZI_FONT_SIZE};",
-	),
-}
-
-CHROMA_HANZI_OFFSET = {
-	"class": "chroma-hanzi-offset",
-	"style": (
-		"display: block;",
-		"position: relative;",
-		f"top: {_HANZI_VERTICAL_OFFSET};",
-	),
-}
-
-CHROMA_TD_PINYIN = {
-	"class": "td.chroma-pinyin",
-	"style": (
-		"margin: 0;",
-		"padding: 0;",
-		f"font-size: {_PINYIN_FONT_SIZE};"
-	),
-}
-
 CHROMA_TD_ZHUYIN = {
 	"class": "td.chroma-zhuyin",
 	"style": (
@@ -188,48 +153,6 @@ CHROMA_NESTED_ZHUYIN = {
 	),
 }
 
-CHROMA_ZHUYIN_PREFIX = {
-	"class": "chroma-zhuyin-prefix",
-	"style": (
-		f"font-size: {_ZHUYIN_PREFIX_FONT_SIZE};",
-	),
-}
-
-CHROMA_ZHUYIN_ROOT = {
-	"class": "chroma-zhuyin-root",
-	"style": (
-		f"font-size: {_ZHUYIN_ROOT_FONT_SIZE};",
-	),
-}
-
-CHROMA_ZHUYIN_SUFFIX = {
-	"class": "chroma-zhuyin-suffix",
-	"style": (
-		f"font-size: {_ZHUYIN_SUFFIX_FONT_SIZE};",
-	),
-}
-
-CHROMA_ZHUYIN_PREFIX_OFFSET = {
-	"class": "chroma-zhuyin-prefix-offset",
-	"style": (
-		"display: block;",
-		"position: relative;",
-		"height: 5px;",
-		"top: -4px;",
-		"z-index: 3;"
-	),
-}
-
-CHROMA_ZHUYIN_SUFFIX_OFFSET = {
-	"class": "chroma-zhuyin-suffix-offset",
-	"style": (
-		"margin: 0;",
-		"padding: 0;",
-		"position: relative;",
-		"top: -2px;",
-	),
-}
-
 CHROMA_VERTICAL_ZHUYIN = {
 	"class": "chroma-vertical-zhuyin",
 	"style": (
@@ -253,28 +176,172 @@ CHROMA_APOSTROPHE_OFFSET = {
 	),
 }
 
-CHROMA_TD_IPA = {
-	"class": "td.chroma-ipa",
-	"style": (
-		"margin: 0;",
-		"padding: 0;",
-		f"font-size: {_IPA_FONT_SIZE};",
-	),
-}
-
-CHROMA_TD_PITCH_GRAPH = {
-	"class": "td.chroma-pitch-graph",
-	"style": (
-		"margin: 0;",
-		"padding: 0;",
-	),
-}
-
-CATEGORY_TO_TD_STYLE = {
-	"hanzi": CHROMA_TD_HANZI,
-	"pinyin": CHROMA_TD_PINYIN,
+_CONTENT_STYLES = {}
+_TO_TD_STYLE = {
+	"hanzi": None,
+	"pinyin": None,
 	"zhuyin": CHROMA_TD_ZHUYIN,
 	"vertical_zhuyin": CHROMA_TD_ZHUYIN,
-	"ipa": CHROMA_TD_IPA,
-	"pitch_graph": CHROMA_TD_PITCH_GRAPH,
+	"ipa": None,
+	"pitch_graph": None,
 }
+
+# sets every font size of each component to a default size times <scale>.
+def set_font_sizes(scale=1.0):
+	set_hanzi_font_size(f"{int(_DEFAULT_HANZI_FONT_SIZE_PX * scale)}px")
+	set_hanzi_vertical_offset()
+	set_pinyin_font_size(f"{int(_DEFAULT_PINYIN_FONT_SIZE_PX * scale)}px")
+	set_zhuyin_prefix_font_size(
+		f"{int(_DEFAULT_ZHUYIN_PREFIX_FONT_SIZE_PX * scale)}px"
+	)
+	set_zhuyin_root_font_size(
+		f"{int(_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX * scale)}px"
+	)
+	set_zhuyin_suffix_font_size(
+		f"{int(_DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX * scale)}px"
+	)
+	set_ipa_font_size(f"{int(_DEFAULT_IPA_FONT_SIZE_PX * scale)}px")
+	set_pitch_graph_height(f"{int(_DEFAULT_PITCH_GRAPH_HEIGHT_PX * scale)}px")
+
+# returns the corresponding dictionary containing CSS information.
+def get_content_style(key_name):
+	global _CONTENT_STYLES
+	return _CONTENT_STYLES[key_name]
+
+# returns the corresponding dictionary containing CSS information.
+def category_to_td_style(category):
+	global _TO_TD_STYLE
+	return _TO_TD_STYLE[category]
+
+def set_hanzi_font_size(font_size=f"{_DEFAULT_HANZI_FONT_SIZE_PX}px"):
+	global _CONTENT_STYLES, _TO_TD_STYLE
+	_CONTENT_STYLES["CHROMA_TD_HANZI"] = {
+		"class": "td.chroma-hanzi",
+		"style": (
+			"margin: 0;",
+			"padding: 1px;",
+			f"font-size: {font_size};",
+		),
+	}
+
+	_CONTENT_STYLES["CHROMA_DIV_HANZI_CONTAINER"] = {
+		"class": "div.chroma-hanzi-container",
+		"style": (
+			"display: block;",
+			"overflow: hidden;",
+			"position: relative;",
+			f"height: {font_size};",
+		),
+	}
+	_TO_TD_STYLE["hanzi"] = _CONTENT_STYLES["CHROMA_TD_HANZI"]
+
+def set_hanzi_vertical_offset(
+	vertical_offset=f"{_DEFAULT_HANZI_VERTICAL_OFFSET_PERCENT}%"
+):
+	global _CONTENT_STYLES
+	_CONTENT_STYLES["CHROMA_HANZI_OFFSET"] = {
+		"class": "chroma-hanzi-offset",
+		"style": (
+			"display: block;",
+			"position: relative;",
+			f"top: {vertical_offset};",
+		),
+	}
+
+def set_pinyin_font_size(font_size=f"{_DEFAULT_PINYIN_FONT_SIZE_PX}px"):
+	global _CONTENT_STYLES, _TO_TD_STYLE
+	_CONTENT_STYLES["CHROMA_TD_PINYIN"] = {
+		"class": "td.chroma-pinyin",
+		"style": (
+			"margin: 0;",
+			"padding: 0;",
+			f"font-size: {font_size};"
+		),
+	}
+	_TO_TD_STYLE["pinyin"] = _CONTENT_STYLES["CHROMA_TD_PINYIN"]
+
+def set_zhuyin_font_size(font_size=f"{_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX}px"):
+	set_zhuyin_prefix_font_size(font_size)
+	set_zhuyin_root_font_size(font_size)
+	set_zhuyin_suffix_font_size(font_size)
+
+def set_zhuyin_prefix_font_size(
+	font_size=f"{_DEFAULT_ZHUYIN_PREFIX_FONT_SIZE_PX}px"
+):
+	global _CONTENT_STYLES
+	_CONTENT_STYLES["CHROMA_ZHUYIN_PREFIX"] = {
+		"class": "chroma-zhuyin-prefix",
+		"style": (
+			f"font-size: {font_size};",
+		),
+	}
+
+	_CONTENT_STYLES["CHROMA_ZHUYIN_PREFIX_OFFSET"] = {
+		"class": "chroma-zhuyin-prefix-offset",
+		"style": (
+			"display: block;",
+			"position: relative;",
+			"height: 5px;",
+			"top: -4px;",
+			"z-index: 3;"
+		),
+	}
+
+def set_zhuyin_root_font_size(font_size=f"{_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX}px"):
+	global _CONTENT_STYLES
+	_CONTENT_STYLES["CHROMA_ZHUYIN_ROOT"] = {
+		"class": "chroma-zhuyin-root",
+		"style": (
+			f"font-size: {font_size};",
+		),
+	}
+
+def set_zhuyin_suffix_font_size(
+	font_size=f"{_DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX}px"
+):
+	global _CONTENT_STYLES
+	_CONTENT_STYLES["CHROMA_ZHUYIN_SUFFIX"] = {
+		"class": "chroma-zhuyin-suffix",
+		"style": (
+			f"font-size: {font_size};",
+		),
+	}
+
+	_CONTENT_STYLES["CHROMA_ZHUYIN_SUFFIX_OFFSET"] = {
+		"class": "chroma-zhuyin-suffix-offset",
+		"style": (
+			"margin: 0;",
+			"padding: 0;",
+			"display:flex;",
+			"position: relative;",
+			"top: 5px;",
+		),
+	}
+
+def set_ipa_font_size(font_size=f"{_DEFAULT_IPA_FONT_SIZE_PX}px"):
+	global _CONTENT_STYLES, _TO_TD_STYLE
+	_CONTENT_STYLES["CHROMA_TD_IPA"] = {
+		"class": "td.chroma-ipa",
+		"style": (
+			"margin: 0;",
+			"padding: 0;",
+			f"font-size: {font_size};",
+		),
+	}
+	_TO_TD_STYLE["ipa"] = _CONTENT_STYLES["CHROMA_TD_IPA"]
+
+def set_pitch_graph_height(height=f"{_DEFAULT_PITCH_GRAPH_HEIGHT_PX}px"):
+	global _CONTENT_STYLES, _TO_TD_STYLE
+	_CONTENT_STYLES["CHROMA_TD_PITCH_GRAPH"] = {
+		"class": "td.chroma-pitch-graph",
+		"style": (
+			"margin: 0;",
+			"padding: 0;",
+		),
+	}
+	_TO_TD_STYLE["pitch_graph"] = _CONTENT_STYLES["CHROMA_TD_PITCH_GRAPH"]
+
+def get_content_style_values():
+	return _CONTENT_STYLES.values()
+
+set_font_sizes(1.0) # initializes <_CONTENT_STYLES> elements.

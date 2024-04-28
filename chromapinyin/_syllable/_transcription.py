@@ -1,3 +1,10 @@
+# chromapinyin._syllable._transcription.py
+# ---
+# this file contains the function <pinyin_to_zhuyin_and_ipa>,
+# which uses the file's internally defined dictionaries
+# in order to transcribe a given pinyin syllable into zhuyin and IPA.
+#
+
 _TO_ZHUYIN_INITIALS = {
 	"b": ("ㄅ", "p"),
 	"p": ("ㄆ", "pʰ"),
@@ -26,6 +33,9 @@ _ZHUYIN_EXCEPTIONS = {
 	"zhi": ("ㄓ", "tʂɚ"),
 	"chi": ("ㄔ", "tʂʰɚ"),
 	"shi": ("ㄕ", "ʂɚ"),
+	"zi": ("ㄗ", "tsɿ"),
+	"ci": ("ㄘ", "tsʰɿ"),
+	"si": ("ㄙ", "sɿ"),
 	"ju": ("ㄩ", "y"),
 	"jue": ("ㄩㄝ", "y̯œ"),
 	"juan": ("ㄩㄢ", "y̯ɛn"),
@@ -136,17 +146,13 @@ def pinyin_to_zhuyin_and_ipa(stripped_pinyin):
 	ending = ("", "")
 	if double_initial and len(stripped_pinyin) > 2:
 		initial = double_initial
-		#print(stripped_pinyin + "\t" + stripped_pinyin[2:])
 		ending = _TO_ZHUYIN_FINALS.get(stripped_pinyin[2:])
 	elif single_initial and len(stripped_pinyin) > 1:
 		initial = single_initial
-		#print(stripped_pinyin + "\t" + stripped_pinyin[1:])
 		ending = _TO_ZHUYIN_FINALS.get(stripped_pinyin[1:])
 	else:
 		ending = _TO_ZHUYIN_FINALS[_PINYIN_TO_FINAL[stripped_pinyin]]
 
-	#print(initial)
-	#print(ending)
 	zhuyin = initial[0] + ending[0]
 	ipa = initial[1] + ending[1]
 	return zhuyin, ipa

@@ -1,3 +1,39 @@
+# chromapinyin._stylize._stylize.py
+# ---
+# this file contains the primary function that returns an HTML table
+# of chinese with stylized tone colors when given:
+# 	- a <word_list> from create_word_list(...) (chromapinyin._words._word_list.py).
+# 	- a 2D list of categories.
+# 	- the option to generate CSS.
+# 
+# each sublist of <categories_2D> will be a row of components for *each* syllable.
+# within these sublists, category components are defined.
+# an element will either be a single string that indicates the category name,
+# or it will be a tuple that has its first element being the category name
+# and uses its other elements to provide additional formatting information.
+#
+# categories that can be used are:
+# 	- "hanzi": the syllable's hanzi character.
+# 	- "pinyin": the syllable's pinyin character.
+# 	- "zhuyin": the syllable's zhuyin transcription.
+# 	- "vertical_zhuyin": the syllable's zhuyin transcription rendered vertically.
+# 	- "ipa": the syllable's international phonetic alphabet transcription.
+# 	- "pitch_graph": the path to an image representing the syllable's spoken tone.
+#
+# additional formatting can be provided when the element is a tuple,
+# like ("pinyin", "grouped", "merge_punctuation").
+# these additional settings are:
+# 	- "grouped": this category's cells for syllables belonging to the same word
+# 	             will be aligned so that they're squished together.
+#	- "merge_punctuation": punctuation in this category's cells will be merged
+# 	                       with the cell to its right. only applicable for
+# 	                       pinyin or ipa.
+#	- "number_tones": the tones of pinyin, zhuyin, or ipa 
+# 	                  will be expressed with a number.
+# 	                  pinyin will use the innate tone,
+# 	                  while zhuyin and ipa will use the spoken tone.
+# 	- "no_tones": the tones of pinyin, zhuyin, or ipa will not be included.
+
 import math
 from chromapinyin._syllable._punctuation_marks import (
 	APOSTROPHES, CLAUSE_BREAKS, PUNCTUATION
@@ -6,16 +42,18 @@ from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
 from ._category_contents import *
+from ._color_scheme import get_chroma_tone_values
 from ._html_builder import embed_styling, HTML_line
 
+# returns an HTML table of stylized chinese syllables.
 def create_stylized_sentence(
 	word_list,
 	categories_2D,
-	generate_css,
+	use_css,
 	vertical=False,
 	exclude_punctuation=False,
 	break_line_with_clauses=True,
-	max_n_line_syllables=9
+	max_n_line_syllables=99
 ):
 	reset_tabulation()
 	word_lines = [[],]
@@ -97,31 +135,69 @@ def create_stylized_sentence(
 			col = 0
 
 	result = HTML_line(
-		f"<table {embed_styling([CHROMA_TABLE], generate_css)}>", 1
+		f"<table {embed_styling([CHROMA_TABLE], use_css)}>", 1
 	)
-	css = ""
 
 	for syllable_row in syllable_table:
 		result += _return_syllable_row_HTML(
-			syllable_row, categories_2D, generate_css, vertical
+			syllable_row, categories_2D, use_css, vertical
 		)
 	
 	result += HTML_line("</table>", -1)
+	return result
 
-	return result, css
+def generate_CSS():
+	reset_tabulation()
+	css = ""
+	style_dicts = []
+	style_dicts.extend(get_chroma_tone_values())
+	style_dicts.extend(
+		[
+			CHROMA_DIV_PUSH_LEFT,
+			CHROMA_DIV_PUSH_RIGHT,
+			CHROMA_DIV_PUSH_CENTER,
+			CHROMA_TD_ALIGN_CENTER,
+			CHROMA_TD_ALIGN_TOP,
+			CHROMA_TD_ALIGN_RIGHT,
+			CHROMA_TD_ALIGN_BOTTOM,
+			CHROMA_TD_ALIGN_LEFT,
+			CHROMA_TABLE,
+			CHROMA_TR,
+			CHROMA_TD,
+			CHROMA_DIV_ZHUYIN_CONTAINER,
+			CHROMA_NESTED_ZHUYIN,
+			CHROMA_VERTICAL_ZHUYIN,
+			CHROMA_APOSTROPHE_OFFSET,
+		]
+	)
+	style_dicts.extend(get_content_style_values())
+
+	for style_dict in style_dicts[:-1]:
+		css += _return_CSS(style_dict) + "\n"
+	css += _return_CSS(style_dicts[-1])
+	return css
+
+def _return_CSS(style_dict):
+	class_str = style_dict["class"]
+	if "." not in class_str:
+		class_str = "." + class_str
+	css = class_str + " {\n"
+	lines = style_dict["style"]
+	for line in lines:
+		css += f"\t{line}\n"
+	css += "}\n"
+	return css
 
 def _return_syllable_row_HTML(
-	syllable_row, categories_2D, generate_css, vertical
+	syllable_row, categories_2D, use_css, vertical
 ):
-	for row in categories_2D:
-		print(row)
 	syllable_cells_width = max([len(row) for row in categories_2D])
 	syllable_cells_height = len(categories_2D)
 	result = ""
 
 	for categories_row in categories_2D:
 		result += HTML_line(
-			f"<tr {embed_styling([CHROMA_TR], generate_css)}>", 1
+			f"<tr {embed_styling([CHROMA_TR], use_css)}>", 1
 		)
 		for syllable_i, syllable in enumerate(syllable_row):
 			if not syllable or syllable["pinyin"] in APOSTROPHES:
@@ -131,28 +207,29 @@ def _return_syllable_row_HTML(
 
 			for category_i in range(syllable_cells_width):
 				if category_i >= len(categories_row):
-					print(f"{category_i} / {len(categories_row)}")
 					result += HTML_line("<td></td>")
 					continue
 
 				category = categories_row[category_i]
 				add_punct, return_blank = _return_additional_punctuation(
-					syllable_row, category, syllable_i, generate_css
+					syllable_row, category, syllable_i, use_css
 				)
 
 				if return_blank:
-					result += HTML_line("<td><!--additional_punct--></td>")
+					# blank <td> that lacks punctuation because its
+					# punctuation was merged to the right.
+					result += HTML_line("<td></td>")
 					continue
 
 				result += _return_syllable_td_HTML(
-					syllable, category, generate_css, vertical, add_punct
+					syllable, category, use_css, vertical, add_punct
 				)
 		result += HTML_line("</tr>", -1)
 
 	return result
 
 def _return_additional_punctuation(
-	syllable_row, category, syllable_i, generate_css
+	syllable_row, category, syllable_i, use_css
 ):
 	category_is_tuple = isinstance(category, tuple)
 	result = ""
@@ -201,7 +278,7 @@ def _return_additional_punctuation(
 
 		# additional punctuation HTML is created and returned.
 		if len(styling_classes) > 0:
-			styling = embed_styling(styling_classes, generate_css)
+			styling = embed_styling(styling_classes, use_css)
 			result += f"<span {styling}>{additional_punctuation}</span>"
 		else:
 			result += additional_punctuation
@@ -209,7 +286,7 @@ def _return_additional_punctuation(
 
 
 def _return_syllable_td_HTML(
-	syllable, category, generate_css, vertical, add_punct
+	syllable, category, use_css, vertical, add_punct
 ):
 	if category is None:
 		return HTML_line("<td></td>")
@@ -220,33 +297,33 @@ def _return_syllable_td_HTML(
 	
 	if category_name == "hanzi":
 		result += return_hanzi_contents(
-			syllable, category, generate_css, vertical
+			syllable, category, use_css, vertical
 		)
 
 	elif category_name == "pinyin":
 		result += return_pinyin_contents(
-			syllable, category, generate_css, vertical, add_punct
+			syllable, category, use_css, vertical, add_punct
 		)
 
 	elif category_name == "zhuyin":
 		result += return_zhuyin_contents(
-			syllable, category, generate_css, vertical
+			syllable, category, use_css, vertical
 		)
 
 	elif category_name == "vertical_zhuyin":
 		result += return_vertical_zhuyin_contents(
-			syllable, category, generate_css, vertical
+			syllable, category, use_css, vertical
 		)
 
 	elif category_name == "ipa":
 		result += return_ipa_contents(
-			syllable, category, generate_css, vertical, add_punct
+			syllable, category, use_css, vertical, add_punct
 		)
 
 	elif category_name == "pitch_graph":
 		result += "" # return_pitch_graph_contents
 
 	else:
-		result += "<td></td>"
+		result += HTML_line("<td></td>")
 
 	return result

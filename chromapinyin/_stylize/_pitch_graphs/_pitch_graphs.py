@@ -7,7 +7,7 @@ from chromapinyin._syllable._inflection import (
 from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
-from chromapinyin._stylize.color_scheme import get_inflection_RGB
+from chromapinyin._stylize._color_scheme import get_inflection_RGB
 
 _prev_style_name = None
 _thinned_templates = {}
@@ -88,8 +88,3 @@ def _make_color_copy(image, color):
 	data = new_color * alpha_strengths
 	new_image = Image.fromarray(data.astype(np.uint8))
 	return new_image;
-
-def maineee():
-	image = _load_thinned_chart("_falling.png")
-	image = _make_color_copy(image, (100, 0, 100,))
-	image.save("new_example.png")

@@ -1,4 +1,7 @@
-# _vowel_chars.py
+# chromapinyin._syllable._vowel_chars.py
+# ---
+# this file contains constant integers which represent primary tones in chinese,
+# as well as functions relating to pinyin and tone markers.
 #
 
 from ._punctuation_marks import APOSTROPHES, PUNCTUATION
@@ -11,7 +14,7 @@ LOW_TONE_NUM = 3
 FALLING_TONE_NUM = 4
 NEUTRAL_TONE_NUM = 5
 
-_PRIMARY_TONES = [
+PRIMARY_TONES = [
 	HIGH_TONE_NUM, RISING_TONE_NUM, LOW_TONE_NUM, FALLING_TONE_NUM,
 ]
 
@@ -79,7 +82,7 @@ def strip_tone_marker(syllable_str):
 
 # returns the given pinyin syllable string with an applied tone marker.
 def place_tone_marker(syllable_str, tone_num):
-	if not tone_num in _PRIMARY_TONES:
+	if not tone_num in PRIMARY_TONES:
 		return syllable_str
 
 	for i, char in enumerate(syllable_str):

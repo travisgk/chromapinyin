@@ -28,11 +28,11 @@ The contained word list is occupied by dictionary objects which each represent a
 For example, ```syllables[0][0]``` is a dictionary object with the following keys:
 - ```"hanzi": "伞"```
 - ```"pinyin": "sǎn"```
-- ```"tone": "low"```
+- ```"tone_str": "low"```
 - ```"tone_num": 3```
-- ```"spoken_tone": "low"```
+- ```"spoken_tone_str": "low"```
 - ```"spoken_tone_num": 3```
-- ```"inflection": "full_low"```
+- ```"inflection_str": "full_low"```
 - ```"inflection_num": 6```
 - ```"ipa_root": "san"```
 - ```"ipa_suffix": "˨˩˦"```

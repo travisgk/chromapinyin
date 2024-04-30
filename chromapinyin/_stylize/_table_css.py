@@ -22,6 +22,7 @@ __all__ = [
 	"CHROMA_TABLE_NESTED",
 	"CHROMA_TR",
 	"CHROMA_TD",
+	"CHROMA_APOSTROPHE_OFFSET",
 	"CHROMA_TD_ZHUYIN",
 	"CHROMA_DIV_ZHUYIN_CONTAINER",
 	"CHROMA_NESTED_ZHUYIN",
@@ -29,7 +30,8 @@ __all__ = [
 	"CHROMA_ZHUYIN_PREFIX_CONTAINER",
 	"CHROMA_ZHUYIN_SUFFIX_OFFSET",
 	"CHROMA_ZHUYIN_SUFFIX_CONTAINER",
-	"CHROMA_APOSTROPHE_OFFSET",
+	"CHROMA_TD_PITCH_GRAPH",
+	"CHROMA_TD_HANDWRITING",
 	"get_content_style",
 	"category_to_td_style",
 	"set_font_sizes",
@@ -44,7 +46,7 @@ _DEFAULT_ZHUYIN_PREFIX_FONT_SIZE_PX = 21
 _DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX = 13
 _DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX = 21
 _DEFAULT_IPA_FONT_SIZE_PX = 13
-_DEFAULT_PITCH_GRAPH_HEIGHT_PX = 100
+_DEFAULT_PITCH_GRAPH_HEIGHT_PX = 64
 
 CHROMA_DIV_PUSH_LEFT = {
 	"class": "div.chroma-push-left",
@@ -133,6 +135,7 @@ CHROMA_TR = {
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
+		"text-align: center;",
 	),
 }
 
@@ -141,6 +144,16 @@ CHROMA_TD = {
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
+	),
+}
+
+CHROMA_APOSTROPHE_OFFSET = {
+	"class": "chroma-apostrophe-offset",
+	"style": (
+		"margin: 0;",
+		"padding: 0;",
+		"position: relative;",
+		"top: -2px;",
 	),
 }
 
@@ -164,7 +177,7 @@ CHROMA_DIV_ZHUYIN_CONTAINER = {
 CHROMA_NESTED_ZHUYIN = {
 	"class": "chroma-nested-zhuyin",
 	"style": (
-		"width: 5px;",
+		"width: 0px;",
 		"margin: 0;",
 		"padding: 0;",
 		"vertical-align: bottom;",
@@ -201,27 +214,32 @@ CHROMA_ZHUYIN_SUFFIX_OFFSET = {
 		"display:flex;",
 		"position: relative;",
 		"left: -2px;",
-		"top: -10px;",
+		"top: -20px;",
 	),
 }
 
 CHROMA_ZHUYIN_SUFFIX_CONTAINER = {
 	"class": "chroma-zhuyin-suffix-container",
 	"style": (
-		"height: 10px;",
+		"width: 0px;",
+		"height: 0px;",
 		"display: flex;",
 		"position: relative;",
 	)
 }
 
-
-CHROMA_APOSTROPHE_OFFSET = {
-	"class": "chroma-apostrophe-offset",
+CHROMA_TD_PITCH_GRAPH = {
+	"class": "td.chroma-pitch-graph",
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
-		"position: relative;",
-		"top: -2px;",
+	),
+}
+
+CHROMA_TD_HANDWRITING = {
+	"class": "td.chroma-handwriting",
+	"style": (
+		"",
 	),
 }
 
@@ -232,7 +250,8 @@ _TO_TD_STYLE = {
 	"zhuyin": CHROMA_TD_ZHUYIN,
 	"vertical_zhuyin": CHROMA_TD_ZHUYIN,
 	"ipa": None,
-	"pitch_graph": None,
+	"pitch_graph": CHROMA_TD_PITCH_GRAPH,
+	"handwriting": CHROMA_TD_HANDWRITING,
 }
 
 # sets every font size of each component to a default size times <scale>.
@@ -387,14 +406,13 @@ def set_ipa_font_size(font_size=f"{_DEFAULT_IPA_FONT_SIZE_PX}px"):
 
 def set_pitch_graph_height(height=f"{_DEFAULT_PITCH_GRAPH_HEIGHT_PX}px"):
 	global _CONTENT_STYLES, _TO_TD_STYLE
-	_CONTENT_STYLES["CHROMA_TD_PITCH_GRAPH"] = {
-		"class": "td.chroma-pitch-graph",
+	_CONTENT_STYLES["CHROMA_IMG_PITCH_GRAPH"] = {
+		"class": "img.chroma-pitch-graph",
 		"style": (
-			"margin: 0;",
-			"padding: 0;",
+			"width: 100%;",
+            f"height: {height};",
 		),
 	}
-	_TO_TD_STYLE["pitch_graph"] = _CONTENT_STYLES["CHROMA_TD_PITCH_GRAPH"]
 
 def get_content_style_values():
 	return _CONTENT_STYLES.values()

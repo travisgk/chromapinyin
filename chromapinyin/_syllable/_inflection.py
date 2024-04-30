@@ -133,14 +133,6 @@ _INFLECTION_TO_IPA_SUFFIX = {
 	TO_INFLECTION["neutral_falling"]: "꜌",
 }
 
-# returns a description of the contextual inflection 
-# from its integer representation.
-def find_inflection_label(inflection_num):
-	for key, value in TO_INFLECTION.items():
-		if inflection_num == value:
-			return key
-	return None
-
 # creates a dictionary object that contains information
 # about a syllable in chinese.
 def create_syllable_dict(hanzi, pinyin, inflection_num):
@@ -193,10 +185,7 @@ def create_syllable_dict(hanzi, pinyin, inflection_num):
 		zhuyin_suffix = "ˇ"
 	elif spoken_tone_num in [FALLING_TONE_NUM, TO_INFLECTION["half_falling"],]:
 		zhuyin_suffix = "ˋ"
-	elif (
-		spoken_tone_num == NEUTRAL_TONE_NUM 
-		or spoken_tone_num in TO_INFLECTED_NEUTRAL.values()
-	):
+	elif inflection_is_neutral(spoken_tone_num):
 		zhuyin_prefix = "˙"
 	
 	syllable["zhuyin_prefix"] = zhuyin_prefix
@@ -205,3 +194,18 @@ def create_syllable_dict(hanzi, pinyin, inflection_num):
 	syllable["zhuyin"] = zhuyin_prefix + zhuyin_root + zhuyin_suffix
 			
 	return syllable
+
+# returns a description of the contextual inflection 
+# from its integer representation.
+def find_inflection_label(inflection_num):
+	for key, value in TO_INFLECTION.items():
+		if inflection_num == value:
+			return key
+	return None
+
+# returns True if an inflection is neutral.
+def inflection_is_neutral(inflection_num):
+	return(
+		inflection_num == NEUTRAL_TONE_NUM 
+		or inflection_num in TO_INFLECTED_NEUTRAL.values()
+	)

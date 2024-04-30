@@ -8,34 +8,67 @@ from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
 from chromapinyin._stylize._color_scheme import get_inflection_RGB
+from chromapinyin._stylize._res_directories import get_pitch_graphs_dir
 
 _prev_style_name = None
 _thinned_templates = {}
 _scale_image = None
+_PITCH_GRAPH_PADDING_PX = 5
+_PUNCTUATION_GRAPH_WIDTH_PX = 100
+_inflection_to_graph_path = {}
 
-def save_inflection_graphs(output_dir="_chroma_res", graph_style_name="simple"):
-	global _thinned_templates
+def inflection_to_graph_path(inflection_num):
+	return _inflection_to_graph_path[inflection_num]
+
+def create_inflection_graphs(
+	graph_style_name="simple",
+	output_dir=get_pitch_graphs_dir(),
+	fixed_width=False
+):
+	if not os.path.exists(output_dir):
+		os.makedirs(output_dir)
+
 	_load_templates(graph_style_name)
+	max_width = max([image.size[0] for image in _thinned_templates.values()])
 
+	punctuation_graph_created = False
 	for inflection_str, inflection in TO_INFLECTION.items():
 		if inflection in [APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM,]:
+			if not punctuation_graph_created:
+				result = _scale_image.resize(
+					(_PUNCTUATION_GRAPH_WIDTH_PX, _scale_image.size[1],),
+					Image.NEAREST
+				)
+				output_path = f"{output_dir}/_punctuation.png"
+				result.save(output_path)
+				_inflection_to_graph_path[inflection] = output_path
+				punctuation_graph_created = True
 			continue
 
 		spoken_tone = INFLECTION_TO_SPOKEN_TONE[inflection]
 		rgb = get_inflection_RGB(inflection)
 		graph = _make_color_copy(_thinned_templates[spoken_tone], rgb)
+		graph_width = max_width if fixed_width else graph.size[0]
+		result = _scale_image.resize(
+			(graph_width + _PITCH_GRAPH_PADDING_PX * 2, graph.size[1],),
+			Image.NEAREST
+		)
 
-		graph.save(f"example_{inflection_str}.png")
+		result.paste(
+			graph, (int(result.size[0] / 2 - graph.size[0] / 2), 0,), graph
+		)
+		output_path = f"{output_dir}/_{inflection_str}.png"
+		result.save(output_path)
+		_inflection_to_graph_path[inflection] = output_path
 
 def _load_templates(graph_style_name):
-	# if the <graph_style_name> is the same one used
-	# to previously load graph template images,
-	# then the images don't need to be loaded again.
-	global _prev_style_name
 	if _prev_style_name and _prev_style_name == graph_style_name:
+		# the <graph_style_name> is the same one used
+		# to previously load graph template images,
+		# so the images don't need to be loaded again.
 		return
 
-	global _thinned_templates
+	global _thinned_templates, _scale_image
 	main_dir = os.path.dirname(os.path.abspath(__file__))
 	style_dir = os.path.join(main_dir, f"_{graph_style_name}")
 	template_inflections = set(INFLECTION_TO_SPOKEN_TONE.values())

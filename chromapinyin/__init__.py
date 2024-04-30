@@ -15,3 +15,8 @@ from chromapinyin._stylize._table_css import (
 	set_ipa_font_size,
 	set_pitch_graph_height,
 )
+from chromapinyin._stylize._pitch_graphs._pitch_graphs import (
+	create_inflection_graphs
+)
+
+create_inflection_graphs()

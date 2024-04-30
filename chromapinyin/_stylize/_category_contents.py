@@ -4,13 +4,16 @@
 # containing syllable information for the given <category>.
 #
 
-from chromapinyin._syllable._inflection import TO_INFLECTION, TO_INFLECTED_NEUTRAL
+from chromapinyin._syllable._inflection import (
+	TO_INFLECTION, TO_INFLECTED_NEUTRAL, INFLECTION_TO_SPOKEN_TONE
+)
 from chromapinyin._syllable._vowel_chars import (
 	NEUTRAL_TONE_NUM, PRIMARY_TONES, strip_tone_marker
 )
 from ._color_scheme import get_inflection_color_style
 from ._table_css import *
 from ._html_builder import *
+from ._pitch_graphs._pitch_graphs import inflection_to_graph_path
 
 _SIMPLIFY_SPOKEN_TONE = {
 	TO_INFLECTION["punctuation"]: TO_INFLECTION["punctuation"],
@@ -59,9 +62,7 @@ def return_hanzi_contents(syllable, category, use_css, vertical):
 
 	return result
 
-def return_pinyin_contents(
-	syllable, category, use_css, vertical, add_punct
-):
+def return_pinyin_contents(syllable, category, use_css, vertical, add_punct):
 	category_is_tuple = isinstance(category, tuple)
 	category_name = category[0] if category_is_tuple else category
 	category_is_grouped = category_is_tuple and "grouped" in category
@@ -215,9 +216,7 @@ def return_zhuyin_contents(
 
 	return result
 
-def return_ipa_contents(
-	syllable, category, use_css, vertical, add_punct
-):
+def return_ipa_contents(syllable, category, use_css, vertical, add_punct):
 	category_is_tuple = isinstance(category, tuple)
 	category_name = category[0] if category_is_tuple else category
 	category_is_grouped = category_is_tuple and "grouped" in category
@@ -243,6 +242,27 @@ def return_ipa_contents(
 	ipa = root + suffix
 
 	result += HTML_line(f"<span {span_styling}>{ipa}</span>" + add_punct)
+	result += HTML_line("</td>", -1)
+
+	return result
+
+def return_pitch_graph_contents(syllable, category, use_css, vertical):
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	category_is_grouped = category_is_tuple and "grouped" in category
+	alignment = syllable["alignment"] if category_is_grouped else "center"
+
+	# opens the <td> element.
+	td_styling_classes = [category_to_td_style(category_name),]
+	td_styling_classes.append(return_td_align_style(alignment, vertical))
+	td_styling = embed_styling(td_styling_classes, use_css)
+	result = HTML_line(f"<td {td_styling}>", 1)
+
+	image_stylings = embed_styling(
+		[get_content_style("CHROMA_IMG_PITCH_GRAPH",),], use_css
+	)
+	graph_path = inflection_to_graph_path(syllable["inflection_num"])
+	result += HTML_line(f"<img {image_stylings} src=\"{graph_path}\" />")
 	result += HTML_line("</td>", -1)
 
 	return result

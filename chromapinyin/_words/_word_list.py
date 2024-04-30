@@ -8,8 +8,9 @@ from chromapinyin._syllable._vowel_chars import (
 )
 from chromapinyin._syllable._inflection import (
 	TO_INFLECTION,
+	TO_INFLECTED_NEUTRAL,
 	create_syllable_dict,
-	TO_INFLECTED_NEUTRAL
+	inflection_is_neutral
 )
 from chromapinyin._syllable._punctuation_marks import PUNCTUATION, CLAUSE_BREAKS
 from ._sequential_inflection import apply_rule as apply_sequential_rule
@@ -155,10 +156,11 @@ def create_word_list(hanzi_str, pinyin_str):
 			and (
 				i + 1 >= len(inflections)
 				or(
-					inflections[i + 1][0] == APOSTROPHE_TONE_NUM
-					and (
+					inflections[i + 1][0] in [
+						APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM,
+					] and (
 						i + 2 >= len(inflections) 
-						or not is_neutral_tone(inflections[i + 2][0])
+						or not inflection_is_neutral(inflections[i + 2][0])
 					)
 				)
 			)

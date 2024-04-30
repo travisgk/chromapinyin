@@ -179,6 +179,7 @@ def generate_CSS():
 			CHROMA_TABLE_NESTED,
 			CHROMA_TR,
 			CHROMA_TD,
+			CHROMA_APOSTROPHE_OFFSET,
 			CHROMA_TD_ZHUYIN,
 			CHROMA_DIV_ZHUYIN_CONTAINER,
 			CHROMA_NESTED_ZHUYIN,
@@ -186,7 +187,8 @@ def generate_CSS():
 			CHROMA_ZHUYIN_PREFIX_CONTAINER,
 			CHROMA_ZHUYIN_SUFFIX_OFFSET,
 			CHROMA_ZHUYIN_SUFFIX_CONTAINER,
-			CHROMA_APOSTROPHE_OFFSET,
+			CHROMA_TD_PITCH_GRAPH,
+			CHROMA_TD_HANDWRITING,
 		]
 	)
 	style_dicts.extend(get_content_style_values())
@@ -347,7 +349,12 @@ def _return_syllable_td_HTML(
 		)
 
 	elif category_name == "pitch_graph":
-		result += "" # return_pitch_graph_contents
+		result += return_pitch_graph_contents(
+			syllable, category, use_css, vertical
+		)
+
+	elif category_name == "handwriting":
+		result += "" # return_handwriting_contents
 
 	else:
 		result += HTML_line("<td></td>")

@@ -7,11 +7,13 @@ The program will take the necessary tone changes into account.
 ```
 pip install pillow
 ```
+<br>
 
 ## Making a stylized table
 ```
 import chromapinyin
 ```
+<br>
 
 ## Information in each syllable dictionary
 ```
@@ -19,18 +21,18 @@ import chromapinyin
 
 hanzi = "我买雨伞。"
 pinyin = "wǒ mǎi yǔsǎn."
-syllables = chromapinyin.create_syllable_list(hanzi, pinyin)
+word_list = chromapinyin.create_syllable_list(hanzi, pinyin)
 ```
-The ```syllables``` list will contain four lists, with each list representing a "word", a group of syllables.
-- ```syllables[0]``` will contain one syllable corresponding to "wǒ" 
-- ```syllables[1]``` will contain one syllable corresponding to "mǎi"
-- ```syllables[2]``` will contain two syllables corresponding to "yǔ" and "sǎn"
-- ```syllables[3]``` will contain one "syllable" corresponding to the "."
+The ```word_list``` list will contain four lists, with each list representing a "word", a group of syllables.
+- ```word_list[0]``` will contain one syllable dictionary object corresponding to "wǒ" 
+- ```word_list[1]``` will contain one syllable dictionary object corresponding to "mǎi"
+- ```word_list[2]``` will contain two syllable dictionary objects corresponding to "yǔ" and "sǎn"
+- ```word_list[3]``` will contain one "syllable" dictionary object corresponding to the "."
 <br>
 
 The contained word list is occupied by dictionary objects which each represent a syllable.
 <br>
-For example, ```syllables[0][0]``` is a dictionary object with the following keys:
+For example, ```word_list[0][0]``` is a dictionary object with the following keys:
 - ```"hanzi": "伞"```
 - ```"pinyin": "sǎn"```
 - ```"tone_str": "low"```

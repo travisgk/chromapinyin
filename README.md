@@ -8,7 +8,12 @@ The program will take the necessary tone changes into account.
 pip install pillow
 ```
 
-## Getting syllable information
+## Making a stylized table
+```
+import chromapinyin
+```
+
+## Information in each syllable dictionary
 ```
 import chromapinyin
 
@@ -44,4 +49,4 @@ For example, ```syllables[0][0]``` is a dictionary object with the following key
 <br>
 
 ## Resources
-SVG animations from the ```svgs``` directory in the repository [makemeahanzi](https://github.com/skishore/makemeahanzi/tree/master) can be downloaded and exported to ```_chroma_res/_makemeahanzi``` in order to let the HTML source these glyph animations.
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, in order to let the HTML source these glyph animations.

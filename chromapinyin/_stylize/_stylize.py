@@ -332,12 +332,12 @@ def _return_syllable_td_HTML(
 		)
 
 	elif category_name == "zhuyin":
-		result += return_zhuyin_contents_i(
+		result += return_zhuyin_contents(
 			syllable, category, use_css, vertical, vertical_zhuyin=False
 		)
 
 	elif category_name == "vertical_zhuyin":
-		result += return_zhuyin_contents_i(
+		result += return_zhuyin_contents(
 			syllable, category, use_css, vertical, vertical_zhuyin=True
 		)
 

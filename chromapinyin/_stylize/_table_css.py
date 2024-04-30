@@ -7,6 +7,8 @@
 # user functions can be accessed to change font sizes, for example:
 # 	chromapinyin.set_pinyin_font_size("30px")
 
+import re
+
 __all__ = [
 	"CHROMA_DIV_PUSH_LEFT",
 	"CHROMA_DIV_PUSH_RIGHT",
@@ -17,11 +19,16 @@ __all__ = [
 	"CHROMA_TD_ALIGN_BOTTOM",
 	"CHROMA_TD_ALIGN_LEFT",
 	"CHROMA_TABLE",
+	"CHROMA_TABLE_NESTED",
 	"CHROMA_TR",
 	"CHROMA_TD",
+	"CHROMA_TD_ZHUYIN",
 	"CHROMA_DIV_ZHUYIN_CONTAINER",
 	"CHROMA_NESTED_ZHUYIN",
-	"CHROMA_VERTICAL_ZHUYIN",
+	"CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET",
+	"CHROMA_ZHUYIN_PREFIX_CONTAINER",
+	"CHROMA_ZHUYIN_SUFFIX_OFFSET",
+	"CHROMA_ZHUYIN_SUFFIX_CONTAINER",
 	"CHROMA_APOSTROPHE_OFFSET",
 	"get_content_style",
 	"category_to_td_style",
@@ -111,6 +118,16 @@ CHROMA_TABLE = {
 	),
 }
 
+CHROMA_TABLE_NESTED = {
+	"class": "table.chroma-nested",
+	"style": (
+		"border-collapse: collapse;",
+		"border: 0;",
+		"margin: 0;",
+		"padding: 0;",
+	),
+}
+
 CHROMA_TR = {
 	"class": "tr.chroma",
 	"style": (
@@ -132,6 +149,7 @@ CHROMA_TD_ZHUYIN = {
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
+		"white-space: nowrap;",
 	),
 }
 
@@ -139,32 +157,63 @@ CHROMA_DIV_ZHUYIN_CONTAINER = {
 	"class": "div.chroma-zhuyin-container",
 	"style": (
 		"display: table;",
-		"overflow: hidden;",
+		"text-align: center;",
 	),
 }
 
 CHROMA_NESTED_ZHUYIN = {
 	"class": "chroma-nested-zhuyin",
 	"style": (
+		"width: 5px;",
 		"margin: 0;",
 		"padding: 0;",
-		"width: 5px;",
 		"vertical-align: bottom;",
 	),
 }
 
-CHROMA_VERTICAL_ZHUYIN = {
-	"class": "chroma-vertical-zhuyin",
+CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET = {
+	"class": "chroma-zhuyin-vertical-prefix-offset",
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
 		"display: flex;",
 		"position: relative;",
-		"text-orientation: upright;",
-		"writing-mode: vertical-lr;",
-		"white-space: nowrap;",
+		"left: 3px;",
+		"top: -7px;",
 	),
 }
+
+CHROMA_ZHUYIN_PREFIX_CONTAINER = {
+	"class": "chroma-zhuyin-prefix-container",
+	"style": (
+		"width: 5px;",
+		"height: 1px;",
+		"display: flex;",
+		"position: relative;",
+	)
+}
+
+CHROMA_ZHUYIN_SUFFIX_OFFSET = {
+	"class": "chroma-zhuyin-suffix-offset",
+	"style": (
+		"margin: 0;",
+		"padding: 0;",
+		"display:flex;",
+		"position: relative;",
+		"left: -2px;",
+		"top: -10px;",
+	),
+}
+
+CHROMA_ZHUYIN_SUFFIX_CONTAINER = {
+	"class": "chroma-zhuyin-suffix-container",
+	"style": (
+		"height: 10px;",
+		"display: flex;",
+		"position: relative;",
+	)
+}
+
 
 CHROMA_APOSTROPHE_OFFSET = {
 	"class": "chroma-apostrophe-offset",
@@ -227,10 +276,10 @@ def set_hanzi_font_size(font_size=f"{_DEFAULT_HANZI_FONT_SIZE_PX}px"):
 	_CONTENT_STYLES["CHROMA_DIV_HANZI_CONTAINER"] = {
 		"class": "div.chroma-hanzi-container",
 		"style": (
+			f"height: {font_size};",
 			"display: block;",
 			"overflow: hidden;",
 			"position: relative;",
-			f"height: {font_size};",
 		),
 	}
 	_TO_TD_STYLE["hanzi"] = _CONTENT_STYLES["CHROMA_TD_HANZI"]
@@ -276,17 +325,6 @@ def set_zhuyin_prefix_font_size(
 		),
 	}
 
-	_CONTENT_STYLES["CHROMA_ZHUYIN_PREFIX_OFFSET"] = {
-		"class": "chroma-zhuyin-prefix-offset",
-		"style": (
-			"display: block;",
-			"position: relative;",
-			"height: 5px;",
-			"top: -4px;",
-			"z-index: 3;"
-		),
-	}
-
 def set_zhuyin_root_font_size(font_size=f"{_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX}px"):
 	global _CONTENT_STYLES
 	_CONTENT_STYLES["CHROMA_ZHUYIN_ROOT"] = {
@@ -296,6 +334,34 @@ def set_zhuyin_root_font_size(font_size=f"{_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX}px"
 		),
 	}
 
+	_CONTENT_STYLES["CHROMA_INLINE_ZHUYIN"] = {
+		"class": "chroma-inline-zhuyin",
+		"style": (
+			f"height: {font_size};",
+			"margin: 0;",
+			"padding: 0;",
+			"display: flex;",
+			"position: relative;",
+			"overflow: hidden;",
+		),
+	}
+
+	_CONTENT_STYLES["CHROMA_VERTICAL_ZHUYIN"] = {
+		"class": "chroma-vertical-zhuyin",
+		"style": (
+			"margin: 0;",
+			"padding: 0;",
+			"display: flex;",
+			"position: relative;",
+			"text-orientation: upright;",
+			"writing-mode: vertical-lr;",
+			"white-space: nowrap;",
+			"overflow: hidden;",
+		),
+	}
+
+	
+
 def set_zhuyin_suffix_font_size(
 	font_size=f"{_DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX}px"
 ):
@@ -304,17 +370,6 @@ def set_zhuyin_suffix_font_size(
 		"class": "chroma-zhuyin-suffix",
 		"style": (
 			f"font-size: {font_size};",
-		),
-	}
-
-	_CONTENT_STYLES["CHROMA_ZHUYIN_SUFFIX_OFFSET"] = {
-		"class": "chroma-zhuyin-suffix-offset",
-		"style": (
-			"margin: 0;",
-			"padding: 0;",
-			"display:flex;",
-			"position: relative;",
-			"top: 5px;",
 		),
 	}
 

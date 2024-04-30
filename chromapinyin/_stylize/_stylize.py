@@ -21,11 +21,11 @@
 # 	- "pitch_graph": the path to an image representing the syllable's spoken tone.
 #
 # additional formatting can be provided when the element is a tuple,
-# like ("pinyin", "grouped", "merge_punctuation").
+# like ("pinyin", "grouped", "split_punctuation").
 # these additional settings are:
 # 	- "grouped": this category's cells for syllables belonging to the same word
 # 	             will be aligned so that they're squished together.
-#	- "merge_punctuation": punctuation in this category's cells will be merged
+#	- "split_punctuation": punctuation in this category's cells won't be merged
 # 	                       with the cell to its right. only applicable for
 # 	                       pinyin or ipa.
 #	- "number_tones": the tones of pinyin, zhuyin, or ipa 
@@ -51,8 +51,8 @@ def create_stylized_sentence(
 	categories_2D,
 	use_css,
 	vertical=False,
-	exclude_punctuation=False,
 	break_line_with_clauses=True,
+	hide_clause_breaks=False,
 	max_n_line_syllables=99
 ):
 	reset_tabulation()
@@ -77,27 +77,29 @@ def create_stylized_sentence(
 				word_lines.append([])
 			continue
 
-		# determines the number of syllables in the next word.
+		# determines the number of syllables in the current word
+		# and if the next "word" is a clause break.
 		n_apostrophes = len(
 			[0 for syllable in word if syllable["pinyin"] in APOSTROPHES]
 		)
-		next_n_syllables = len(word) - n_apostrophes
-
-		# adds an additional syllable if the next syllable is a clause break.
+		n_new_syllables = len(word) - n_apostrophes
 		next_word = (
 			word_list[word_i + 1] if word_i + 1 < len(word_list) else None
 		)
 		next_word_is_clause_break = False
 		if next_word and next_word[0]["hanzi"] in CLAUSE_BREAKS:
-			next_n_syllables += len(word_list[word_i + 1])
+			n_new_syllables += (
+				0 if hide_clause_breaks else len(word_list[word_i + 1])
+			)
 			next_word_is_clause_break = True
 
 		# determines how the number of syllables the current line will have
 		# if the current <word> (and possibly a clause breaker) is added.
 		# then, a new line is created if that number of syllables
+		# added on to the current line
 		# exceeds the maximum amount of syllables per line.
 		n_line_syllables = sum([len(word) for word in word_lines[-1]])
-		prospective_n_line_syllables = n_line_syllables + next_n_syllables
+		prospective_n_line_syllables = n_line_syllables + n_new_syllables
 		if prospective_n_line_syllables > max_n_line_syllables:
 			word_lines.append([])
 
@@ -109,17 +111,29 @@ def create_stylized_sentence(
 
 	# breaks the <word_lines> into a 2D table of syllables.
 	syllable_run = max(
-		[sum([len(word) for word in line]) for line in word_lines]
+		[
+			sum(
+				[
+					len(word) for word in line
+					if not hide_clause_breaks
+					or word[0]["hanzi"] not in CLAUSE_BREAKS
+				]
+			) for line in word_lines
+		]
 	)
 	n_lines = len(word_lines)
 	n_cols = n_lines if vertical else syllable_run
 	n_rows = syllable_run if vertical else n_lines
 	syllable_table = [[None for _ in range(n_cols)] for _ in range(n_rows)]
+	
+	# copies syllables to their respective position in the table.
 	row, col = 0, 0
 	if vertical:
 		for line in word_lines:
 			for word in line:
 				for syllable in word:
+					if hide_clause_breaks and syllable["hanzi"] in CLAUSE_BREAKS:
+						continue
 					syllable_table[row][col] = syllable
 					row += 1
 			col += 1
@@ -129,6 +143,8 @@ def create_stylized_sentence(
 		for line in word_lines:
 			for word in line:
 				for syllable in word:
+					if hide_clause_breaks and syllable["hanzi"] in CLAUSE_BREAKS:
+						continue
 					syllable_table[row][col] = syllable
 					col += 1
 			row += 1
@@ -137,12 +153,10 @@ def create_stylized_sentence(
 	result = HTML_line(
 		f"<table {embed_styling([CHROMA_TABLE], use_css)}>", 1
 	)
-
 	for syllable_row in syllable_table:
 		result += _return_syllable_row_HTML(
 			syllable_row, categories_2D, use_css, vertical
 		)
-	
 	result += HTML_line("</table>", -1)
 	return result
 
@@ -162,11 +176,16 @@ def generate_CSS():
 			CHROMA_TD_ALIGN_BOTTOM,
 			CHROMA_TD_ALIGN_LEFT,
 			CHROMA_TABLE,
+			CHROMA_TABLE_NESTED,
 			CHROMA_TR,
 			CHROMA_TD,
+			CHROMA_TD_ZHUYIN,
 			CHROMA_DIV_ZHUYIN_CONTAINER,
 			CHROMA_NESTED_ZHUYIN,
-			CHROMA_VERTICAL_ZHUYIN,
+			CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET,
+			CHROMA_ZHUYIN_PREFIX_CONTAINER,
+			CHROMA_ZHUYIN_SUFFIX_OFFSET,
+			CHROMA_ZHUYIN_SUFFIX_CONTAINER,
 			CHROMA_APOSTROPHE_OFFSET,
 		]
 	)
@@ -200,7 +219,14 @@ def _return_syllable_row_HTML(
 			f"<tr {embed_styling([CHROMA_TR], use_css)}>", 1
 		)
 		for syllable_i, syllable in enumerate(syllable_row):
-			if not syllable or syllable["pinyin"] in APOSTROPHES:
+			if not syllable:
+				# blank cells are inserted to align words
+				# that have had word-wrapping applied.
+				for category_i in range(syllable_cells_width):
+					result += HTML_line("<td></td>")
+				continue
+
+			if syllable["pinyin"] in APOSTROPHES:
 				# skips None elements of the <syllable_row>
 				# or elements that are solely a pinyin apostrophe.
 				continue
@@ -234,14 +260,14 @@ def _return_additional_punctuation(
 	category_is_tuple = isinstance(category, tuple)
 	result = ""
 	current_cell_is_blank = False
-	if not category_is_tuple:
+	if category_is_tuple and "split_punctuation" in category:
 		# merging punctuation is not used,
 		# so no additional punctuation is returned.
 		return result, current_cell_is_blank
 
 	category_name = category[0] if category_is_tuple else category
 	PUNCTUATION_NUMS = [APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM]
-	if category_name in ["pinyin", "ipa"] and "merge_punctuation" in category:
+	if category_name in ["pinyin", "ipa"]:
 		inflection_num = syllable_row[syllable_i]["inflection_num"]
 		if inflection_num in PUNCTUATION_NUMS:
 			# merging punctuation is used,
@@ -306,13 +332,13 @@ def _return_syllable_td_HTML(
 		)
 
 	elif category_name == "zhuyin":
-		result += return_zhuyin_contents(
-			syllable, category, use_css, vertical
+		result += return_zhuyin_contents_i(
+			syllable, category, use_css, vertical, vertical_zhuyin=False
 		)
 
 	elif category_name == "vertical_zhuyin":
-		result += return_vertical_zhuyin_contents(
-			syllable, category, use_css, vertical
+		result += return_zhuyin_contents_i(
+			syllable, category, use_css, vertical, vertical_zhuyin=True
 		)
 
 	elif category_name == "ipa":

@@ -54,16 +54,16 @@ def embed_styling(style_dicts, uses_css):
 # <tab_inc> will increase/decrease the current tabulation after/before
 # the given <HTML> line depending on 
 # if <tab_inc> is positive/negative respectively.
-def HTML_line(HTML, tab_inc=0):
+def HTML_line(HTML, tab_inc=0, tab="    ", end="\n"):
 	global _n_tabs
 	if tab_inc < 0:
 		_n_tabs += tab_inc
-		result = "\t" * _n_tabs + HTML + "\n"
+		result = tab * _n_tabs + HTML + end
 
 	elif tab_inc > 0:
-		result = "\t" * _n_tabs + HTML + "\n"
+		result = tab * _n_tabs + HTML + end
 		_n_tabs += tab_inc
 
 	else:
-		result = "\t" * _n_tabs + HTML + "\n"
+		result = tab * _n_tabs + HTML + end
 	return result

@@ -94,7 +94,7 @@ def return_pinyin_contents(
 
 	return result
 
-def return_zhuyin_contents_i(
+def return_zhuyin_contents(
 	syllable, category, use_css, vertical_table, vertical_zhuyin
 ):
 	category_is_tuple = isinstance(category, tuple)

@@ -3,6 +3,8 @@ A Python script for creating HTML tables of various Chinese transcriptions (IPA 
 These can be created by giving chromapinyin text in hanzi and text of its corresponding pinyin.
 The program will take the necessary tone changes into account.
 
+<br>
+
 ## Installation
 ```
 pip install pillow apng

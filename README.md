@@ -7,7 +7,7 @@ The program will take the necessary tone changes into account.
 
 ## Installation
 ```
-pip install pillow apng
+pip install pillow imageio
 ```
 [pillow](https://github.com/python-pillow/Pillow) is used for creating customized pitch graph components.
 

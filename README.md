@@ -1,6 +1,6 @@
 # chromapinyin
-A Python script for creating HTML tables of various Mandarin transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
-These can be created by giving the program text in hanzi and its corresponding pinyin.
+A Python script for creating HTML tables of various Chinese transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
+These can be created by giving chromapinyin text in hanzi and text of its corresponding pinyin.
 The program will take the necessary tone changes into account.
 
 ## Installation

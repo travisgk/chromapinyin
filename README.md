@@ -17,7 +17,7 @@ pip install pillow apng
 
 ## Resources
 
-GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, which will be the local directory from which the created HTML will source any handwriting animations.
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and have its folders ```images``` and ```images_large``` placed under chromapinyin's output directory to be ```_chroma_res/handwriting/images``` and ```_chroma_res/handwriting/images_large``` respectively, which will be the local directory from which the created HTML will source any handwriting animations.
 
 <br>
 

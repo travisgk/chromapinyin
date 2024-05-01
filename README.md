@@ -3,18 +3,23 @@ A Python script for creating HTML tables of various Mandarin transcriptions (IPA
 These can be created by giving the program text in hanzi and its corresponding pinyin.
 The program will take the necessary tone changes into account.
 
-## Resources
-GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, which will be the local directory from which the created HTML will source any handwriting animations.
-
 ## Installation
 ```
 pip install pillow apng
 ```
 [pillow](https://github.com/python-pillow/Pillow) is used for creating customized pitch graph components.
+
 [apng](https://github.com/eight04/pyAPNG) is optional. Installing it will enable functionality to modify the GIF animations' speed and/or looping behavior.
+
 <br>
 
-## Making a stylized table
+## Resources
+
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, which will be the local directory from which the created HTML will source any handwriting animations.
+
+<br>
+
+# Making a stylized table
 ```
 import chromapinyin
 ```
@@ -35,9 +40,9 @@ The ```word_list``` list will contain four lists, with each list representing a 
 - ```word_list[3]``` will contain one "syllable" dictionary object corresponding to the "."
 <br>
 
-The contained word list is occupied by dictionary objects which each represent a syllable.
+Every contained list is occupied by dictionary objects which represent each syllable in a word.
 <br>
-For example, ```word_list[0][0]``` is a dictionary object with the following keys:
+For example, ```word_list[2][1]``` is a dictionary object with the following keys:
 - ```"hanzi": "伞"```
 - ```"pinyin": "sǎn"```
 - ```"tone_str": "low"```

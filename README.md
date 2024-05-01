@@ -1,12 +1,17 @@
 # chromapinyin
-A python script for creating HTML tables of various Mandarin transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
+A Python script for creating HTML tables of various Mandarin transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
 These can be created by giving the program text in hanzi and its corresponding pinyin.
 The program will take the necessary tone changes into account.
 
+## Resources
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, which will be the local directory from which the created HTML will source any handwriting animations.
+
 ## Installation
 ```
-pip install pillow
+pip install pillow apng
 ```
+[pillow](https://github.com/python-pillow/Pillow) is used for creating customized pitch graph components.
+[apng](https://github.com/eight04/pyAPNG) is optional. Installing it will enable functionality to modify the GIF animations' speed and/or looping behavior.
 <br>
 
 ## Making a stylized table
@@ -49,6 +54,3 @@ For example, ```word_list[0][0]``` is a dictionary object with the following key
 - ```"zhuyin_suffix": "ˇ"```
 - ```"zhuyin": "ㄙㄢˇ"```
 <br>
-
-## Resources
-GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and exported to a subdirectory under chromapinyin's output directory, ```_chroma_res/_handwriting```, in order to let the HTML source these glyph animations.

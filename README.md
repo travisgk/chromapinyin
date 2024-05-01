@@ -11,7 +11,7 @@ pip install pillow apng
 ```
 [pillow](https://github.com/python-pillow/Pillow) is used for creating customized pitch graph components.
 
-[apng](https://github.com/eight04/pyAPNG) is optional. Installing it will enable functionality to modify the GIF animations' speed and/or looping behavior.
+[imageio](https://github.com/imageio/imageio) is optional. Installing it will enable functionality to modify the GIF animations' speed and/or looping behavior.
 
 <br>
 

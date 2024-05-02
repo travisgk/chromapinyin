@@ -1,5 +1,7 @@
-_pitch_graphs_dir = "_chroma_res"
-_handwriting_dir = "_chroma_res/makemeahanzi"
+import os
+
+_pitch_graphs_dir = os.path.join("_chroma_res", "pitch_graphs")
+_handwriting_dir = os.path.join("_chroma_res", "handwriting")
 
 def get_pitch_graphs_dir():
 	return _pitch_graphs_dir

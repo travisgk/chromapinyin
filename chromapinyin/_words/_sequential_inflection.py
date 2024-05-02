@@ -82,7 +82,6 @@ def apply_rule(inflection_groups, stay_inflection, to_inflection):
 	monosyllable_series = _find_series_of_monosyllables(
 		markup_clause, [stay_inflection, to_inflection, UNDETERMINED]
 	)
-
 	for current_series in monosyllable_series:
 		if len(current_series) <= 1:
 			continue
@@ -311,7 +310,7 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 				len(current_series) == 0 
 				or current_series[-1][0] == i - 1
 			):
-				current_series.append((i, 0)) # part of series
+				monosyllable_series[-1].append((i, 0)) # part of series
 			else:
 				monosyllable_series.append([(i, 0)]) # starts new series
 			continue
@@ -326,7 +325,7 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 		):
 			# monosyllable is isolated at the beginning of <word>.
 			if len(current_series) == 0 or current_series[-1][0] == i - 1:
-				current_series.append((i, 0)) # part of series
+				monosyllable_series[-1].append((i, 0)) # part of series
 			else:
 				monosyllable_series.append([(i, 0)]) # starts new series
 
@@ -336,9 +335,9 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 		):
 			# monosyllable is isolated at the end of <word>.
 			if len(current_series) == 0 or current_series[-1][0] == i - 1:
-				current_series.append((i, len(word) - 1)) # part of series
+				monosyllable_series[-1].append((i, len(word) - 1)) # part of series
 			else:
-				current_series.append([(i, len(word) - 1)]) # starts new series
+				monosyllable_series.append([(i, len(word) - 1)]) # starts new series
 	return monosyllable_series
 
 def _is_neutral_inflection(inflection_num):

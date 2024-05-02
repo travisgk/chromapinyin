@@ -7,8 +7,9 @@
 from chromapinyin._syllable._inflection import (
 	TO_INFLECTION, TO_INFLECTED_NEUTRAL, INFLECTION_TO_SPOKEN_TONE
 )
+from chromapinyin._syllable._punctuation_marks import PUNCTUATION
 from chromapinyin._syllable._vowel_chars import (
-	NEUTRAL_TONE_NUM, PRIMARY_TONES, strip_tone_marker
+	PUNCTUATION_TONE_NUM, NEUTRAL_TONE_NUM, PRIMARY_TONES, strip_tone_marker
 )
 from ._color_scheme import get_inflection_color_style
 from ._table_css import *
@@ -247,10 +248,22 @@ def return_ipa_contents(syllable, category, use_css, vertical, add_punct):
 	return result
 
 def return_pitch_graph_contents(syllable, category, use_css, vertical):
+	INCLUDE_PUNCTUATION_GRAPH = True
 	category_is_tuple = isinstance(category, tuple)
 	category_name = category[0] if category_is_tuple else category
 	category_is_grouped = category_is_tuple and "grouped" in category
-	alignment = syllable["alignment"] if category_is_grouped else "center"
+	
+	# determines which the image alignment selection.
+	alignment = syllable["alignment"]
+	if not category_is_grouped or vertical:
+		image_alignment = "center"
+	else:
+		if alignment == "start":
+			image_alignment = "right"
+		elif alignment == "end":
+			image_alignment = "left"
+		else:
+			image_alignment = "center"
 
 	# opens the <td> element.
 	td_styling_classes = [category_to_td_style(category_name),]
@@ -261,8 +274,13 @@ def return_pitch_graph_contents(syllable, category, use_css, vertical):
 	image_stylings = embed_styling(
 		[get_content_style("CHROMA_IMG_PITCH_GRAPH",),], use_css
 	)
-	graph_path = inflection_to_graph_path(syllable["inflection_num"])
-	result += HTML_line(f"<img {image_stylings} src=\"{graph_path}\" />")
-	result += HTML_line("</td>", -1)
 
+	inflection_num = syllable["inflection_num"]
+	if (
+		inflection_num != PUNCTUATION_TONE_NUM and len(syllable["hanzi"]) > 0
+	):
+		graph_path = inflection_to_graph_path(inflection_num, image_alignment)
+		result += HTML_line(f"<img {image_stylings} src=\"{graph_path}\" />")
+
+	result += HTML_line("</td>", -1)
 	return result

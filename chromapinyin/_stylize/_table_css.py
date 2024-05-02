@@ -46,7 +46,7 @@ _DEFAULT_ZHUYIN_PREFIX_FONT_SIZE_PX = 21
 _DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX = 13
 _DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX = 21
 _DEFAULT_IPA_FONT_SIZE_PX = 13
-_DEFAULT_PITCH_GRAPH_HEIGHT_PX = 64
+_DEFAULT_PITCH_GRAPH_HEIGHT_PX = 67
 
 CHROMA_DIV_PUSH_LEFT = {
 	"class": "div.chroma-push-left",
@@ -191,8 +191,8 @@ CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET = {
 		"padding: 0;",
 		"display: flex;",
 		"position: relative;",
-		"left: 3px;",
-		"top: -7px;",
+		"left: 5.5px;",
+		"top: -6px;",
 	),
 }
 
@@ -409,8 +409,8 @@ def set_pitch_graph_height(height=f"{_DEFAULT_PITCH_GRAPH_HEIGHT_PX}px"):
 	_CONTENT_STYLES["CHROMA_IMG_PITCH_GRAPH"] = {
 		"class": "img.chroma-pitch-graph",
 		"style": (
-			"width: 100%;",
-            f"height: {height};",
+			f"height: {height};",
+			"object-fit: contain;",
 		),
 	}
 

@@ -17,7 +17,18 @@ pip install pillow imageio
 
 ## Resources
 
-GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and have its folders ```images``` and ```images_large``` placed under chromapinyin's output directory to be ```_chroma_res/handwriting/images``` and ```_chroma_res/handwriting/images_large``` respectively, which will be the local directory from which the created HTML will source any handwriting animations.
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and have its folders ```images``` and ```images_large``` placed under chromapinyin's output directory to be ```_chroma_res/handwriting/images``` and ```_chroma_res/handwriting/images_large``` respectively.
+
+Then, the following can be run to change the speed and looping behavior of the GIFs:
+```
+import chromapinyin
+chromapinyin.process_gifs(fps=5, start_freeze_ms=1000, end_freeze_ms=3500, loops=True)
+```
+
+```_chroma_res/handwriting/images``` will be the directory used to source handwriting animations.
+
+The process GIFs function will also rename the files under ```_chroma_res/handwriting/images-large```,
+so this directory can easily be renamed to ```_chroma_res/handwriting/images``` to be used instead.
 
 <br>
 

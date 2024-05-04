@@ -42,7 +42,7 @@ hanzi = "我不是来自中国。"
 pinyin = "wǒ bùshì láizì zhōngguó."
 word_list = chromapinyin.create_word_list(hanzi, pinyin)
 
-# a 2D table of the syllable aspects to display.
+# defines the 2D table of the syllable aspects to display per syllable.
 categories = [
     ["hanzi", "vertical_zhuyin",],
     [("pinyin", "number_tones",), ("ipa", "no_tones"),],

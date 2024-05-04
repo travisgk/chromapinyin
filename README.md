@@ -50,7 +50,8 @@ categories = [
 
 html = ""
 html += "<html>\n<head>\n<style>\n"
-html += "body { background-color: black; }\n</style>\n</head>\n<body>\n"
+html += "body {\nbackground-color: black;\nfont-family: Bahnschrift;\n}\n"
+html += "</style>\n</head>\n<body>\n"
 
 # creates an HTML table with styling components placed directly inline
 # and the characters placed to be read horizontally.

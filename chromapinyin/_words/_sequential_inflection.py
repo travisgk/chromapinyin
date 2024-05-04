@@ -1,7 +1,7 @@
-# sequential_inflection.py
+# _sequential_inflection.py
 # ---
 # this file defines a function used to make inflections
-# follow the 2-2-3 rule in Mandarin.
+# follow the 2-2-3 rule in chinese.
 # this is an approximation; regional variance is bound to differ.
 #
 
@@ -340,12 +340,14 @@ def _find_series_of_monosyllables(markup_clause, active_inflections):
 				monosyllable_series.append([(i, len(word) - 1)]) # starts new series
 	return monosyllable_series
 
+# returns True if the <inflection_num> represents a neutral tone.
 def _is_neutral_inflection(inflection_num):
 	return (
 		inflection_num == NEUTRAL_TONE_NUM
 		or inflection_num in TO_INFLECTED_NEUTRAL.values()
 	)
 
+# prints debugging information for <apply_rule>.
 def _print_markup_clause(rule_num, markup_clause, stay_inflection, to_inflection):
 	MARK = {
 		TO_INFLECTION["punctuation"]:  "█",

@@ -12,6 +12,8 @@ from chromapinyin._syllable._inflection import TO_INFLECTION
 
 _inflection_to_RGB = None
 _chroma_tones = None
+_chroma_gif_colors_white = None
+_chroma_gif_colors_black = None
 
 def get_inflection_RGB(inflection):
 	return _inflection_to_RGB[inflection]
@@ -21,6 +23,17 @@ def get_inflection_color_style(inflection):
 
 def get_chroma_tone_values():
 	return _chroma_tones.values()
+
+def get_inflection_img_color_style(inflection, white_background=True):
+	if white_background:
+		return _chroma_gif_colors_white[inflection]
+	return _chroma_gif_colors_black[inflection]
+
+def get_chroma_gif_colors_white_values():
+	return _chroma_gif_colors_white.values()
+
+def get_chroma_gif_colors_black_values():
+	return _chroma_gif_colors_black.values()
 
 # sets the color scheme to chromapinyin's default.
 def set_to_default():
@@ -127,13 +140,64 @@ def _set_inflection_to_RGB(
 
 # creates the dictionary containing the internal color stylings used for HTML.
 def _rebuild_colors():
-	global _chroma_tones
+	global _chroma_tones, _chroma_gif_colors_white, _chroma_gif_colors_black
 	_chroma_tones = {
 		inflection: {
 			"class": "chroma-tone-" + inflection_str.replace("_", "-"),
 			"style": (f"color: {_RGB_to_hex(_inflection_to_RGB[inflection])};",),
 		} for inflection_str, inflection in TO_INFLECTION.items()
 	}
+
+	_chroma_gif_colors_white = {
+		inflection: {
+			"class": "img.chroma-tone-" + inflection_str.replace("_", "-"),
+			"style": _RGB_to_svg_filter(
+				_inflection_to_RGB[inflection], white_background=True
+			),
+		} for inflection_str, inflection in TO_INFLECTION.items()
+	}
+
+	_chroma_gif_colors_black = {
+		inflection: {
+			"class": ".nightMode img.chroma-tone-" + inflection_str.replace("_", "-"),
+			"style": _RGB_to_svg_filter(
+				_inflection_to_RGB[inflection], white_background=False
+			),
+		} for inflection_str, inflection in TO_INFLECTION.items()
+	}
+
+def _RGB_to_svg_filter(rgb, white_background):
+	r = f"{rgb[0] / 255:.3f}"
+	g = f"{rgb[1] / 255:.3f}"
+	b = f"{rgb[2] / 255:.3f}"
+	gray = "0.35"
+
+	if white_background:
+		r = f"{1.0 - rgb[0] / 255:.3f}"
+		g = f"{1.0 - rgb[1] / 255:.3f}"
+		b = f"{1.0 - rgb[2] / 255:.3f}"
+
+	tabs = "\t"
+	result = (
+		"filter: contrast(135%) invert(100%)",
+		f"{tabs}url(\"\\",
+		f"{tabs}data:image/svg+xml;utf8,\\",
+		f"{tabs}<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\\",
+		f"{tabs}<defs>\\",
+		f"{tabs}<filter id='color-filter' color-interpolation-filters='sRGB'>\\",
+		f"{tabs}<feComponentTransfer>\\",
+		f"{tabs}<feFuncR type='table' tableValues='0 {gray} {r} {r}'/>\\",
+		f"{tabs}<feFuncG type='table' tableValues='0 {gray} {g} {g}'/>\\",
+		f"{tabs}<feFuncB type='table' tableValues='0 {gray} {b} {b}'/>\\",
+		f"{tabs}<feFuncA type='table' tableValues='0 0 0 1'/>\\",
+		f"{tabs}</feComponentTransfer>\\",
+		f"{tabs}</filter>\\",
+		f"{tabs}</defs>\\",
+		f"{tabs}</svg>#color-filter\")" 
+		+ (" invert(100%)" if white_background else "") + ";",
+	)
+
+	return result
 
 # returns an RGB tuple that's interpolated between two given colors.
 def _mid_RGB(a_RGB, b_RGB, factor=0.5):

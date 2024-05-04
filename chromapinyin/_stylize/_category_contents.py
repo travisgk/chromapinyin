@@ -4,6 +4,7 @@
 # containing syllable information for the given <category>.
 #
 
+import os
 from chromapinyin._syllable._inflection import (
 	TO_INFLECTION, TO_INFLECTED_NEUTRAL, INFLECTION_TO_SPOKEN_TONE
 )
@@ -11,10 +12,15 @@ from chromapinyin._syllable._punctuation_marks import PUNCTUATION
 from chromapinyin._syllable._vowel_chars import (
 	PUNCTUATION_TONE_NUM, NEUTRAL_TONE_NUM, PRIMARY_TONES, strip_tone_marker
 )
-from ._color_scheme import get_inflection_color_style
-from ._table_css import *
+from ._color_scheme import (
+	get_inflection_color_style, get_inflection_img_color_style
+)
 from ._html_builder import *
 from ._pitch_graphs._pitch_graphs import inflection_to_graph_path
+from ._res_directories import get_handwriting_gifs_path
+from ._table_css import *
+
+
 
 _SIMPLIFY_SPOKEN_TONE = {
 	TO_INFLECTION["punctuation"]: TO_INFLECTION["punctuation"],
@@ -51,11 +57,14 @@ def return_hanzi_contents(syllable, category, use_css, vertical):
 	result += HTML_line(f"<div {div_styling}>", 1)
 
 	# opens and closes the <span> container element.
-	color_css = get_inflection_color_style(syllable["inflection_num"])
-	span_styling_classes = [color_css, get_content_style("CHROMA_HANZI_OFFSET"),]
+	span_styling_classes = [get_content_style("CHROMA_HANZI_OFFSET"),]
+	if not category_is_tuple or "no_color" not in category:
+		color_css = get_inflection_color_style(syllable["inflection_num"])
+		span_styling_classes.append(color_css)
 	span_styling = embed_styling(span_styling_classes, use_css)
 	hanzi = syllable["hanzi"]
 	result += HTML_line(f"<span {span_styling}>{hanzi}</span>")
+
 
 	# closes elements.
 	result += HTML_line("</div>", -1)
@@ -76,9 +85,11 @@ def return_pinyin_contents(syllable, category, use_css, vertical, add_punct):
 	result = HTML_line(f"<td {td_styling}>", 1)
 
 	# opens and closes the <span> container element.
-	color_css = get_inflection_color_style(syllable["inflection_num"])
-	span_styling = embed_styling([color_css,], use_css)
-	
+	span_styling = None
+	if not category_is_tuple or "no_color" not in category:
+		color_css = get_inflection_color_style(syllable["inflection_num"])
+		span_styling = embed_styling([color_css,], use_css)
+		
 	# determines the pinyin to display.
 	pinyin = syllable["pinyin"]
 	if category_is_tuple:
@@ -91,7 +102,10 @@ def return_pinyin_contents(syllable, category, use_css, vertical, add_punct):
 		elif "no_tones" in category:
 			pinyin = strip_tone_marker(pinyin)
 
-	result += HTML_line(f"<span {span_styling}>{pinyin}</span>" + add_punct)
+	if span_styling:
+		result += HTML_line(f"<span {span_styling}>{pinyin}</span>" + add_punct)
+	else:
+		result += HTML_line(pinyin + add_punct)
 	result += HTML_line("</td>", -1)
 
 	return result
@@ -127,9 +141,12 @@ def return_zhuyin_contents(
 	result += HTML_line(f"<td {nested_styling}>", 1)
 	
 	# open the coloring span for the prefix and root.
-	color_css = get_inflection_color_style(syllable["inflection_num"])
-	color_styling = embed_styling([color_css,], use_css)
-	result += HTML_line(f"<span {color_styling}>", 1)
+	color_css = None
+	span_styling = None
+	if not category_is_tuple or "no_color" not in category:
+		color_css = get_inflection_color_style(syllable["inflection_num"])
+		span_styling = embed_styling([color_css,], use_css)
+		result += HTML_line(f"<span {span_styling}>", 1)
 
 	use_number_tones = False
 	use_no_tones = False
@@ -179,7 +196,8 @@ def return_zhuyin_contents(
 		span_line += f"</span>"
 	
 	result += HTML_line(span_line)
-	result += HTML_line("</span>", -1)
+	if span_styling:
+		result += HTML_line("</span>", -1)
 	result += HTML_line("</td>", -1)
 
 	# creates the formatting for the suffix.
@@ -196,13 +214,13 @@ def return_zhuyin_contents(
 		elif "no_tones" in category:
 			suffix = ""
 
-	span_styling = embed_styling(
-		[
-			color_css,
-			get_content_style("CHROMA_ZHUYIN_SUFFIX"), 
-			CHROMA_ZHUYIN_SUFFIX_CONTAINER,
-		], use_css
-	)
+	span_classes = [
+		get_content_style("CHROMA_ZHUYIN_SUFFIX"), 
+		CHROMA_ZHUYIN_SUFFIX_CONTAINER,
+	]
+	if color_css:
+		span_classes.append(color_css)
+	span_styling = embed_styling(span_classes, use_css)
 	span_line += f"<span {span_styling}>{suffix}</span>"
 
 	result += HTML_line(span_line)
@@ -230,8 +248,11 @@ def return_ipa_contents(syllable, category, use_css, vertical, add_punct):
 	result = HTML_line(f"<td {td_styling}>", 1)
 
 	# opens and closes the <span> container element.
-	color_css = get_inflection_color_style(syllable["inflection_num"])
-	span_styling = embed_styling([color_css,], use_css)
+	span_styling = None
+	if not category_is_tuple or "no_color" not in category:
+		color_css = get_inflection_color_style(syllable["inflection_num"])
+		span_styling = embed_styling([color_css,], use_css)
+
 	root = syllable["ipa_root"]
 	suffix = syllable["ipa_suffix"]
 	if category_is_tuple:
@@ -242,7 +263,10 @@ def return_ipa_contents(syllable, category, use_css, vertical, add_punct):
 			suffix = ""
 	ipa = root + suffix
 
-	result += HTML_line(f"<span {span_styling}>{ipa}</span>" + add_punct)
+	if span_styling:
+		result += HTML_line(f"<span {span_styling}>{ipa}</span>" + add_punct)
+	else:
+		result += HTML_line(ipa + add_punct)
 	result += HTML_line("</td>", -1)
 
 	return result
@@ -282,5 +306,38 @@ def return_pitch_graph_contents(syllable, category, use_css, vertical):
 		graph_path = inflection_to_graph_path(inflection_num, image_alignment)
 		result += HTML_line(f"<img {image_stylings} src=\"{graph_path}\" />")
 
+	result += HTML_line("</td>", -1)
+	return result
+
+def return_handwriting_contents(syllable, category, use_css, vertical):
+	# gets the GIF path from the hex encoding of the hanzi unicode.
+	hanzi_hex = hex(ord(syllable["hanzi"]))[2:]
+	gif_path = os.path.join(get_handwriting_gifs_path(), f"{hanzi_hex}.gif")
+	if not os.path.exists(gif_path):
+		return HTML_line("<td></td>")
+
+	category_is_tuple = isinstance(category, tuple)
+	category_name = category[0] if category_is_tuple else category
+	category_is_grouped = category_is_tuple and "grouped" in category
+	alignment = syllable["alignment"] if category_is_grouped else "center"
+
+	# opens the <td> element.
+	td_styling_classes = [category_to_td_style(category_name),]
+	td_styling_classes.append(return_td_align_style(alignment, vertical))
+	td_styling = embed_styling(td_styling_classes, use_css)
+	result = HTML_line(f"<td {td_styling}>", 1)
+
+	# gets the coloring style for the image.
+	img_classes = [get_content_style("CHROMA_IMG_HANDWRITING"),]
+	color_css = get_inflection_img_color_style(
+			syllable["inflection_num"]
+			if not category_is_tuple or "no_color" not in category
+			else syllable["punctuation"]
+	)
+	img_classes.append(color_css)
+	img_styling = embed_styling(img_classes, use_css)
+
+	# adds image and closes the <td> element.
+	result += HTML_line(f"<img {img_styling} src=\"{gif_path}\" />")
 	result += HTML_line("</td>", -1)
 	return result

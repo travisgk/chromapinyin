@@ -47,6 +47,7 @@ _DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX = 13
 _DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX = 21
 _DEFAULT_IPA_FONT_SIZE_PX = 13
 _DEFAULT_PITCH_GRAPH_HEIGHT_PX = 67
+_DEFAULT_HANDWRITING_HEIGHT_PX = 65
 
 CHROMA_DIV_PUSH_LEFT = {
 	"class": "div.chroma-push-left",
@@ -239,7 +240,8 @@ CHROMA_TD_PITCH_GRAPH = {
 CHROMA_TD_HANDWRITING = {
 	"class": "td.chroma-handwriting",
 	"style": (
-		"",
+		"margin: 0;",
+		"padding: 0;",
 	),
 }
 
@@ -270,6 +272,7 @@ def set_font_sizes(scale=1.0):
 	)
 	set_ipa_font_size(f"{int(_DEFAULT_IPA_FONT_SIZE_PX * scale)}px")
 	set_pitch_graph_height(f"{int(_DEFAULT_PITCH_GRAPH_HEIGHT_PX * scale)}px")
+	set_handwriting_height(f"{int(_DEFAULT_HANDWRITING_HEIGHT_PX * scale)}px")
 
 # returns the corresponding dictionary containing CSS information.
 def get_content_style(key_name):
@@ -379,8 +382,6 @@ def set_zhuyin_root_font_size(font_size=f"{_DEFAULT_ZHUYIN_ROOT_FONT_SIZE_PX}px"
 		),
 	}
 
-	
-
 def set_zhuyin_suffix_font_size(
 	font_size=f"{_DEFAULT_ZHUYIN_SUFFIX_FONT_SIZE_PX}px"
 ):
@@ -405,9 +406,19 @@ def set_ipa_font_size(font_size=f"{_DEFAULT_IPA_FONT_SIZE_PX}px"):
 	_TO_TD_STYLE["ipa"] = _CONTENT_STYLES["CHROMA_TD_IPA"]
 
 def set_pitch_graph_height(height=f"{_DEFAULT_PITCH_GRAPH_HEIGHT_PX}px"):
-	global _CONTENT_STYLES, _TO_TD_STYLE
+	global _CONTENT_STYLES
 	_CONTENT_STYLES["CHROMA_IMG_PITCH_GRAPH"] = {
 		"class": "img.chroma-pitch-graph",
+		"style": (
+			f"height: {height};",
+			"object-fit: contain;",
+		),
+	}
+
+def set_handwriting_height(height=f"{_DEFAULT_HANDWRITING_HEIGHT_PX}px"):
+	global _CONTENT_STYLES
+	_CONTENT_STYLES["CHROMA_IMG_HANDWRITING"] = {
+		"class": "img.chroma-handwriting",
 		"style": (
 			f"height: {height};",
 			"object-fit: contain;",

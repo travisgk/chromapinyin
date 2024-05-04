@@ -1,11 +1,25 @@
+# _word_list.py
+# ---
+# this file defines the primary function of <create_word_list>,
+# which will return a list of words, with each word
+# being a nested list of dictionary objects.
+#
+# each dictionary object represents a syllable,
+# which has the keys as defined in chromapinyin.inflection.py:
+#
+# "hanzi": the syllable written in hanzi.
+# "pinyin": the syllable written in pinyin.
+# "tone_str": a description of innate tone.
+# "tone_num": the number used by the program to refer to this tone.
+# "spoken_tone_str": a description of the spoken tone. 
+# "spoken_tone_num": the number used by the program to refer to this tone.
+# "inflection_str": a description of the contextual inflection.
+# "inflection_num": the number used by the program to refer to the inflection.
+# "ipa": the syllable transcribed in the international phonetic alphabet.
+# "zhuyin": the syllable transcribed in zhuyin.
+#
+
 import re
-from chromapinyin._syllable._vowel_chars import (
-	get_tone_num, 
-	is_pinyin_E, 
-	is_pinyin_vowel, 
-	APOSTROPHE_TONE_NUM, 
-	PUNCTUATION_TONE_NUM
-)
 from chromapinyin._syllable._inflection import (
 	TO_INFLECTION,
 	TO_INFLECTED_NEUTRAL,
@@ -13,9 +27,14 @@ from chromapinyin._syllable._inflection import (
 	inflection_is_neutral
 )
 from chromapinyin._syllable._punctuation_marks import PUNCTUATION, CLAUSE_BREAKS
+from chromapinyin._syllable._vowel_chars import (
+	get_tone_num, 
+	is_pinyin_E, 
+	is_pinyin_vowel, 
+	APOSTROPHE_TONE_NUM, 
+	PUNCTUATION_TONE_NUM
+)
 from ._sequential_inflection import apply_rule as apply_sequential_rule
-
-
 
 _NORMAL_TONES = {
 	TO_INFLECTION["high"],
@@ -26,23 +45,10 @@ _NORMAL_TONES = {
 }
 
 # returns a list of groupings (lists) of dictionary objects.
-# each dictionary object represents a syllable,
-# which has the keys as defined in chromapinyin.inflection.py:
-#
-# "hanzi": the syllable written in hanzi.
-# "pinyin": the syllable written in pinyin.
-# "tone": a description of innate tone.
-# "tone_num": the number used by the program to refer to this tone.
-# "spoken_tone": a description of the spoken tone. 
-# "spoken_tone_num": the number used by the program to refer to this tone.
-# "inflection": a description of the contextual inflection.
-# "inflection_num": the number used by the program to refer to the inflection.
-# "ipa": the syllable transcribed in the international phonetic alphabet.
-# "zhuyin": the syllable transcribed in zhuyin.
 def create_word_list(hanzi_str, pinyin_str):
 	# determines the groupings of initial inflections.
 	inflections = []
-	pinyin_list = split_pinyin(pinyin_str)
+	pinyin_list = _split_pinyin(pinyin_str)
 	for word in pinyin_list:
 		inflections.append([])
 		for syllable in word:
@@ -201,28 +207,9 @@ def create_word_list(hanzi_str, pinyin_str):
 
 	return syllable_results
 
-# sets the inflection of the neutral tone 
-# within <flat_inflections> at <current_index>
-# to its inflected counterpart, based on the tone that
-# comes <offset_backward> element(s) before <current_index>.
-def _inflect_neutral(current_index, offset_backward, flat_inflections):
-	i = current_index
-	prev_i = current_index - offset_backward
-
-	# the previous inflection is not punctuation.
-	if flat_inflections[prev_i] in _NORMAL_TONES:
-		# the previous inflection is a normal tone.
-		# sets current inflection to the corresponding neutral.
-		flat_inflections[i] = TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
-
-	elif flat_inflections[prev_i] in TO_INFLECTED_NEUTRAL.items():
-		# <prev_inflection> is an inflected neutral.
-		# the current inflection just repeats it.
-		flat_inflections[i] = flat_inflections[prev_i]
-
 # returns a list of units, 
 # with each unit (word) containing strings of pinyin syllables.
-def split_pinyin(pinyin_str):
+def _split_pinyin(pinyin_str):
 	results = []
 
 	# breaks <pinyin_str> into a list, with <CLAUSE_BREAKS>
@@ -246,6 +233,25 @@ def split_pinyin(pinyin_str):
 			_word_unit_to_syllables(results, unit_str)
 
 	return results
+
+# sets the inflection of the neutral tone 
+# within <flat_inflections> at <current_index>
+# to its inflected counterpart, based on the tone that
+# comes <offset_backward> element(s) before <current_index>.
+def _inflect_neutral(current_index, offset_backward, flat_inflections):
+	i = current_index
+	prev_i = current_index - offset_backward
+
+	# the previous inflection is not punctuation.
+	if flat_inflections[prev_i] in _NORMAL_TONES:
+		# the previous inflection is a normal tone.
+		# sets current inflection to the corresponding neutral.
+		flat_inflections[i] = TO_INFLECTED_NEUTRAL[flat_inflections[prev_i]]
+
+	elif flat_inflections[prev_i] in TO_INFLECTED_NEUTRAL.items():
+		# <prev_inflection> is an inflected neutral.
+		# the current inflection just repeats it.
+		flat_inflections[i] = flat_inflections[prev_i]
 
 # processes the given <unit_str> and breaks it down
 # into syllables and appends the unit

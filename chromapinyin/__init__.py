@@ -1,8 +1,18 @@
+# __init__.py
+# ---
+# this file imports functions to create a list of syllables,
+# process a pinyin syllable,
+# modify the color scheme,
+# change element sizes,
+# create new pitch graph components,
+# modify the speed/looping behavior of all handwriting GIFs,
+# and create a stylized chinese table.
+#
+
 from chromapinyin._words._word_list import create_word_list
 from chromapinyin._syllable._vowel_chars import (
 	get_tone_num, strip_tone_marker, place_tone_marker, is_pinyin_vowel
 )
-from chromapinyin._stylize._stylize import create_stylized_sentence, generate_CSS
 import chromapinyin._stylize._color_scheme as color_scheme
 from chromapinyin._stylize._table_css import (
 	set_font_sizes, # str
@@ -19,5 +29,6 @@ from chromapinyin._stylize._pitch_graphs._pitch_graphs import (
 	create_inflection_graphs # graph_style_name, output_dir, fixed_width (bool)
 )
 from chromapinyin._stylize._handwriting_gifs import process_gifs
+from chromapinyin._stylize._stylize import create_stylized_sentence, generate_CSS
 
 create_inflection_graphs(overwrite_images=False)

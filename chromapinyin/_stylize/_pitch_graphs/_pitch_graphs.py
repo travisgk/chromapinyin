@@ -8,7 +8,7 @@ from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
 from chromapinyin._stylize._color_scheme import get_inflection_RGB
-from chromapinyin._stylize._res_directories import get_pitch_graphs_dir
+from chromapinyin._stylize._res_directories import get_pitch_graphs_path
 
 _prev_style_name = None
 _thinned_templates = {}
@@ -33,7 +33,7 @@ def inflection_to_graph_path(inflection_num, alignment):
 # - <overwrite_images> being False will preserve any existing graph components.
 def create_inflection_graphs(
 	graph_style_name="fancy",
-	output_dir=get_pitch_graphs_dir(),
+	output_dir=get_pitch_graphs_path(),
 	fixed_width=False,
 	overwrite_images=True
 ):

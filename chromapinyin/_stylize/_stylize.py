@@ -33,6 +33,7 @@
 # 	                  pinyin will use the innate tone,
 # 	                  while zhuyin and ipa will use the spoken tone.
 # 	- "no_tones": the tones of pinyin, zhuyin, or ipa will not be included.
+# 	- "no_color": coloring spans will not be used.
 
 import math
 from chromapinyin._syllable._punctuation_marks import (
@@ -42,7 +43,11 @@ from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
 from ._category_contents import *
-from ._color_scheme import get_chroma_tone_values
+from ._color_scheme import (
+	get_chroma_tone_values,
+	get_chroma_gif_colors_white_values,
+	get_chroma_gif_colors_black_values
+)
 from ._html_builder import embed_styling, HTML_line
 
 # returns an HTML table of stylized chinese syllables.
@@ -164,7 +169,6 @@ def generate_CSS():
 	reset_tabulation()
 	css = ""
 	style_dicts = []
-	style_dicts.extend(get_chroma_tone_values())
 	style_dicts.extend(
 		[
 			CHROMA_DIV_PUSH_LEFT,
@@ -192,6 +196,9 @@ def generate_CSS():
 		]
 	)
 	style_dicts.extend(get_content_style_values())
+	style_dicts.extend(get_chroma_tone_values())
+	style_dicts.extend(get_chroma_gif_colors_white_values())
+	style_dicts.extend(get_chroma_gif_colors_black_values())
 
 	for style_dict in style_dicts[:-1]:
 		css += _return_CSS(style_dict) + "\n"
@@ -354,7 +361,9 @@ def _return_syllable_td_HTML(
 		)
 
 	elif category_name == "handwriting":
-		result += "" # return_handwriting_contents
+		result += return_handwriting_contents(
+			syllable, category, use_css, vertical
+		)
 
 	else:
 		result += HTML_line("<td></td>")

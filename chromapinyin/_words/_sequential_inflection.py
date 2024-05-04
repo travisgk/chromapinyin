@@ -12,6 +12,7 @@ from chromapinyin._syllable._vowel_chars import (
 	APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM
 )
 
+# set this to True to see the workflow of the <apply_rule> function.
 _PRINT_APPLY_RULE_DEBUG = False
 
 # modifies the given list of inflections groupings

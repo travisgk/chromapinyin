@@ -1,3 +1,11 @@
+# chromapinyin._stylize._html_builder.py
+# ---
+# this file contains functions that help
+# choose formatting for the output HTML
+# and a function to maintain consistent
+# tabulations while producing the HTML.
+#
+
 from ._table_css import (
 	CHROMA_DIV_PUSH_LEFT,
 	CHROMA_DIV_PUSH_RIGHT,

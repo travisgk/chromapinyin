@@ -5,7 +5,8 @@
 # 	- a <word_list> from create_word_list(...) (chromapinyin._words._word_list.py).
 # 	- a 2D list of categories.
 # 	- the option to generate CSS.
-# 
+#
+# ---
 # each sublist of <categories_2D> will be a row of components for *each* syllable.
 # within these sublists, category components are defined.
 # an element will either be a single string that indicates the category name,
@@ -34,6 +35,7 @@
 # 	                  while zhuyin and ipa will use the spoken tone.
 # 	- "no_tones": the tones of pinyin, zhuyin, or ipa will not be included.
 # 	- "no_color": coloring spans will not be used.
+#
 
 import math
 from chromapinyin._syllable._punctuation_marks import (
@@ -155,6 +157,7 @@ def create_stylized_sentence(
 			row += 1
 			col = 0
 
+	# builds the HTML.
 	result = HTML_line(
 		f"<table {embed_styling([CHROMA_TABLE], use_css)}>", 1
 	)
@@ -165,6 +168,7 @@ def create_stylized_sentence(
 	result += HTML_line("</table>", -1)
 	return result
 
+# returns the CSS for all the utilized classes.
 def generate_CSS():
 	reset_tabulation()
 	css = ""
@@ -205,6 +209,7 @@ def generate_CSS():
 	css += _return_CSS(style_dicts[-1])
 	return css
 
+# returns a string that contains the given <style_dict> formatted for CSS.
 def _return_CSS(style_dict):
 	class_str = style_dict["class"]
 	if "." not in class_str:
@@ -216,6 +221,7 @@ def _return_CSS(style_dict):
 	css += "}\n"
 	return css
 
+# returns a string that contains a row of contents in the HTML table.
 def _return_syllable_row_HTML(
 	syllable_row, categories_2D, use_css, vertical
 ):
@@ -263,6 +269,11 @@ def _return_syllable_row_HTML(
 
 	return result
 
+# returns HTML that's appended to the current cell's contents.
+# this is used to move isolated punctuation from its
+# own cell into the cell to its right.
+# an additional boolean is returned,
+#
 def _return_additional_punctuation(
 	syllable_row, category, syllable_i, use_css
 ):
@@ -319,7 +330,8 @@ def _return_additional_punctuation(
 			result += additional_punctuation
 	return result, current_cell_is_blank
 
-
+# returns the HTML that defines a table cell element
+# containing the appropriate syllable information.
 def _return_syllable_td_HTML(
 	syllable, category, use_css, vertical, add_punct
 ):

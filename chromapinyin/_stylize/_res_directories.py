@@ -1,3 +1,9 @@
+# chromapinyin._stylize._res_directories.py
+# ---
+# this file defines global variables that
+# hold the directories to resources sourced by the produced HTML.
+#
+
 import os
 
 _output_dir = "_chroma_res"

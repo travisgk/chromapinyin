@@ -1,3 +1,9 @@
+# chromapinyin._stylize._pitch_graphs.py
+# ---
+# this file contains functions which create pitch graph components
+# that will be sourced by the produced HTML.
+#
+
 import os
 import numpy as np
 from PIL import Image
@@ -30,6 +36,7 @@ def inflection_to_graph_path(inflection_num, alignment):
 #   chromapinyin/_stylize/_pitch_graphs/_<graph_style_name>
 # - <output_dir> is the directory where the created components will be saved.
 # - <fixed_width> being True will make each saved image the exact same size.
+#   this will align the line component inside its respective image accordingly.
 # - <overwrite_images> being False will preserve any existing graph components.
 def create_inflection_graphs(
 	graph_style_name="fancy",

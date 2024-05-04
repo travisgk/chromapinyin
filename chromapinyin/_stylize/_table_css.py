@@ -6,6 +6,7 @@
 # 
 # user functions can be accessed to change font sizes, for example:
 # 	chromapinyin.set_pinyin_font_size("30px")
+#
 
 import re
 

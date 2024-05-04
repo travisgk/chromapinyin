@@ -9,11 +9,13 @@
 #
 
 from chromapinyin._syllable._inflection import TO_INFLECTION
+from chromapinyin._syllable._vowel_chars import PUNCTUATION_TONE_NUM
 
 _inflection_to_RGB = None
 _chroma_tones = None
 _chroma_gif_colors_white = None
 _chroma_gif_colors_black = None
+_nightmode_GIF_punctuation_RGB = None
 
 def get_inflection_RGB(inflection):
 	return _inflection_to_RGB[inflection]
@@ -37,7 +39,7 @@ def get_chroma_gif_colors_black_values():
 
 # sets the color scheme to chromapinyin's default.
 def set_to_default():
-	global _inflection_to_RGB
+	global _inflection_to_RGB, _nightmode_GIF_punctuation_RGB
 	HIGH_COLOR = (255, 157, 18)
 	RISING_COLOR = (0, 190, 36)
 	LOW_COLOR = (0, 87, 190)
@@ -47,6 +49,7 @@ def set_to_default():
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
 	_inflection_to_RGB[TO_INFLECTION["rising_low"]] = (7, 169, 250)
+	_nightmode_GIF_punctuation_RGB = (255, 255, 255)
 	_rebuild_colors()
 
 # sets the color scheme to Nathan Dummitt's color scheme used
@@ -119,8 +122,8 @@ def _set_inflection_to_RGB(
 ):
 	global _inflection_to_RGB
 	_inflection_to_RGB = {
-		TO_INFLECTION["apostrophe"]: (255, 255, 255),
-		TO_INFLECTION["punctuation"]: (255, 255, 255), # punctuation
+		TO_INFLECTION["apostrophe"]: (0, 0, 0),
+		TO_INFLECTION["punctuation"]: (0, 0, 0), # punctuation
 		TO_INFLECTION["neutral"]: NEUTRAL_COLOR,
 		TO_INFLECTION["high"]: HIGH_COLOR,
 		TO_INFLECTION["rising"]: RISING_COLOR,
@@ -161,11 +164,19 @@ def _rebuild_colors():
 		inflection: {
 			"class": ".nightMode img.chroma-tone-" + inflection_str.replace("_", "-"),
 			"style": _RGB_to_svg_filter(
-				_inflection_to_RGB[inflection], white_background=False
+				_inflection_to_RGB[inflection]
+				if (
+					inflection != PUNCTUATION_TONE_NUM 
+					or not _nightmode_GIF_punctuation_RGB
+				) else _nightmode_GIF_punctuation_RGB,
+				white_background=False
 			),
 		} for inflection_str, inflection in TO_INFLECTION.items()
 	}
 
+# returns a styling filter which will convert the original black
+# pixels in the image to the given <rgb> tuple.
+# <white_background> is a boolean option.
 def _RGB_to_svg_filter(rgb, white_background):
 	r = f"{rgb[0] / 255:.3f}"
 	g = f"{rgb[1] / 255:.3f}"

@@ -1,7 +1,6 @@
 # chromapinyin._stylize._category_contents.py
 # ---
-# this file defines functions which return HTML of a <td> element
-# containing syllable information for the given <category>.
+# this file defines functions which return HTML contents of a <td> element.
 #
 
 import os
@@ -19,8 +18,6 @@ from ._html_builder import *
 from ._pitch_graphs._pitch_graphs import inflection_to_graph_path
 from ._res_directories import get_handwriting_gifs_path
 from ._table_css import *
-
-
 
 _SIMPLIFY_SPOKEN_TONE = {
 	TO_INFLECTION["punctuation"]: TO_INFLECTION["punctuation"],
@@ -332,7 +329,7 @@ def return_handwriting_contents(syllable, category, use_css, vertical):
 	color_css = get_inflection_img_color_style(
 			syllable["inflection_num"]
 			if not category_is_tuple or "no_color" not in category
-			else syllable["punctuation"]
+			else PUNCTUATION_TONE_NUM
 	)
 	img_classes.append(color_css)
 	img_styling = embed_styling(img_classes, use_css)

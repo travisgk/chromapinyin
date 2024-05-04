@@ -67,7 +67,7 @@ print(html)
 ```
 
 The resulting HTML will look like this:
-![](https://raw.githubusercontent.com/travisgk/chromapinyin/main/_screenshots/_example_01.png?token=GHSAT0AAAAAACRE74CQIUUNP72OE64FEP52ZRWSKJQ)
+![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_example_01.png?raw=true)
 
 <br>
 

@@ -237,7 +237,24 @@ chromapinyin.color_scheme.set_inflection_to_RGB(
 
 <br>
 
-# Information in each syllable dictionary
+# Changing Component Sizes
+All of these functions can be called from chromapinyin and given a string representing the new size for the particular component. This string should include the unit as well.
+- ```set_font_sizes(new_size)```
+- ```set_hanzi_font_size(new_size)```
+- ```set_hanzi_vertical_offset(new_size)```
+- ```set_pinyin_font_size(new_size)```
+- ```set_zhuyin_prefix_font_size(new_size)```
+- ```set_zhuyin_root_font_size(new_size)```
+- ```set_zhuyin_suffix_font_size(new_size)```
+- ```set_ipa_font_size(new_size)```
+- ```set_pitch_graph_height(new_size)```
+- ```set_handwriting_height(new_size)```
+
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_e.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_e.py)
+
+<br>
+
+# Information in each Syllable Dictionary
 ```
 import chromapinyin
 

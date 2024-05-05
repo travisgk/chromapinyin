@@ -1,4 +1,4 @@
-![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_demo1.png?raw=true)
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo1.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo1.py)
 # chromapinyin
 A Python script for creating HTML tables of various Chinese transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
 These can be created by giving chromapinyin text in hanzi and text of its corresponding pinyin.
@@ -74,7 +74,7 @@ main()
 ```
 
 The resulting HTML will look like this:
-![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_demo2.png?raw=true)
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo2.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo2.py)
 
 <br>
 

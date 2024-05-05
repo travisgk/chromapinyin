@@ -180,6 +180,61 @@ With ```max_n_line_syllables=5```, chromapinyin creates the following table:
 # Color Palettes
 chromapinyin provides several default tone color palettes that can be selected.
 
+<table>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_default()</td>
+		<td>chromapinyin's default color scheme.</td>
+	</tr>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_dummit()</td>
+		<td>Nathan Dummitt's color scheme used in <i>Chinese Through Tone & Color</i>.</td>
+	</tr>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_MDBG()</td>
+		<td>MBDG Chinese Dictionary's color scheme.</td>
+	</tr>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_hanping()</td>
+		<td>Hanping Chinese Dictionary's color scheme.</td>
+	</tr>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_pleco()</td>
+		<td>Pleco Software's color scheme.</td>
+	</tr>
+	<tr>
+		<td>chromapinyin.color_scheme.set_to_sinosplice()</td>
+		<td>the color scheme proposed by John Pasden of the website <i>Sinosplice</i>.</td>
+	</tr>
+</table>
+
+<br>
+
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_d.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_d.py)
+```
+import chromapinyin
+
+chromapinyin.color_scheme.set_to_MDBG()
+chromapinyin.create_inflection_graphs(fixed_width=True, style_name="simple")
+```
+```create_inflection_graphs``` creates pitch graph components and should be run after the color palette is changed. The full demo can be found [here](https://github.com/travisgk/chromapinyin/blob/main/demo_d.py).
+
+<br>
+
+A completely custom color scheme can be given by using:
+
+```
+import chromapinyin
+
+chromapinyin.color_scheme.set_inflection_to_RGB(
+    HIGH_COLOR=(255, 255, 0),
+    RISING_COLOR=(0, 255, 0),
+    LOW_COLOR=(0, 0, 255),
+    FALLING_COLOR=(255, 0, 0),
+    NEUTRAL_COLOR=(127, 127, 127),
+    NEUTRAL_INTERPOLATION=0.2 # 0.0 for full neutral color.
+)
+```
+
 <br>
 
 # Information in each syllable dictionary

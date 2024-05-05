@@ -1,46 +1,49 @@
 import chromapinyin
 
+
 def main():
-	chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
-	#chromapinyin.color_scheme.set_to_default()
-	#chromapinyin.color_scheme.set_to_dummit()
-	chromapinyin.color_scheme.set_to_MDBG()
-	#chromapinyin.color_scheme.set_to_hanping()
-	#chromapinyin.color_scheme.set_to_pleco()
-	#chromapinyin.color_scheme.set_to_sinosplice()
-	chromapinyin.create_inflection_graphs(
-		fixed_width=True, style_name="simple"
-	)
+    chromapinyin.color_scheme.set_to_MDBG()
+    chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
+    chromapinyin.create_inflection_graphs(fixed_width=True, style_name="simple")
 
-	hanzi = "我不是来自中国"
-	pinyin = "wǒ bùshì láizì zhōngguó"
-	word_list = chromapinyin.create_word_list(hanzi, pinyin)
+    hanzi = "我不是来自中国"
+    pinyin = "wǒ bùshì láizì zhōngguó"
+    word_list = chromapinyin.create_word_list(hanzi, pinyin)
 
-	# defines the 2D table of the syllable aspects to display per syllable.
-	categories = [
-	    ["hanzi",],
-	    ["pinyin",],
-	    [("pitch_graph", "grouped"),],
-	]
+    # defines the 2D table of the syllable aspects to display per syllable.
+    categories = [
+        [
+            "hanzi",
+        ],
+        [
+            "pinyin",
+        ],
+        [
+            ("pitch_graph", "grouped"),
+        ],
+    ]
 
-	html = ""
-	html += "<html>\n<head>\n<style>\n"
-	html += "body { background-color: black; color: white; font-family: \"Bahnschrift\"; }"
-	html += "</style>\n</head>\n<body>\n"
+    html = ""
+    html += "<html>\n<head>\n<style>\n"
+    html += (
+        'body { background-color: black; color: white; font-family: "Bahnschrift"; }'
+    )
+    html += "</style>\n</head>\n<body>\n"
 
-	# creates an HTML table with styling components placed directly inline
-	# and the characters placed to be read horizontally.
-	html += chromapinyin.create_stylized_sentence(
-	    word_list, 
-	    categories,
-	    use_css=False,
-	    vertical=False,
-	    hide_clause_breaks=False,
-	    max_n_line_syllables=999
-	)
-	html += "</body>\n</html>"
+    # creates an HTML table with styling components placed directly inline
+    # and the characters placed to be read horizontally.
+    html += chromapinyin.create_stylized_sentence(
+        word_list,
+        categories,
+        use_css=False,
+        vertical=False,
+        hide_clause_breaks=False,
+        max_n_line_syllables=999,
+    )
+    html += "</body>\n</html>"
 
-	with open("demo_d.html", "w", encoding="utf-8") as file:
-		file.write(html)
+    with open("demo_d.html", "w", encoding="utf-8") as file:
+        file.write(html)
+
 
 main()

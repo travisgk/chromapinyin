@@ -50,17 +50,25 @@ def embed_styling(style_dicts, uses_css):
 
 	results = []
 	for style_dict in style_dicts:
-		for style_line in style_dict["style"]:
-			if "svg" in style_line:
-				clean_line = style_line.replace("url(\"", "url(&quot;")
-				clean_line = clean_line.replace("#color-filter\")", "#color-filter&quot;)")
+		is_svg_filter = any(
+			"svg" in style_line for style_line in style_dict["style"]
+		)
+
+		if is_svg_filter:
+			for style_line in style_dict["style"]:
+				clean_line = style_line.replace("\\", "")
+				clean_line = clean_line.replace("url(\"", "url(&quot;")
+				clean_line = clean_line.replace(
+					"#color-filter\")", "#color-filter&quot;)"
+				)
 				clean_line = clean_line.replace("\"", "'")
-			else:
-				clean_line = style_line.replace("\"", "")
-			clean_line = clean_line.replace(": ", ":")
-			clean_line = clean_line.replace("\\", "")
-			
-			results.append(" ".join(clean_line.split()))
+				clean_line = clean_line.replace(": ", ":")
+				results.append(" ".join(clean_line.split()))
+		else:
+			for style_line in style_dict["style"]:
+				clean_line = style_line.replace("\"", "'")
+				clean_line = clean_line.replace(": ", ":")
+				results.append("".join(clean_line.split()))
 
 	return (
 		"style=\"" 
@@ -85,3 +93,6 @@ def HTML_line(HTML, tab_inc=0, tab="    ", end="\n"):
 	else:
 		result = tab * _n_tabs + HTML + end
 	return result
+
+def colspan_str(colspan):
+	return "" if colspan <= 1 else f"colspan=\"{colspan}\" "

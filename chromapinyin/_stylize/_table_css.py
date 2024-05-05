@@ -138,6 +138,7 @@ CHROMA_TR = {
 		"margin: 0;",
 		"padding: 0;",
 		"text-align: center;",
+		"overflow: visible;",
 	),
 }
 
@@ -215,15 +216,15 @@ CHROMA_ZHUYIN_SUFFIX_OFFSET = {
 		"padding: 0;",
 		"display:flex;",
 		"position: relative;",
-		"left: -2px;",
-		"top: -20px;",
+		"left: -3px;",
+		"top: -19px;",
 	),
 }
 
 CHROMA_ZHUYIN_SUFFIX_CONTAINER = {
 	"class": "chroma-zhuyin-suffix-container",
 	"style": (
-		"width: 3px;",
+		"width: 10px;",
 		"height: 0px;",
 		"display: flex;",
 		"position: relative;",

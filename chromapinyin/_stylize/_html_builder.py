@@ -20,6 +20,7 @@
 # 	- "vertical_zhuyin": the syllable's zhuyin transcription rendered vertically.
 # 	- "ipa": the syllable's international phonetic alphabet transcription.
 # 	- "pitch_graph": the path to an image representing the syllable's spoken tone.
+#   - "blank": an empty table cell. used to block cell merging.
 #
 # additional formatting can be provided when the element is a tuple,
 # like ("pinyin", "grouped", "split_punctuation").
@@ -35,6 +36,9 @@
 # 	                  while zhuyin and ipa will use the spoken tone.
 # 	- "no_tones": the tones of pinyin, zhuyin, or ipa will not be included.
 # 	- "no_color": coloring spans will not be used.
+#   - "manual_night_mode": this is used if the user wants night mode styling
+#	                      embedded inline for their GIFs, since without CSS
+#	                      these stylings can't be reached.
 #
 
 import math
@@ -50,7 +54,9 @@ from ._color_scheme import (
 	get_chroma_gif_colors_white_values,
 	get_chroma_gif_colors_black_values
 )
-from ._formatting_helper import reset_tabulation, embed_styling, HTML_line
+from ._formatting_helper import (
+	reset_tabulation, embed_styling, HTML_line, colspan_str
+)
 
 # returns an HTML table of stylized chinese syllables.
 def create_stylized_sentence(
@@ -173,41 +179,101 @@ def create_stylized_sentence(
 def generate_CSS():
 	reset_tabulation()
 	css = ""
-	style_dicts = []
-	style_dicts.extend(
-		[
-			CHROMA_DIV_PUSH_LEFT,
-			CHROMA_DIV_PUSH_RIGHT,
-			CHROMA_DIV_PUSH_CENTER,
-			CHROMA_TD_ALIGN_CENTER,
-			CHROMA_TD_ALIGN_TOP,
-			CHROMA_TD_ALIGN_RIGHT,
-			CHROMA_TD_ALIGN_BOTTOM,
-			CHROMA_TD_ALIGN_LEFT,
-			CHROMA_TABLE,
-			CHROMA_TABLE_NESTED,
-			CHROMA_TR,
-			CHROMA_TD,
-			CHROMA_APOSTROPHE_OFFSET,
-			CHROMA_TD_ZHUYIN,
-			CHROMA_DIV_ZHUYIN_CONTAINER,
-			CHROMA_NESTED_ZHUYIN,
-			CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET,
-			CHROMA_ZHUYIN_PREFIX_CONTAINER,
-			CHROMA_ZHUYIN_SUFFIX_OFFSET,
-			CHROMA_ZHUYIN_SUFFIX_CONTAINER,
-			CHROMA_TD_PITCH_GRAPH,
-			CHROMA_TD_HANDWRITING,
-		]
+	style_sections = []
+	style_sections.append(
+		(	
+			"TABLE",
+			(
+				CHROMA_DIV_PUSH_LEFT,
+				CHROMA_DIV_PUSH_RIGHT,
+				CHROMA_DIV_PUSH_CENTER,
+				CHROMA_TD_ALIGN_CENTER,
+				CHROMA_TD_ALIGN_TOP,
+				CHROMA_TD_ALIGN_RIGHT,
+				CHROMA_TD_ALIGN_BOTTOM,
+				CHROMA_TD_ALIGN_LEFT,
+				CHROMA_TABLE,
+				CHROMA_TABLE_NESTED,
+				CHROMA_TR,
+				CHROMA_TD,
+			),
+		)
 	)
-	style_dicts.extend(get_content_style_values())
-	style_dicts.extend(get_chroma_tone_values())
-	style_dicts.extend(get_chroma_gif_colors_white_values())
-	style_dicts.extend(get_chroma_gif_colors_black_values())
 
-	for style_dict in style_dicts[:-1]:
-		css += _return_CSS(style_dict) + "\n"
-	css += _return_CSS(style_dicts[-1])
+
+	style_sections.append(
+		(
+			"HANZI",
+			(
+				get_content_style("CHROMA_TD_HANZI"),
+				get_content_style("CHROMA_HANZI_OFFSET"),
+				get_content_style("CHROMA_DIV_HANZI_CONTAINER"),
+			),
+		)
+	)
+
+	style_sections.append(
+		(
+			"PINYIN",
+			(
+				get_content_style("CHROMA_TD_PINYIN"),
+				CHROMA_APOSTROPHE_OFFSET,
+			),
+		)
+	)
+
+	style_sections.append(
+		(
+			"ZHUYIN",
+			(
+				CHROMA_TD_ZHUYIN,
+				get_content_style("CHROMA_ZHUYIN_PREFIX"),
+				get_content_style("CHROMA_ZHUYIN_ROOT"),
+				get_content_style("CHROMA_ZHUYIN_SUFFIX"),
+				get_content_style("CHROMA_INLINE_ZHUYIN"),
+				get_content_style("CHROMA_VERTICAL_ZHUYIN"),
+				CHROMA_DIV_ZHUYIN_CONTAINER,
+				CHROMA_NESTED_ZHUYIN,
+				CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET,
+				CHROMA_ZHUYIN_PREFIX_CONTAINER,
+				CHROMA_ZHUYIN_SUFFIX_OFFSET,
+				CHROMA_ZHUYIN_SUFFIX_CONTAINER,
+			),
+		)
+	)
+
+	style_sections.append(
+		(
+			"PITCH_GRAPH",
+			(
+				CHROMA_TD_PITCH_GRAPH,
+				get_content_style("CHROMA_IMG_PITCH_GRAPH"),
+			),
+		)
+	)
+
+	style_sections.append(
+		(
+			"HANDWRITING",
+			(
+				CHROMA_TD_HANDWRITING,
+				get_content_style("CHROMA_IMG_HANDWRITING"),
+			),
+		)
+	)
+
+	style_sections.append(("tone colors", get_chroma_tone_values(),))
+	style_sections.append(
+		("GIF white filters", get_chroma_gif_colors_white_values(),)
+	)
+	style_sections.append(
+		("GIF black filters", get_chroma_gif_colors_black_values(),)
+	)
+
+	for style_section in style_sections:
+		css += f"\n/* {style_section[0]} */\n"
+		for style_dict in style_section[1]:
+			css += _return_CSS(style_dict) + "\n"
 	return css
 
 # returns a string that contains the given <style_dict> formatted for CSS.
@@ -363,14 +429,15 @@ def _return_syllable_td_HTML(
 	result = ""
 	
 	colspan = 1
-	if use_colspan and len(categories_row) == 1:
-		colspan = 0
-		for i in range(category_i, syllable_cells_width):
+	if use_colspan:
+		for i in range(category_i + 1, syllable_cells_width):
 			if (
-				i + 1 >= len(categories_row) 
-				or (i + 1 < len(categories_row) and categories_row[i + 1] == None)
+				i >= len(categories_row) 
+				or (i < len(categories_row) and categories_row[i] == None)
 			):
 				colspan += 1
+			elif i < len(categories_row) and categories_row[i] != None:
+				break
 
 	if category_name == "hanzi":
 		result += return_hanzi_contents(
@@ -407,7 +474,10 @@ def _return_syllable_td_HTML(
 			syllable, category, use_css, colspan, vertical
 		)
 
+	elif category_name == "blank":
+		result += HTML_line(f"<td {colspan_str(colspan)}></td>")
+
 	elif not use_colspan:
-		result += HTML_line("<td></td>")
+		result += HTML_line(f"<td></td>")
 
 	return result

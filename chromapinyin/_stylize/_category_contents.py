@@ -44,7 +44,7 @@ def return_hanzi_contents(syllable, category, use_css, colspan, vertical):
 	if vertical:
 		td_styling_classes.append(return_td_align_style(alignment, vertical))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	# opens the <div> container element.
 	div_styling_classes = [get_content_style("CHROMA_DIV_HANZI_CONTAINER"),]
@@ -81,7 +81,7 @@ def return_pinyin_contents(
 	td_styling_classes = [category_to_td_style(category_name),]
 	td_styling_classes.append(return_td_align_style(alignment, vertical))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	# opens and closes the <span> container element.
 	span_styling = None
@@ -122,7 +122,7 @@ def return_zhuyin_contents(
 	if vertical_table:
 		td_styling_classes.append(return_td_align_style(alignment, vertical_table))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	# opens the <div> container element.
 	div_styling_classes = [CHROMA_DIV_ZHUYIN_CONTAINER,]
@@ -244,7 +244,7 @@ def return_ipa_contents(syllable, category, use_css, colspan, vertical, add_punc
 	td_styling_classes = [category_to_td_style(category_name),]
 	td_styling_classes.append(return_td_align_style(alignment, vertical))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	# opens and closes the <span> container element.
 	span_styling = None
@@ -292,7 +292,7 @@ def return_pitch_graph_contents(syllable, category, use_css, colspan, vertical):
 	td_styling_classes = [category_to_td_style(category_name),]
 	td_styling_classes.append(return_td_align_style(alignment, vertical))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	image_stylings = embed_styling(
 		[get_content_style("CHROMA_IMG_PITCH_GRAPH",),], use_css
@@ -316,7 +316,6 @@ def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
 	if not os.path.exists(gif_path):
 		return HTML_line("<td></td>")
 
-	
 	category_name = category[0] if category_is_tuple else category
 	category_is_grouped = category_is_tuple and "grouped" in category
 	alignment = syllable["alignment"] if category_is_grouped else "center"
@@ -325,14 +324,18 @@ def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
 	td_styling_classes = [category_to_td_style(category_name),]
 	td_styling_classes.append(return_td_align_style(alignment, vertical))
 	td_styling = embed_styling(td_styling_classes, use_css)
-	result = HTML_line(f"<td {_colspan_str(colspan)}{td_styling}>", 1)
+	result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
 	# gets the coloring style for the image.
 	img_classes = [get_content_style("CHROMA_IMG_HANDWRITING"),]
+	black_background = (
+		not use_css and category_is_tuple and "night_mode_GIFs" in category
+	)
 	color_css = get_inflection_img_color_style(
 			syllable["inflection_num"]
 			if not category_is_tuple or "no_color" not in category
-			else PUNCTUATION_TONE_NUM
+			else PUNCTUATION_TONE_NUM,
+			white_background=not black_background
 	)
 	img_classes.append(color_css)
 	img_styling = embed_styling(img_classes, use_css)
@@ -341,6 +344,3 @@ def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
 	result += HTML_line(f"<img {img_styling} src=\"{gif_path}\" />")
 	result += HTML_line("</td>", -1)
 	return result
-
-def _colspan_str(colspan):
-	return "" if colspan <= 1 else f"colspan=\"{colspan}\" "

@@ -1,0 +1,1094 @@
+<html>
+<head>
+<style>
+body {
+	font-family: DejaVu Sans;
+	background-color: black;
+}
+
+
+/* TABLE */
+div.chroma-push-left {
+	margin-right: auto;
+}
+
+div.chroma-push-right {
+	margin-left: auto;
+}
+
+div.chroma-push-center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td.chroma-align-center {
+	text-align: center;
+	vertical-align: center;
+}
+
+td.chroma-align-top {
+	text-align: center;
+	vertical-align: top;
+}
+
+td.chroma-align-right {
+	text-align: right;
+	vertical-align: center;
+}
+
+td.chroma-align-bottom {
+	text-align: center;
+	vertical-align: bottom;
+}
+
+td.chroma-align-left {
+	text-align: left;
+	vertical-align: center;
+}
+
+table.chroma {
+	border-collapse: collapse;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+table.chroma-nested {
+	border-collapse: collapse;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+tr.chroma {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	overflow: visible;
+}
+
+td.chroma {
+	margin: 0;
+	padding: 0;
+}
+
+
+/* HANZI */
+td.chroma-hanzi {
+	margin: 0;
+	padding: 1px;
+	font-size: 64px;
+}
+
+.chroma-hanzi-offset {
+	display: block;
+	position: relative;
+	top: -20%;
+}
+
+div.chroma-hanzi-container {
+	height: 64px;
+	display: block;
+	overflow: hidden;
+	position: relative;
+}
+
+
+/* PINYIN */
+td.chroma-pinyin {
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+}
+
+.chroma-apostrophe-offset {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	top: -2px;
+}
+
+
+/* ZHUYIN */
+td.chroma-zhuyin {
+	margin: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+
+.chroma-zhuyin-prefix {
+	font-size: 21px;
+}
+
+.chroma-zhuyin-root {
+	font-size: 13px;
+}
+
+.chroma-zhuyin-suffix {
+	font-size: 21px;
+}
+
+.chroma-inline-zhuyin {
+	height: 13px;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+	overflow: hidden;
+}
+
+.chroma-vertical-zhuyin {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+	text-orientation: upright;
+	writing-mode: vertical-lr;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+div.chroma-zhuyin-container {
+	display: table;
+	text-align: center;
+}
+
+.chroma-nested-zhuyin {
+	width: 0px;
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+}
+
+.chroma-zhuyin-vertical-prefix-offset {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+	left: 5.5px;
+	top: -6px;
+}
+
+.chroma-zhuyin-prefix-container {
+	width: 5px;
+	height: 1px;
+	display: flex;
+	position: relative;
+}
+
+.chroma-zhuyin-suffix-offset {
+	margin: 0;
+	padding: 0;
+	display:flex;
+	position: relative;
+	left: -3px;
+	top: -19px;
+}
+
+.chroma-zhuyin-suffix-container {
+	width: 10px;
+	height: 0px;
+	display: flex;
+	position: relative;
+}
+
+
+/* PITCH_GRAPH */
+td.chroma-pitch-graph {
+	margin: 0;
+	padding: 0;
+}
+
+img.chroma-pitch-graph {
+	height: 67px;
+	object-fit: contain;
+}
+
+
+/* HANDWRITING */
+td.chroma-handwriting {
+	margin: 0;
+	padding: 0;
+	overflow: visible;
+}
+
+img.chroma-handwriting {
+	height: 65px;
+	object-fit: contain;
+}
+
+
+/* tone colors */
+.chroma-tone-apostrophe {
+	color: #000000;
+}
+
+.chroma-tone-punctuation {
+	color: #ffffff;
+}
+
+.chroma-tone-high {
+	color: #ff9d12;
+}
+
+.chroma-tone-rising {
+	color: #00be24;
+}
+
+.chroma-tone-low {
+	color: #0057be;
+}
+
+.chroma-tone-falling {
+	color: #b06fdb;
+}
+
+.chroma-tone-neutral {
+	color: #808080;
+}
+
+.chroma-tone-full-low {
+	color: #0057be;
+}
+
+.chroma-tone-half-falling {
+	color: #b06fdb;
+}
+
+.chroma-tone-neutral-high {
+	color: #99856a;
+}
+
+.chroma-tone-neutral-rising {
+	color: #668c6d;
+}
+
+.chroma-tone-neutral-low {
+	color: #66778c;
+}
+
+.chroma-tone-neutral-falling {
+	color: #897c92;
+}
+
+.chroma-tone-rising-low {
+	color: #07a9fa;
+}
+
+.chroma-tone-rising-yi {
+	color: #00be24;
+}
+
+.chroma-tone-falling-yi {
+	color: #b06fdb;
+}
+
+.chroma-tone-rising-bu {
+	color: #00be24;
+}
+
+
+/* GIF white filters */
+img.chroma-tone-apostrophe {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncB type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-punctuation {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-high {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.384 0.384'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.929 0.929'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-rising {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.659 0.659'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.255 0.255'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-neutral {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.498 0.498'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.498 0.498'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.498 0.498'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-full-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.659 0.659'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.255 0.255'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-half-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-neutral-high {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.478 0.478'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.584 0.584'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-neutral-rising {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.451 0.451'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.573 0.573'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-neutral-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.533 0.533'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.451 0.451'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-neutral-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.463 0.463'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.514 0.514'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.427 0.427'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-rising-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.973 0.973'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.337 0.337'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.020 0.020'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-rising-yi {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-falling-yi {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+img.chroma-tone-rising-bu {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter") invert(100%);
+}
+
+
+/* GIF black filters */
+.nightMode img.chroma-tone-apostrophe {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-punctuation {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncB type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-high {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.616 0.616'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.071 0.071'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-rising {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.341 0.341'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.745 0.745'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-neutral {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.502 0.502'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.502 0.502'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.502 0.502'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-full-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.341 0.341'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.745 0.745'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-half-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-neutral-high {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.522 0.522'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.416 0.416'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-neutral-rising {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.549 0.549'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.427 0.427'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-neutral-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.467 0.467'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.549 0.549'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-neutral-falling {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.537 0.537'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.486 0.486'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.573 0.573'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-rising-low {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.027 0.027'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.663 0.663'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.980 0.980'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-rising-yi {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-falling-yi {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+.nightMode img.chroma-tone-rising-bu {
+	filter: contrast(135%) invert(100%)
+		url("\
+		data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg' version='1.1'>\
+		<defs>\
+		<filter id='color-filter' color-interpolation-filters='sRGB'>\
+		<feComponentTransfer>\
+		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
+		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		</feComponentTransfer>\
+		</filter>\
+		</defs>\
+		</svg>#color-filter");
+}
+
+</style>
+</head>
+<body>
+<div class="nightMode">
+<table class="chroma">
+    <tr class="chroma">
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-low">很</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-low">
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄏㄣ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-low">ˇ</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-high">高</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-high">
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄍㄠ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-high"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-half-falling">兴</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-half-falling">
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄒㄧㄥ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-half-falling">ˋ</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-falling">认</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-falling">
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄖㄣ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-falling">ˋ</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-rising">识</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-rising">
+                                <span class="chroma-zhuyin-root chroma-inline-zhuyin">ㄕ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-rising">ˊ</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td class="chroma-hanzi">
+            <div class="chroma-hanzi-container chroma-push-center">
+                <span class="chroma-hanzi-offset chroma-tone-full-low">你</span>
+            </div>
+        </td>
+        <td class="chroma-zhuyin">
+            <div class="chroma-zhuyin-container chroma-push-center">
+                <table class="chroma-nested">
+                    <tr class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-zhuyin">
+                            <span class="chroma-tone-full-low">
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄋㄧ</span>
+                            </span>
+                        </td>
+                        <td class="chroma-nested-zhuyin">
+                            <div class="chroma-zhuyin-suffix-offset">
+                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-full-low">ˇ</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr class="chroma">
+        <td colspan="2" class="chroma-pinyin chroma-align-center">
+            <span class="chroma-tone-low">hěn</span>
+        </td>
+        <td colspan="2" class="chroma-pinyin chroma-align-right">
+            <span class="chroma-tone-high">gāo</span>
+        </td>
+        <td colspan="2" class="chroma-pinyin chroma-align-left">
+            <span class="chroma-tone-half-falling">xìng</span>
+        </td>
+        <td colspan="2" class="chroma-pinyin chroma-align-right">
+            <span class="chroma-tone-falling">rèn</span>
+        </td>
+        <td colspan="2" class="chroma-pinyin chroma-align-left">
+            <span class="chroma-tone-rising">shí</span>
+        </td>
+        <td colspan="2" class="chroma-pinyin chroma-align-center">
+            <span class="chroma-tone-full-low">nǐ</span>
+        </td>
+    </tr>
+    <tr class="chroma">
+        <td colspan="2" class="chroma-pitch-graph chroma-align-center">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_low_center.png" />
+        </td>
+        <td colspan="2" class="chroma-pitch-graph chroma-align-right">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_high_right.png" />
+        </td>
+        <td colspan="2" class="chroma-pitch-graph chroma-align-left">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_half_falling_left.png" />
+        </td>
+        <td colspan="2" class="chroma-pitch-graph chroma-align-right">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_falling_right.png" />
+        </td>
+        <td colspan="2" class="chroma-pitch-graph chroma-align-left">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_rising_left.png" />
+        </td>
+        <td colspan="2" class="chroma-pitch-graph chroma-align-center">
+            <img class="chroma-pitch-graph" src="_chroma_res\pitch_graphs\_full_low_center.png" />
+        </td>
+    </tr>
+</table>
+</div>
+</body>
+</html>

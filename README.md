@@ -6,7 +6,9 @@ The program will take the necessary tone changes into account.
 
 <br>
 
-## Installation
+# Setup
+
+### Installation
 ```
 pip install pillow imageio
 ```
@@ -16,12 +18,12 @@ pip install pillow imageio
 
 <br>
 
-## Resources
+### Handwriting Animation GIFs
+chromapinyin can modify handwriting GIFs' speed and looping behavior.
 
-GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and have its folders ```images``` and ```images_large``` placed under chromapinyin's output directory to be ```_chroma_res/handwriting/images``` and ```_chroma_res/handwriting/images_large``` respectively.
+GIF animations from the repository [chinese-char-animations](https://github.com/nmarley/chinese-char-animations) can be downloaded and have its folders ```images``` and ```images_large``` placed under chromapinyin's output directory to (by default) be ```_chroma_res/handwriting/images``` and ```_chroma_res/handwriting/images_large``` respectively.
 
-You will need the imageio library for the next part.
-The following can be run to change the speed and looping behavior of the GIFs:
+Then the following can be run (imageio is necessary):
 ```
 import chromapinyin
 chromapinyin.process_gifs(fps=5, start_freeze_ms=1000, end_freeze_ms=3500, loops=True)
@@ -34,7 +36,7 @@ so that this directory can easily be renamed to ```_chroma_res/handwriting/image
 
 <br>
 
-# Making a stylized table
+# Using chromapinyin
 The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/main.py).
 ```
 import chromapinyin

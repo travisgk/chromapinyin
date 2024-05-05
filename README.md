@@ -169,7 +169,7 @@ categories = [
 ]
 ```
 
-The **"blank"** category adds padding to the second row so that **"ipa"** isn't spanned over two columns, while the **"handwriting"** category will be spanned across all three columns.
+The **"blank"** category adds padding to the second row so that **"ipa"** isn't spanned over two columns, while the **"handwriting"** category in the third row will be spanned across all three columns.
 
 With ```max_n_line_syllables=5```, chromapinyin creates the following table:
 

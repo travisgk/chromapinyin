@@ -5,6 +5,7 @@ These can be created by giving chromapinyin text in hanzi and text of its corres
 The program will take the necessary tone changes into account.
 
 <br>
+<br>
 
 # Setup
 
@@ -35,9 +36,10 @@ The process GIFs function will also rename the files under ```_chroma_res/handwr
 so that this directory can easily be renamed to ```_chroma_res/handwriting/images``` to be used instead.
 
 <br>
+<br>
 
 # Creating a Stylized Table
-
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_b.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_b.py)
 The following can be found under [demo_b.py](https://github.com/travisgk/chromapinyin/blob/main/demo_b.py).
 ```
 import chromapinyin
@@ -75,10 +77,6 @@ def main():
 
 main()
 ```
-
-The resulting HTML will look like this:
-[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_b.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_b.py)
-
 <br>
 
 ### Category Options
@@ -176,8 +174,10 @@ With ```max_n_line_syllables=5```, chromapinyin creates the following table:
 [<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_c.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_c.py)
 
 <br>
+<br>
 
 # Color Palettes
+### Built-in Color Palettes
 chromapinyin provides several default tone color palettes that can be selected.
 
 <table>
@@ -220,6 +220,7 @@ chromapinyin.create_inflection_graphs(fixed_width=True, style_name="simple")
 
 <br>
 
+### Custom Color Palette
 A completely custom color scheme can be given by using:
 
 ```
@@ -236,9 +237,11 @@ chromapinyin.color_scheme.set_inflection_to_RGB(
 ```
 
 <br>
+<br>
 
 # Changing Component Sizes
-All of these functions can be called from chromapinyin and given a string representing the new size for the particular component. This string should include the unit as well.
+All of these functions can be called from chromapinyin and given a string representing the new size for the particular component. This string should include the unit as well.<br>
+By default, all of these components are configured to use ```rem``` units.
 - ```set_font_sizes(new_size)```
 - ```set_hanzi_font_size(new_size)```
 - ```set_hanzi_vertical_offset(new_size)```
@@ -252,6 +255,7 @@ All of these functions can be called from chromapinyin and given a string repres
 
 [<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_e.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_e.py)
 
+<br>
 <br>
 
 # Information in each Syllable Dictionary

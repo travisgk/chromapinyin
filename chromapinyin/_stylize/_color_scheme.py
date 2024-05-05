@@ -37,6 +37,11 @@ def get_chroma_gif_colors_white_values():
 def get_chroma_gif_colors_black_values():
 	return _chroma_gif_colors_black.values()
 
+def set_punctuation_RGB(rgb):
+	global _inflection_to_RGB
+	_inflection_to_RGB[PUNCTUATION_TONE_NUM] = rgb
+	rebuild_colors()
+
 # sets the color scheme to chromapinyin's default.
 def set_to_default():
 	global _inflection_to_RGB, _nightmode_GIF_punctuation_RGB
@@ -45,12 +50,12 @@ def set_to_default():
 	LOW_COLOR = (0, 87, 190)
 	FALLING_COLOR = (176, 111, 219)
 	NEUTRAL_COLOR = (128, 128, 128)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
 	_inflection_to_RGB[TO_INFLECTION["rising_low"]] = (7, 169, 250)
 	_nightmode_GIF_punctuation_RGB = (255, 255, 255)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the color scheme to Nathan Dummitt's color scheme used
 # in Chinese Through Tone & Color.
@@ -60,10 +65,10 @@ def set_to_dummit():
 	LOW_COLOR = (151, 205, 93)
 	FALLING_COLOR = (88, 155, 200)
 	NEUTRAL_COLOR = (128, 128, 128)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the color scheme to the MBDG Chinese Dictionary's color scheme.
 def set_to_MDBG():
@@ -72,10 +77,10 @@ def set_to_MDBG():
 	LOW_COLOR = (0, 160, 0)
 	FALLING_COLOR = (0, 0, 255)
 	NEUTRAL_COLOR = (0, 0, 0)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the color scheme to the Hanping Chinese Dictionary's color scheme.
 def set_to_hanping():
@@ -84,10 +89,10 @@ def set_to_hanping():
 	LOW_COLOR = (240, 128, 0)
 	FALLING_COLOR = (208, 0, 32)
 	NEUTRAL_COLOR = (160, 160, 160)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the color scheme to Pleco Software's color scheme.
 def set_to_pleco():
@@ -96,10 +101,10 @@ def set_to_pleco():
 	LOW_COLOR = (21, 16, 240)
 	FALLING_COLOR = (137, 0, 191)
 	NEUTRAL_COLOR = (119, 119, 119)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the color scheme to the proposed system formulated
 # by John Pasden of the website Sinosplice.
@@ -109,15 +114,15 @@ def set_to_sinosplice():
 	LOW_COLOR = (32, 92, 181)
 	FALLING_COLOR = (217, 56, 33)
 	NEUTRAL_COLOR = (128, 128, 128)
-	_set_inflection_to_RGB(
+	set_inflection_to_RGB(
 		HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR 
 	)
-	_rebuild_colors()
+	rebuild_colors()
 
 # sets the colors for every inflection using a handful of given colors.
 # neutral colors will be interpolated between <NEUTRAL_COLOR> 
 # and corresponding primary tone colors.
-def _set_inflection_to_RGB(
+def set_inflection_to_RGB(
 	HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR
 ):
 	global _inflection_to_RGB
@@ -141,8 +146,8 @@ def _set_inflection_to_RGB(
 		TO_INFLECTION["rising_bu"]: RISING_COLOR,
 	}
 
-# creates the dictionary containing the internal color stylings used for HTML.
-def _rebuild_colors():
+# creates dictionaries containing the internal color styling dicts used for HTML.
+def rebuild_colors():
 	global _chroma_tones, _chroma_gif_colors_white, _chroma_gif_colors_black
 	_chroma_tones = {
 		inflection: {

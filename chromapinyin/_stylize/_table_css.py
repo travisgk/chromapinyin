@@ -223,7 +223,7 @@ CHROMA_ZHUYIN_SUFFIX_OFFSET = {
 CHROMA_ZHUYIN_SUFFIX_CONTAINER = {
 	"class": "chroma-zhuyin-suffix-container",
 	"style": (
-		"width: 0px;",
+		"width: 3px;",
 		"height: 0px;",
 		"display: flex;",
 		"position: relative;",
@@ -243,6 +243,7 @@ CHROMA_TD_HANDWRITING = {
 	"style": (
 		"margin: 0;",
 		"padding: 0;",
+		"overflow: visible;",
 	),
 }
 

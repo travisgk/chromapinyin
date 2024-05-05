@@ -111,7 +111,7 @@ _INFLECTION_TO_TONE = {
 	TO_INFLECTION["rising_low"]: TO_INFLECTION["low"],
 	TO_INFLECTION["rising_yi"]: TO_INFLECTION["high"],
 	TO_INFLECTION["falling_yi"]: TO_INFLECTION["high"],
-	TO_INFLECTION["rising_bu"]: TO_INFLECTION["low"],
+	TO_INFLECTION["rising_bu"]: TO_INFLECTION["falling"],
 }
 
 # gives the spoken tone marker in the IPA.

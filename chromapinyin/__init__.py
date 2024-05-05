@@ -24,11 +24,13 @@ from chromapinyin._stylize._table_css import (
 	set_zhuyin_suffix_font_size, # str
 	set_ipa_font_size, # str
 	set_pitch_graph_height, # str
+	set_handwriting_height # str
 )
-from chromapinyin._stylize._pitch_graphs._pitch_graphs import (
+from chromapinyin._stylize._graphics._pitch_graphs import (
 	create_inflection_graphs # graph_style_name, output_dir, fixed_width (bool)
 )
-from chromapinyin._stylize._handwriting_gifs import process_gifs
-from chromapinyin._stylize._stylize import create_stylized_sentence, generate_CSS
+import chromapinyin._stylize._res_directories as res_directories
+from chromapinyin._stylize._graphics._handwriting_gifs import process_gifs
+from chromapinyin._stylize._html_builder import create_stylized_sentence, generate_CSS
 
 create_inflection_graphs(overwrite_images=False)

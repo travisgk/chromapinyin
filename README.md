@@ -79,6 +79,47 @@ The resulting HTML will look like this:
 <br>
 
 ## Category Options
+Categories of syllable aspects are provided in a 2D table.
+These can be any of the following selections:
+
+<table>
+	<tr>
+		<td><strong>"hanzi"</strong></td>
+		<td>the syllable's hanzi character.</td>
+	</tr>
+	<tr>
+		<td><strong>"pinyin"</strong></td>
+		<td>the syllable's pinyin character.</td>
+	</tr>
+	<tr>
+		<td><strong>"zhuyin"</strong></td>
+		<td>the syllable's zhuyin transcription.</td>
+	</tr>
+	<tr>
+		<td><strong>"vertical_zhuyin"</strong></td>
+		<td>the syllable's zhuyin transcription rendered vertically.</td>
+	</tr>
+	<tr>
+		<td><strong>"ipa"</strong></td>
+		<td>the syllable's international phonetic alphabet transcription.</td>
+	</tr>
+	<tr>
+		<td><strong>"pitch_graph"</strong></td>
+		<td>an HTML embedded graph image of the syllable's spoken tone.</td>
+	</tr>
+	<tr>
+		<td><strong>"handwriting"</strong></td>
+		<td>an HTML embedded GIF of the hanzi being written.</td>
+	</tr>
+	<tr>
+		<td><strong>"blank"</strong></td>
+		<td>an empty table cell. used to block cell merging.</td>
+	</tr>
+	<tr>
+		<td><strong>None</strong></td>
+		<td>used to control how cells merge.</td>
+	</tr>
+</table>
 
 <br>
 

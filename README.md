@@ -36,44 +36,42 @@ so that this directory can easily be renamed to ```_chroma_res/handwriting/image
 
 <br>
 
-# Using chromapinyin
+# Creating a Stylized Table
 
-### Creating a Stylized Table
-
-The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/main.py).
+The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/demo2.py).
 ```
 import chromapinyin
 
 def main():
-	chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
-	hanzi = "我不是来自中国。"
-	pinyin = "wǒ bùshì láizì zhōngguó."
-	word_list = chromapinyin.create_word_list(hanzi, pinyin)
+    chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
+    hanzi = "我不是来自中国。"
+    pinyin = "wǒ bùshì láizì zhōngguó."
+    word_list = chromapinyin.create_word_list(hanzi, pinyin)
 
-	# defines the 2D table of the syllable aspects to display per syllable.
-	categories = [
-	    ["hanzi", "vertical_zhuyin",],
-	    [("pinyin", "number_tones",), ("ipa", "no_tones"),],
-	]
+    # defines the 2D table of the syllable aspects to display per syllable.
+    categories = [
+        ["hanzi", "vertical_zhuyin",],
+        [("pinyin", "number_tones",), ("ipa", "no_tones"),],
+    ]
 
-	html = ""
-	html += "<html>\n<head>\n<style>\n"
-	html += "body { background-color: black; }\n</style>\n</head>\n<body>\n"
+    html = ""
+    html += "<html>\n<head>\n<style>\n"
+    html += "body { background-color: black; }\n</style>\n</head>\n<body>\n"
 
-	# creates an HTML table with styling components placed directly inline
-	# and the characters placed to be read horizontally.
-	html += chromapinyin.create_stylized_sentence(
-	    word_list, 
-	    categories,
-	    use_css=False,
-	    vertical=False,
-	    hide_clause_breaks=False,
-	    max_n_line_syllables=999
-	)
-	html += "</body>\n</html>"
+    # creates an HTML table with styling components placed directly inline
+    # and the characters placed to be read horizontally.
+    html += chromapinyin.create_stylized_sentence(
+        word_list, 
+        categories,
+        use_css=False,
+        vertical=False,
+        hide_clause_breaks=False,
+        max_n_line_syllables=999
+    )
+    html += "</body>\n</html>"
 
-	with open("demo2.html", "w", encoding="utf-8") as file:
-		file.write(html)
+    with open("demo2.html", "w", encoding="utf-8") as file:
+        file.write(html)
 
 main()
 ```
@@ -156,6 +154,32 @@ but it can also be given as a tuple in order to provide additional formatting.
 		<td>only applicable for <strong>"handwriting"</strong>.<br>this will make the handwriting GIFs use filters to display the GIFs with a black background.<br>this should be used when the user is not using CSS and the night mode filters should be embedded inline directly.</td>
 	</tr>
 </table>
+<br>
+
+### Cell Merging
+By default, chromapinyin will merge cells using the ```colspan``` property.
+If this is undesired, ```chromapinyin.create_stylized_sentence(...)``` can be called with ```use_colspan=False``` in its parameters.
+
+The following categories 2D table is used for this [demo](https://github.com/travisgk/chromapinyin/blob/main/demo3.py):
+```
+categories = [
+    ["hanzi", "vertical_zhuyin", "pinyin",],
+    ["zhuyin", "blank", ("ipa", "no_color", "no_tones",),],
+    [("handwriting", "night_mode_GIFs",),],
+]
+```
+
+The **"blank"** category adds padding to the second row so that **"ipa"** isn't spanned over two columns, while the **"handwriting"** category will be spanned across all three columns.
+
+With ```max_n_line_syllables=5```, chromapinyin creates the following table:
+
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo3.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo3.py)
+
+<br>
+
+# Color Palettes
+chromapinyin provides several default tone color palettes that can be selected.
+
 <br>
 
 # Information in each syllable dictionary

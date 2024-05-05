@@ -37,6 +37,9 @@ so that this directory can easily be renamed to ```_chroma_res/handwriting/image
 <br>
 
 # Using chromapinyin
+
+### Creating a Stylized Table
+
 The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/main.py).
 ```
 import chromapinyin
@@ -80,7 +83,7 @@ The resulting HTML will look like this:
 
 <br>
 
-## Category Options
+### Category Options
 Categories of syllable aspects are provided in a 2D table.
 These can be any of the following selections:
 
@@ -122,7 +125,37 @@ These can be any of the following selections:
 		<td>used to control how cells merge.</td>
 	</tr>
 </table>
+<br>
 
+### Additional Category Formatting
+A category selection can be given in the 2D table as a lone string,
+but it can also be given as a tuple in order to provide additional formatting.
+<table>
+	<tr>
+		<td><strong>"grouped"</strong></td>
+		<td>this category's cells will be aligned together so that syllables belonging to the same word will be grouped together.</td>
+	</tr>
+	<tr>
+		<td><strong>"split_punctuation"</strong></td>
+		<td>only applicable for <strong>"pinyin"</strong> or <strong>"ipa"</strong>.<br>punctuation in this category cell won't be merged with the previous syllable's cell for the same category.</td>
+	</tr>
+	<tr>
+		<td><strong>"number_tones"</strong></td>
+		<td>only applicable for <strong>"pinyin"</strong>, <strong>"zhuyin"</strong>, and <strong>"ipa"</strong>.<br>the category's tones will be expressed with a number.</td>
+	</tr>
+	<tr>
+		<td><strong>"no_tones"</strong></td>
+		<td>only applicable for <strong>"pinyin"</strong>, <strong>"zhuyin"</strong>, and <strong>"ipa"</strong>.<br>the category's tones won't be rendered at all.</td>
+	</tr>
+	<tr>
+		<td><strong>"no_color"</strong></td>
+		<td>coloring styles won't be used.</td>
+	</tr>
+	<tr>
+		<td><strong>"night_mode_GIFs"</strong></td>
+		<td>only applicable for <strong>"handwriting"</strong>.<br>this will make the handwriting GIFs use filters to display the GIFs with a black background.<br>this should be used when the user is not using CSS and the night mode filters should be embedded inline directly.</td>
+	</tr>
+</table>
 <br>
 
 # Information in each syllable dictionary

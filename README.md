@@ -1,3 +1,4 @@
+![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_demo1.png?raw=true)
 # chromapinyin
 A Python script for creating HTML tables of various Chinese transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
 These can be created by giving chromapinyin text in hanzi and text of its corresponding pinyin.
@@ -34,40 +35,46 @@ so that this directory can easily be renamed to ```_chroma_res/handwriting/image
 <br>
 
 # Making a stylized table
+The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/main.py).
 ```
 import chromapinyin
 
-chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
-hanzi = "我不是来自中国。"
-pinyin = "wǒ bùshì láizì zhōngguó."
-word_list = chromapinyin.create_word_list(hanzi, pinyin)
+def main():
+	chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
+	hanzi = "我不是来自中国。"
+	pinyin = "wǒ bùshì láizì zhōngguó."
+	word_list = chromapinyin.create_word_list(hanzi, pinyin)
 
-# defines the 2D table of the syllable aspects to display per syllable.
-categories = [
-    ["hanzi", "vertical_zhuyin",],
-    [("pinyin", "number_tones",), ("ipa", "no_tones"),],
-]
+	# defines the 2D table of the syllable aspects to display per syllable.
+	categories = [
+	    ["hanzi", "vertical_zhuyin",],
+	    [("pinyin", "number_tones",), ("ipa", "no_tones"),],
+	]
 
-html = ""
-html += "<html>\n<head>\n<style>\n"
-html += "body { background-color: black; }\n</style>\n</head>\n<body>\n"
+	html = ""
+	html += "<html>\n<head>\n<style>\n"
+	html += "body { background-color: black; }\n</style>\n</head>\n<body>\n"
 
-# creates an HTML table with styling components placed directly inline
-# and the characters placed to be read horizontally.
-html += chromapinyin.create_stylized_sentence(
-    word_list, 
-    categories,
-    use_css=False,
-    vertical=False,
-    hide_clause_breaks=False,
-    max_n_line_syllables=999
-)
-html += "</body>\n</html>"
-print(html)
+	# creates an HTML table with styling components placed directly inline
+	# and the characters placed to be read horizontally.
+	html += chromapinyin.create_stylized_sentence(
+	    word_list, 
+	    categories,
+	    use_css=False,
+	    vertical=False,
+	    hide_clause_breaks=False,
+	    max_n_line_syllables=999
+	)
+	html += "</body>\n</html>"
+
+	with open("demo2.html", "w", encoding="utf-8") as file:
+		file.write(html)
+
+main()
 ```
 
 The resulting HTML will look like this:
-![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_example_01.png?raw=true)
+![](https://github.com/travisgk/chromapinyin/blob/main/_screenshots/_demo2.png?raw=true)
 
 <br>
 

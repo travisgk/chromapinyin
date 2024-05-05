@@ -1,4 +1,4 @@
-[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo1.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo1.py)
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_a.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_a.py)
 # chromapinyin
 A Python script for creating HTML tables of various Chinese transcriptions (IPA and zhuyin), with the option to color syllables by their tone.
 These can be created by giving chromapinyin text in hanzi and text of its corresponding pinyin.
@@ -38,7 +38,7 @@ so that this directory can easily be renamed to ```_chroma_res/handwriting/image
 
 # Creating a Stylized Table
 
-The following can be found under [demo2.py](https://github.com/travisgk/chromapinyin/blob/main/demo2.py).
+The following can be found under [demo_b.py](https://github.com/travisgk/chromapinyin/blob/main/demo_b.py).
 ```
 import chromapinyin
 
@@ -77,7 +77,7 @@ main()
 ```
 
 The resulting HTML will look like this:
-[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo2.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo2.py)
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_b.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_b.py)
 
 <br>
 
@@ -160,7 +160,7 @@ but it can also be given as a tuple in order to provide additional formatting.
 By default, chromapinyin will merge cells using the ```colspan``` property.
 If this is undesired, ```chromapinyin.create_stylized_sentence(...)``` can be called with ```use_colspan=False``` in its parameters.
 
-The following categories 2D table is used for this [demo](https://github.com/travisgk/chromapinyin/blob/main/demo3.py):
+The following categories 2D table is used for this [demo](https://github.com/travisgk/chromapinyin/blob/main/demo_c.py):
 ```
 categories = [
     ["hanzi", "vertical_zhuyin", "pinyin",],
@@ -173,7 +173,7 @@ The **"blank"** category adds padding to the second row so that **"ipa"** isn't 
 
 With ```max_n_line_syllables=5```, chromapinyin creates the following table:
 
-[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo3.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo3.py)
+[<img src="https://github.com/travisgk/chromapinyin/blob/main/_demo_output/demo_c.png?raw=true">](https://github.com/travisgk/chromapinyin/blob/main/demo_c.py)
 
 <br>
 

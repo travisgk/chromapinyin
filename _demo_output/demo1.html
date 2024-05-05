@@ -51,6 +51,7 @@ table.chroma {
 	border: 0;
 	margin: 0;
 	padding: 0;
+	overflow: visible
 }
 
 table.chroma-nested {
@@ -64,7 +65,6 @@ tr.chroma {
 	margin: 0;
 	padding: 0;
 	text-align: center;
-	overflow: visible;
 }
 
 td.chroma {
@@ -134,7 +134,8 @@ td.chroma-zhuyin {
 	padding: 0;
 	display: flex;
 	position: relative;
-	overflow: hidden;
+	white-space: nowrap;
+	overflow: visible;
 }
 
 .chroma-vertical-zhuyin {
@@ -165,7 +166,7 @@ div.chroma-zhuyin-container {
 	padding: 0;
 	display: flex;
 	position: relative;
-	left: 5.5px;
+	left: 4px;
 	top: -6px;
 }
 
@@ -186,7 +187,14 @@ div.chroma-zhuyin-container {
 }
 
 .chroma-zhuyin-suffix-container {
-	width: 10px;
+	width: 8px;
+	height: 0px;
+	display: flex;
+	position: relative;
+}
+
+.chroma-zhuyin-suffix-container {
+	width: 5px;
 	height: 0px;
 	display: flex;
 	position: relative;

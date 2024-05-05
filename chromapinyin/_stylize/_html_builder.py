@@ -19,26 +19,28 @@
 # 	- "zhuyin": the syllable's zhuyin transcription.
 # 	- "vertical_zhuyin": the syllable's zhuyin transcription rendered vertically.
 # 	- "ipa": the syllable's international phonetic alphabet transcription.
-# 	- "pitch_graph": the path to an image representing the syllable's spoken tone.
+# 	- "pitch_graph": an HTML embedded graph image of the syllable's spoken tone.
+# 	- "handwriting": an HTML embedded GIF of the hanzi being written.
 #   - "blank": an empty table cell. used to block cell merging.
+# 	- None: used to control how cells merge.
 #
 # additional formatting can be provided when the element is a tuple,
 # like ("pinyin", "grouped", "split_punctuation").
 # these additional settings are:
 # 	- "grouped": this category's cells for syllables belonging to the same word
 # 	             will be aligned so that they're squished together.
-#	- "split_punctuation": punctuation in this category's cells won't be merged
-# 	                       with the cell to its right. only applicable for
-# 	                       pinyin or ipa.
+#	- "split_punctuation": only applicable for pinyin or ipa.
+#	                       punctuation in this category's cell won't be merged
+# 	                       with the previous syllable's cell for the same category. 
 #	- "number_tones": the tones of pinyin, zhuyin, or ipa 
 # 	                  will be expressed with a number.
 # 	                  pinyin will use the innate tone,
 # 	                  while zhuyin and ipa will use the spoken tone.
 # 	- "no_tones": the tones of pinyin, zhuyin, or ipa will not be included.
 # 	- "no_color": coloring spans will not be used.
-#   - "manual_night_mode": this is used if the user wants night mode styling
-#	                      embedded inline for their GIFs, since without CSS
-#	                      these stylings can't be reached.
+#   - "night_mode_GIFs": this is used if the user wants night mode styling
+#	                     embedded inline for their GIFs, since without CSS
+#	                     these stylings can't be reached.
 #
 
 import math
@@ -234,10 +236,13 @@ def generate_CSS():
 				get_content_style("CHROMA_VERTICAL_ZHUYIN"),
 				CHROMA_DIV_ZHUYIN_CONTAINER,
 				CHROMA_NESTED_ZHUYIN,
+				get_content_style("CHROMA_TD_NESTED_VERTICAL_ZHUYIN_ROOT"),
 				CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET,
+				CHROMA_INLINE_ZHUYIN_PREFIX_OFFSET,
 				CHROMA_ZHUYIN_PREFIX_CONTAINER,
 				CHROMA_ZHUYIN_SUFFIX_OFFSET,
-				CHROMA_ZHUYIN_SUFFIX_CONTAINER,
+				CHROMA_VERTICAL_ZHUYIN_SUFFIX_CONTAINER,
+				CHROMA_INLINE_ZHUYIN_SUFFIX_CONTAINER,
 			),
 		)
 	)

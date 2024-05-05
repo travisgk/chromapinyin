@@ -123,7 +123,12 @@ def set_to_sinosplice():
 # neutral colors will be interpolated between <NEUTRAL_COLOR> 
 # and corresponding primary tone colors.
 def set_inflection_to_RGB(
-	HIGH_COLOR, RISING_COLOR, LOW_COLOR, FALLING_COLOR, NEUTRAL_COLOR
+	HIGH_COLOR,
+	RISING_COLOR,
+	LOW_COLOR,
+	FALLING_COLOR,
+	NEUTRAL_COLOR,
+	NEUTRAL_INTERPOLATION=0.2 # 0.0 for full neutral color.
 ):
 	global _inflection_to_RGB
 	_inflection_to_RGB = {
@@ -136,10 +141,18 @@ def set_inflection_to_RGB(
 		TO_INFLECTION["falling"]: FALLING_COLOR,
 		TO_INFLECTION["full_low"]:  LOW_COLOR,
 		TO_INFLECTION["half_falling"]: FALLING_COLOR,
-		TO_INFLECTION["neutral_high"]: _mid_RGB(NEUTRAL_COLOR, HIGH_COLOR, 0.2),
-		TO_INFLECTION["neutral_rising"]: _mid_RGB(NEUTRAL_COLOR, RISING_COLOR, 0.2),
-		TO_INFLECTION["neutral_low"]: _mid_RGB(NEUTRAL_COLOR, LOW_COLOR, 0.2),
-		TO_INFLECTION["neutral_falling"]: _mid_RGB(NEUTRAL_COLOR, FALLING_COLOR, 0.2),
+		TO_INFLECTION["neutral_high"]: _mid_RGB(
+			NEUTRAL_COLOR, HIGH_COLOR, NEUTRAL_INTERPOLATION
+		),
+		TO_INFLECTION["neutral_rising"]: _mid_RGB(
+			NEUTRAL_COLOR, RISING_COLOR, NEUTRAL_INTERPOLATION
+		),
+		TO_INFLECTION["neutral_low"]: _mid_RGB(
+			NEUTRAL_COLOR, LOW_COLOR, NEUTRAL_INTERPOLATION
+		),
+		TO_INFLECTION["neutral_falling"]: _mid_RGB(
+			NEUTRAL_COLOR, FALLING_COLOR, NEUTRAL_INTERPOLATION
+		),
 		TO_INFLECTION["rising_low"]: _mid_RGB(LOW_COLOR, RISING_COLOR),
 		TO_INFLECTION["rising_yi"]: RISING_COLOR,
 		TO_INFLECTION["falling_yi"]: FALLING_COLOR,
@@ -186,7 +199,7 @@ def _RGB_to_svg_filter(rgb, white_background):
 	r = f"{rgb[0] / 255:.3f}"
 	g = f"{rgb[1] / 255:.3f}"
 	b = f"{rgb[2] / 255:.3f}"
-	gray = "0.35"
+	GRAY = "0.27"
 
 	if white_background:
 		r = f"{1.0 - rgb[0] / 255:.3f}"
@@ -202,10 +215,9 @@ def _RGB_to_svg_filter(rgb, white_background):
 		f"{tabs}<defs>\\",
 		f"{tabs}<filter id='color-filter' color-interpolation-filters='sRGB'>\\",
 		f"{tabs}<feComponentTransfer>\\",
-		f"{tabs}<feFuncR type='table' tableValues='0 {gray} {r} {r}'/>\\",
-		f"{tabs}<feFuncG type='table' tableValues='0 {gray} {g} {g}'/>\\",
-		f"{tabs}<feFuncB type='table' tableValues='0 {gray} {b} {b}'/>\\",
-		f"{tabs}<feFuncA type='table' tableValues='0 0 0 1'/>\\",
+		f"{tabs}<feFuncR type='table' tableValues='0 {GRAY} {r} {r}'/>\\",
+		f"{tabs}<feFuncG type='table' tableValues='0 {GRAY} {g} {g}'/>\\",
+		f"{tabs}<feFuncB type='table' tableValues='0 {GRAY} {b} {b}'/>\\",
 		f"{tabs}</feComponentTransfer>\\",
 		f"{tabs}</filter>\\",
 		f"{tabs}</defs>\\",

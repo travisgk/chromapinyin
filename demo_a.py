@@ -33,7 +33,7 @@ def main():
 	)
 
 	html += "</div>\n</body>\n</html>"
-	with open("example1.html", "w", encoding="utf-8") as file:
+	with open("demo_a.html", "w", encoding="utf-8") as file:
 		file.write(html)
 
 main()

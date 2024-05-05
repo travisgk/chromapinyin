@@ -28,7 +28,7 @@ def main():
 	)
 	html += "</body>\n</html>"
 
-	with open("demo2.html", "w", encoding="utf-8") as file:
+	with open("demo_b.html", "w", encoding="utf-8") as file:
 		file.write(html)
 
 main()

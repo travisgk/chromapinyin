@@ -51,7 +51,7 @@ table.chroma {
 	border: 0;
 	margin: 0;
 	padding: 0;
-	overflow: visible
+	overflow: visible;
 }
 
 table.chroma-nested {
@@ -65,29 +65,35 @@ tr.chroma {
 	margin: 0;
 	padding: 0;
 	text-align: center;
+	overflow: visible;
 }
 
 td.chroma {
 	margin: 0;
 	padding: 0;
+	overflow: visible;
 }
 
 
 /* HANZI */
 td.chroma-hanzi {
 	margin: 0;
-	padding: 1px;
-	font-size: 64px;
+	padding-top: 0.1rem;
+	padding-right: 0.0rem;
+	padding-bottom: 0.1rem;
+	padding-left: 0.07rem;
+	font-size: 5.000rem;
+	font-family: SimHei;
 }
 
 .chroma-hanzi-offset {
 	display: block;
 	position: relative;
-	top: -20%;
+	top: -20.000%;
 }
 
 div.chroma-hanzi-container {
-	height: 64px;
+	height: 5.000rem;
 	display: block;
 	overflow: hidden;
 	position: relative;
@@ -98,14 +104,14 @@ div.chroma-hanzi-container {
 td.chroma-pinyin {
 	margin: 0;
 	padding: 0;
-	font-size: 13px;
+	font-size: 1.000rem;
 }
 
 .chroma-apostrophe-offset {
 	margin: 0;
 	padding: 0;
 	position: relative;
-	top: -2px;
+	top: -0.1em;
 }
 
 
@@ -117,19 +123,19 @@ td.chroma-zhuyin {
 }
 
 .chroma-zhuyin-prefix {
-	font-size: 21px;
+	font-size: 1.600rem;
 }
 
 .chroma-zhuyin-root {
-	font-size: 13px;
+	font-size: 1.000rem;
 }
 
 .chroma-zhuyin-suffix {
-	font-size: 21px;
+	font-size: 1.600rem;
 }
 
 .chroma-inline-zhuyin {
-	height: 13px;
+	height: 1.000rem;
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -155,24 +161,40 @@ div.chroma-zhuyin-container {
 }
 
 .chroma-nested-zhuyin {
-	width: 0px;
+	width: 0.2rem;
 	margin: 0;
 	padding: 0;
 	vertical-align: bottom;
 }
 
-.chroma-zhuyin-vertical-prefix-offset {
+td.chroma-nested-vertical-zhuyin-root {
+	width: 1.000rem;
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+}
+
+.chroma-vertical-zhuyin-prefix-offset {
 	margin: 0;
 	padding: 0;
 	display: flex;
 	position: relative;
-	left: 4px;
-	top: -6px;
+	left: 0.3em;
+	top: -0.5em;
+}
+
+.chroma-inline-zhuyin-prefix-offset {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+	left: 0em;
+	top: 0.1em;
 }
 
 .chroma-zhuyin-prefix-container {
-	width: 5px;
-	height: 1px;
+	width: 0.2em;
+	height: 0.06em;
 	display: flex;
 	position: relative;
 }
@@ -182,20 +204,20 @@ div.chroma-zhuyin-container {
 	padding: 0;
 	display:flex;
 	position: relative;
-	left: -3px;
-	top: -19px;
+	left: -0.2em;
+	top: -1.42em;
 }
 
-.chroma-zhuyin-suffix-container {
-	width: 8px;
-	height: 0px;
+.chroma-vertical-zhuyin-suffix-container {
+	width: 0.32em;
+	height: 0;
 	display: flex;
 	position: relative;
 }
 
-.chroma-zhuyin-suffix-container {
-	width: 5px;
-	height: 0px;
+.chroma-inline-zhuyin-suffix-container {
+	width: 0rem;
+	height: 0;
 	display: flex;
 	position: relative;
 }
@@ -208,7 +230,7 @@ td.chroma-pitch-graph {
 }
 
 img.chroma-pitch-graph {
-	height: 67px;
+	height: 5.000rem;
 	object-fit: contain;
 }
 
@@ -217,11 +239,12 @@ img.chroma-pitch-graph {
 td.chroma-handwriting {
 	margin: 0;
 	padding: 0;
+	position: relative;
 	overflow: visible;
 }
 
 img.chroma-handwriting {
-	height: 65px;
+	height: 5.000rem;
 	object-fit: contain;
 }
 
@@ -305,10 +328,9 @@ img.chroma-tone-apostrophe {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncB type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncB type='table' tableValues='0 0.27 1.000 1.000'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -323,10 +345,9 @@ img.chroma-tone-punctuation {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.000 0.000'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -341,10 +362,9 @@ img.chroma-tone-high {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.384 0.384'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.929 0.929'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.384 0.384'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.929 0.929'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -359,10 +379,9 @@ img.chroma-tone-rising {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -377,10 +396,9 @@ img.chroma-tone-low {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.659 0.659'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.255 0.255'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.659 0.659'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.255 0.255'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -395,10 +413,9 @@ img.chroma-tone-falling {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -413,10 +430,9 @@ img.chroma-tone-neutral {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.498 0.498'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.498 0.498'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.498 0.498'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.498 0.498'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.498 0.498'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.498 0.498'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -431,10 +447,9 @@ img.chroma-tone-full-low {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.659 0.659'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.255 0.255'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.659 0.659'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.255 0.255'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -449,10 +464,9 @@ img.chroma-tone-half-falling {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -467,10 +481,9 @@ img.chroma-tone-neutral-high {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.478 0.478'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.584 0.584'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.478 0.478'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.584 0.584'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -485,10 +498,9 @@ img.chroma-tone-neutral-rising {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.451 0.451'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.573 0.573'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.451 0.451'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.573 0.573'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -503,10 +515,9 @@ img.chroma-tone-neutral-low {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.533 0.533'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.451 0.451'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.533 0.533'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.451 0.451'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -521,10 +532,9 @@ img.chroma-tone-neutral-falling {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.463 0.463'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.514 0.514'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.427 0.427'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.463 0.463'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.514 0.514'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.427 0.427'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -539,10 +549,9 @@ img.chroma-tone-rising-low {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.973 0.973'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.337 0.337'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.020 0.020'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.973 0.973'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.337 0.337'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.020 0.020'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -557,10 +566,9 @@ img.chroma-tone-rising-yi {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -575,10 +583,9 @@ img.chroma-tone-falling-yi {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.310 0.310'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.565 0.565'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.310 0.310'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.565 0.565'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -593,10 +600,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.255 0.255'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.255 0.255'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -613,10 +619,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.000 0.000'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -631,10 +636,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncB type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncB type='table' tableValues='0 0.27 1.000 1.000'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -649,10 +653,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 1.000 1.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.616 0.616'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.071 0.071'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 1.000 1.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.616 0.616'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.071 0.071'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -667,10 +670,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -685,10 +687,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.341 0.341'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.745 0.745'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.341 0.341'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.745 0.745'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -703,10 +704,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -721,10 +721,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.502 0.502'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.502 0.502'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.502 0.502'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.502 0.502'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.502 0.502'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.502 0.502'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -739,10 +738,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.341 0.341'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.745 0.745'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.341 0.341'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.745 0.745'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -757,10 +755,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -775,10 +772,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.600 0.600'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.522 0.522'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.416 0.416'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.600 0.600'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.522 0.522'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.416 0.416'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -793,10 +789,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.549 0.549'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.427 0.427'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.549 0.549'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.427 0.427'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -811,10 +806,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.400 0.400'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.467 0.467'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.549 0.549'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.400 0.400'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.467 0.467'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.549 0.549'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -829,10 +823,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.537 0.537'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.486 0.486'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.573 0.573'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.537 0.537'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.486 0.486'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.573 0.573'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -847,10 +840,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.027 0.027'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.663 0.663'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.980 0.980'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.027 0.027'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.663 0.663'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.980 0.980'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -865,10 +857,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -883,10 +874,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.690 0.690'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.435 0.435'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.859 0.859'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.690 0.690'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.435 0.435'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.859 0.859'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -901,10 +891,9 @@ img.chroma-tone-rising-bu {
 		<defs>\
 		<filter id='color-filter' color-interpolation-filters='sRGB'>\
 		<feComponentTransfer>\
-		<feFuncR type='table' tableValues='0 0.35 0.000 0.000'/>\
-		<feFuncG type='table' tableValues='0 0.35 0.745 0.745'/>\
-		<feFuncB type='table' tableValues='0 0.35 0.141 0.141'/>\
-		<feFuncA type='table' tableValues='0 0 0 1'/>\
+		<feFuncR type='table' tableValues='0 0.27 0.000 0.000'/>\
+		<feFuncG type='table' tableValues='0 0.27 0.745 0.745'/>\
+		<feFuncB type='table' tableValues='0 0.27 0.141 0.141'/>\
 		</feComponentTransfer>\
 		</filter>\
 		</defs>\
@@ -926,14 +915,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-low">
-                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄏㄣ</span>
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄏㄣ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-low">ˇ</span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-low">ˇ</span>
                             </div>
                         </td>
                     </tr>
@@ -949,14 +938,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-high">
-                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄍㄠ</span>
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄍㄠ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-high"></span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-high"></span>
                             </div>
                         </td>
                     </tr>
@@ -972,14 +961,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-half-falling">
-                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄒㄧㄥ</span>
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄒㄧㄥ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-half-falling">ˋ</span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-half-falling">ˋ</span>
                             </div>
                         </td>
                     </tr>
@@ -995,14 +984,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-falling">
-                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄖㄣ</span>
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄖㄣ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-falling">ˋ</span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-falling">ˋ</span>
                             </div>
                         </td>
                     </tr>
@@ -1018,14 +1007,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-rising">
-                                <span class="chroma-zhuyin-root chroma-inline-zhuyin">ㄕ</span>
+                                <span class="chroma-zhuyin-root chroma-inline-zhuyin">ㄕ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-rising">ˊ</span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-rising">ˊ</span>
                             </div>
                         </td>
                     </tr>
@@ -1041,14 +1030,14 @@ img.chroma-tone-rising-bu {
             <div class="chroma-zhuyin-container chroma-push-center">
                 <table class="chroma-nested">
                     <tr class="chroma-nested-zhuyin">
-                        <td class="chroma-nested-zhuyin">
+                        <td class="chroma-nested-vertical-zhuyin-root">
                             <span class="chroma-tone-full-low">
-                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄋㄧ</span>
+                                <span class="chroma-zhuyin-root chroma-vertical-zhuyin">ㄋㄧ</span></span>
                             </span>
                         </td>
                         <td class="chroma-nested-zhuyin">
                             <div class="chroma-zhuyin-suffix-offset">
-                                <span class="chroma-zhuyin-suffix chroma-zhuyin-suffix-container chroma-tone-full-low">ˇ</span>
+                                <span class="chroma-zhuyin-suffix chroma-vertical-zhuyin-suffix-container chroma-tone-full-low">ˇ</span>
                             </div>
                         </td>
                     </tr>

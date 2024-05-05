@@ -137,15 +137,31 @@ def return_zhuyin_contents(
 	# opens the nested <tr> and <td> elements.
 	nested_styling = embed_styling([CHROMA_NESTED_ZHUYIN], use_css)
 	result += HTML_line(f"<tr {nested_styling}>", 1)
-	result += HTML_line(f"<td {nested_styling}>", 1)
+
+	# 
+	if vertical_zhuyin:
+		root_styling = embed_styling(
+			[get_content_style("CHROMA_TD_NESTED_VERTICAL_ZHUYIN_ROOT"),],
+			use_css
+		)
+		result += HTML_line(f"<td {root_styling}>", 1)
+	else:
+		result += HTML_line(f"<td {nested_styling}>", 1)
 	
 	# open the coloring span for the prefix and root.
 	color_css = None
-	prefix_span_styling = None
+	outer_span_classes = []
+	outer_span_styling = None
 	if not category_is_tuple or "no_color" not in category:
 		color_css = get_inflection_color_style(syllable["inflection_num"])
-		prefix_span_styling = embed_styling([color_css,], use_css)
-		result += HTML_line(f"<span {prefix_span_styling}>", 1)
+		outer_span_classes.append(color_css)
+	
+	if not vertical_zhuyin:
+		outer_span_classes.append(get_content_style("CHROMA_INLINE_ZHUYIN"))
+
+	if len(outer_span_classes) > 0:
+		outer_span_styling = embed_styling(outer_span_classes, use_css)
+		result += HTML_line(f"<span {outer_span_styling}>", 1)
 
 	use_number_tones = False
 	use_no_tones = False
@@ -159,6 +175,7 @@ def return_zhuyin_contents(
 	span_line = ""
 	prefix = syllable["zhuyin_prefix"]
 	uses_prefix = False
+	outer_span_closed = False
 	if len(prefix) > 0 and not use_number_tones and not use_no_tones:
 		uses_prefix = True
 		if vertical_zhuyin:
@@ -167,35 +184,37 @@ def return_zhuyin_contents(
 			)
 			span_line += f"<span {offset_styling}>"
 		else:
-			inline_styling = embed_styling(
-				[get_content_style("CHROMA_INLINE_ZHUYIN"),], use_css
+			offset_styling = embed_styling(
+				[CHROMA_INLINE_ZHUYIN_PREFIX_OFFSET,], use_css
 			)
-			span_line += f"<span {inline_styling}>"
+			span_line += f"<span {offset_styling}>"
 
 		span_style_dicts = [
 			get_content_style("CHROMA_ZHUYIN_PREFIX"),
 			CHROMA_ZHUYIN_PREFIX_CONTAINER,
 		]
-		prefix_span_styling = embed_styling(span_style_dicts, use_css)
-		span_line += f"<span {prefix_span_styling}>{prefix}</span>"
+		outer_span_styling = embed_styling(span_style_dicts, use_css)
+		span_line += f"<span {outer_span_styling}>{prefix}</span>"
 
-		if vertical_zhuyin:
+		if vertical_zhuyin or (not vertical_zhuyin and len(outer_span_classes) > 0):
 			span_line += "</span>"
+			outer_span_closed = True
 
 	# creates the formatting for the root.
 	root = syllable["zhuyin_root"]
 	style_dicts = [get_content_style("CHROMA_ZHUYIN_ROOT"),]
-	if vertical_zhuyin and len(root) > 1:
-		style_dicts.append(get_content_style("CHROMA_VERTICAL_ZHUYIN"))
-	else:
-		style_dicts.append(get_content_style("CHROMA_INLINE_ZHUYIN"))
+	if vertical_zhuyin:
+		if len(root) > 1:
+			style_dicts.append(get_content_style("CHROMA_VERTICAL_ZHUYIN"))
+		elif len(root) == 1:
+			style_dicts.append(get_content_style("CHROMA_INLINE_ZHUYIN"))
 	span_styling = embed_styling(style_dicts, use_css)
 	span_line += f"<span {span_styling}>{root}</span>"
-	if not vertical_zhuyin and uses_prefix:
+	if not outer_span_closed:
 		span_line += f"</span>"
 	
 	result += HTML_line(span_line)
-	if prefix_span_styling:
+	if outer_span_styling:
 		result += HTML_line("</span>", -1)
 	result += HTML_line("</td>", -1)
 
@@ -215,7 +234,9 @@ def return_zhuyin_contents(
 
 	span_classes = [
 		get_content_style("CHROMA_ZHUYIN_SUFFIX"), 
-		CHROMA_ZHUYIN_SUFFIX_CONTAINER,
+		CHROMA_VERTICAL_ZHUYIN_SUFFIX_CONTAINER 
+		if vertical_zhuyin 
+		else CHROMA_INLINE_ZHUYIN_SUFFIX_CONTAINER,
 	]
 	if color_css:
 		span_classes.append(color_css)
@@ -309,6 +330,9 @@ def return_pitch_graph_contents(syllable, category, use_css, colspan, vertical):
 	return result
 
 def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
+	if not len(syllable["hanzi"]) > 0:
+		return HTML_line("<td></td>")
+
 	# gets the GIF path from the hex encoding of the hanzi unicode.
 	category_is_tuple = isinstance(category, tuple)
 	hanzi_hex = hex(ord(syllable["hanzi"]))[2:]

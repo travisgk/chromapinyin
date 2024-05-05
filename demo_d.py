@@ -1,10 +1,15 @@
 import chromapinyin
 
 def main():
-	chromapinyin.color_scheme.set_to_MDBG()
 	chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
+	#chromapinyin.color_scheme.set_to_default()
+	#chromapinyin.color_scheme.set_to_dummit()
+	chromapinyin.color_scheme.set_to_MDBG()
+	#chromapinyin.color_scheme.set_to_hanping()
+	#chromapinyin.color_scheme.set_to_pleco()
+	#chromapinyin.color_scheme.set_to_sinosplice()
 	chromapinyin.create_inflection_graphs(
-		fixed_width=True, graph_style_name="simple"
+		fixed_width=True, style_name="simple"
 	)
 
 	hanzi = "我不是来自中国"

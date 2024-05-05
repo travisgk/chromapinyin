@@ -32,16 +32,16 @@ def inflection_to_graph_path(inflection_num, alignment):
 	return _inflection_to_graph_path[inflection_num][alignment]
 
 # saves pitch graph components (images) that the produced HTML will use.
-# - <graph_style_name> will select a directory under 
-#   chromapinyin/_stylize/_pitch_graphs/_<graph_style_name>
+# - <style_name> will select a directory under 
+#   chromapinyin/_stylize/_pitch_graphs/_<style_name>
 # - <output_dir> is the directory where the created components will be saved.
 # - <fixed_width> being True will make each saved image the exact same size.
 #   this will align the line component inside its respective image accordingly.
 # - <overwrite_images> being False will preserve any existing graph components.
 def create_inflection_graphs(
-	graph_style_name="fancy",
+	style_name="fancy",
 	output_dir=get_pitch_graphs_path(),
-	fixed_width=False,
+	fixed_width=True,
 	overwrite_images=True
 ):
 	global _inflection_to_graph_path, _punctuation_graph_path
@@ -49,7 +49,7 @@ def create_inflection_graphs(
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
 
-	_load_templates(graph_style_name)
+	_load_templates(style_name)
 	max_width = max([image.size[0] for image in _thinned_templates.values()])
 
 	punctuation_graph_created = False
@@ -124,18 +124,18 @@ def create_inflection_graphs(
 				stretched_scale.save(output_path)
 
 # loads template image components 
-# from the directory chromapinyin/_stylize/_pitch_graphs/_<graph_style_name>
+# from the directory chromapinyin/_stylize/_pitch_graphs/_<style_name>
 # to the file's global dictionaries <_inflection_to_graph_path>.
-def _load_templates(graph_style_name):
-	if _prev_style_name and _prev_style_name == graph_style_name:
-		# the <graph_style_name> is the same one used
+def _load_templates(style_name):
+	if _prev_style_name and _prev_style_name == style_name:
+		# the <style_name> is the same one used
 		# to previously load graph template images,
 		# so the images don't need to be loaded again.
 		return
 
 	global _thinned_templates, _scale_image
 	main_dir = os.path.dirname(os.path.abspath(__file__))
-	style_dir = os.path.join(main_dir, f"_{graph_style_name}")
+	style_dir = os.path.join(main_dir, f"_{style_name}")
 	template_inflections = set(INFLECTION_TO_SPOKEN_TONE.values())
 
 	# PIL is used to load images from the style directory.

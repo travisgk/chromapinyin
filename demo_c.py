@@ -10,7 +10,7 @@ def main():
 	categories = [
 	    ["hanzi", "vertical_zhuyin", "pinyin",],
 	    ["zhuyin", "blank", ("ipa", "no_color", "no_tones",),],
-	    [("handwriting", "night_mode_GIFs",),],
+	    [("handwriting", "night_mode_GIFs", "grouped",),],
 	]
 
 	html = ""

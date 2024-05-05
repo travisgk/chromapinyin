@@ -27,7 +27,7 @@ from chromapinyin._stylize._table_css import (
 	set_handwriting_height # str
 )
 from chromapinyin._stylize._graphics._pitch_graphs import (
-	create_inflection_graphs # graph_style_name, output_dir, fixed_width (bool)
+	create_inflection_graphs # style_name, output_dir, fixed_width (bool)
 )
 import chromapinyin._stylize._res_directories as res_directories
 from chromapinyin._stylize._graphics._handwriting_gifs import process_gifs

@@ -1,6 +1,7 @@
 import chromapinyin
 
 def main():
+	chromapinyin.set_pitch_graph_height("7em")
 	chromapinyin.color_scheme.set_punctuation_RGB((255, 255, 255))
 	css = chromapinyin.generate_CSS()
 

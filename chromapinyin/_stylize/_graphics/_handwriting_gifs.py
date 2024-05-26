@@ -3,14 +3,14 @@
 # this file contains the function <process_gifs>,
 # which is an optional function that can be called by the user
 # to modify the GIF files located under the directories
-# get_handwriting_path()/images and get_handwriting_path()/images-large
+# get_local_handwriting_path()/images and get_local_handwriting_path()/images-large
 # so that they have a different speed.
 
 import os
 import time
 from chromapinyin._stylize._res_directories import (
-    get_handwriting_path,
-    get_handwriting_gifs_path,
+    get_local_handwriting_path,
+    get_local_handwriting_gifs_path,
 )
 
 _process_possible = True
@@ -31,8 +31,10 @@ def process_gifs(fps=3.5, start_freeze_ms=1500, end_freeze_ms=3500, loops=True):
 
     print("Beginning processing GIFs.")
     start_time = time.time()
-    handwriting_dir = get_handwriting_gifs_path()
-    large_handwriting_dir = os.path.join(get_handwriting_path(), "images-large")
+    handwriting_dir = os.path.join(get_output_dir(), get_local_handwriting_gifs_path())
+    large_handwriting_dir = os.path.join(
+        get_output_dir(), get_local_handwriting_path(), "images-large"
+    )
 
     process_normal_gifs = os.path.exists(handwriting_dir)
     process_large_gifs = os.path.exists(large_handwriting_dir)

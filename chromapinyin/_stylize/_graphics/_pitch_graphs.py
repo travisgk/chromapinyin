@@ -17,7 +17,10 @@ from chromapinyin._syllable._vowel_chars import (
     PUNCTUATION_TONE_NUM,
 )
 from chromapinyin._stylize._color_scheme import get_inflection_RGB
-from chromapinyin._stylize._res_directories import get_pitch_graphs_path
+from chromapinyin._stylize._res_directories import (
+    get_output_dir,
+    get_local_pitch_graphs_path,
+)
 
 _prev_style_name = None
 _thinned_templates = {}
@@ -48,14 +51,15 @@ def inflection_to_graph_path(inflection_num, alignment):
 # - <overwrite_images> being False will preserve any existing graph components.
 def create_inflection_graphs(
     style_name="fancy",
-    output_dir=get_pitch_graphs_path(),
     fixed_width=True,
     overwrite_images=True,
 ):
     global _inflection_to_graph_path, _punctuation_graph_path
+    local_output_dir = get_local_pitch_graphs_path()
+    absolute_output_dir = os.path.join(get_output_dir(), local_output_dir)
 
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    if not os.path.exists(absolute_output_dir):
+        os.makedirs(absolute_output_dir)
 
     _load_templates(style_name)
     max_width = max([image.size[0] for image in _thinned_templates.values()])
@@ -64,25 +68,20 @@ def create_inflection_graphs(
     for inflection_str, inflection in TO_INFLECTION.items():
         # creates a graph image for a punctuation mark
         # that will be <_PUNCTUATION_GRAPH_WIDTH_PX> pixels wide.
-        if inflection in [
-            APOSTROPHE_TONE_NUM,
-            PUNCTUATION_TONE_NUM,
-        ]:
+        if inflection in [APOSTROPHE_TONE_NUM, PUNCTUATION_TONE_NUM]:
             if not punctuation_graph_created:
-                output_path = os.path.join(output_dir, "_punctuation.png")
-                _punctuation_graph_path = output_path
+                local_output_path = os.path.join(local_output_dir, "_punctuation.png")
+                _punctuation_graph_path = local_output_path
                 punctuation_graph_created = True
 
-                if not overwrite_images and os.path.exists(output_path):
+                abs_output_path = os.path.join(get_output_dir(), local_output_path)
+                if not overwrite_images and os.path.exists(abs_output_path):
                     continue
 
                 graph_width = max_width if fixed_width else _PUNCTUATION_GRAPH_WIDTH_PX
-                scale_img_size = (
-                    graph_width,
-                    _scale_image.size[1],
-                )
+                scale_img_size = (graph_width, _scale_image.size[1])
                 result = _scale_image.resize(scale_img_size, Image.NEAREST)
-                result.save(output_path)
+                result.save(abs_output_path)
             continue
 
         # creates pitch graph images for the <inflection>.
@@ -91,11 +90,7 @@ def create_inflection_graphs(
         graph = _make_color_copy(_thinned_templates[spoken_tone], rgb)
         graph_width = max_width if fixed_width else graph.size[0]
         stretched_scale = _scale_image.resize(
-            (
-                graph_width + _GRAPH_PADDING_PX * 2,
-                graph.size[1],
-            ),
-            Image.NEAREST,
+            (graph_width + _GRAPH_PADDING_PX * 2, graph.size[1]), Image.NEAREST
         )
 
         if not _inflection_to_graph_path.get(inflection):
@@ -104,16 +99,14 @@ def create_inflection_graphs(
         if fixed_width:
             # aligns the graph line component on the stretched grid
             # and saves its image accordingly.
-            for i, align in enumerate(
-                [
-                    "left",
-                    "center",
-                    "right",
-                ]
-            ):
-                output_path = os.path.join(output_dir, f"_{inflection_str}_{align}.png")
-                _inflection_to_graph_path[inflection][align] = output_path
-                if not overwrite_images and os.path.exists(output_path):
+            for i, align in enumerate(["left", "center", "right"]):
+                local_output_path = os.path.join(
+                    local_output_dir, f"_{inflection_str}_{align}.png"
+                )
+                _inflection_to_graph_path[inflection][align] = local_output_path
+                abs_output_path = os.path.join(get_output_dir(), local_output_path)
+
+                if not overwrite_images and os.path.exists(abs_output_path):
                     continue
 
                 result = stretched_scale.copy()
@@ -124,39 +117,24 @@ def create_inflection_graphs(
                 else:
                     offset_x = result.size[0] - graph.size[0] - _GRAPH_PADDING_PX
 
-                result.paste(
-                    graph,
-                    (
-                        offset_x,
-                        0,
-                    ),
-                    graph,
-                )
-                result.save(output_path)
+                result.paste(graph, (offset_x, 0), graph)
+                result.save(abs_output_path)
 
         else:
             # the graph component doesn't need to be aligned on the grid,
             # so the same image is saved under each alignment image name.
             offset_x = int(stretched_scale.size[0] / 2 - graph.size[0] / 2)
-            stretched_scale.paste(
-                graph,
-                (
-                    offset_x,
-                    0,
-                ),
-                graph,
-            )
-            for align in [
-                "left",
-                "center",
-                "right",
-            ]:
-                output_path = os.path.join(output_dir, f"_{inflection_str}_{align}.png")
-                _inflection_to_graph_path[inflection][align] = output_path
-                if not overwrite_images and os.path.exists(output_path):
+            stretched_scale.paste(graph, (offset_x, 0), graph)
+            for align in ["left", "center", "right"]:
+                local_output_path = os.path.join(
+                    local_output_dir, f"_{inflection_str}_{align}.png"
+                )
+                _inflection_to_graph_path[inflection][align] = local_output_path
+                abs_output_path = os.path.join(get_output_dir(), local_output_path)
+                if not overwrite_images and os.path.exists(abs_output_path):
                     continue
 
-                stretched_scale.save(output_path)
+                stretched_scale.save(abs_output_path)
 
 
 # loads template image components

@@ -74,9 +74,7 @@ def create_stylized_sentence(
     max_n_line_syllables=99,
 ):
     reset_tabulation()
-    word_lines = [
-        [],
-    ]
+    word_lines = [[]]
     for word_i, word in enumerate(word_list):
         # embeds alignment to the syllable dictionaries.
         for syllable_i, syllable in enumerate(word):

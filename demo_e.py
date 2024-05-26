@@ -1,3 +1,4 @@
+import os
 import chromapinyin
 
 
@@ -12,22 +13,10 @@ def main():
 
     # defines the 2D table of the syllable aspects to display per syllable.
     categories = [
-        [
-            "hanzi",
-        ],
-        [
-            "pinyin",
-            (
-                "ipa",
-                "no_tones",
-            ),
-        ],
-        [
-            "zhuyin",
-        ],
-        [
-            ("pitch_graph", "grouped"),
-        ],
+        ["hanzi"],
+        ["pinyin", ("ipa", "no_tones")],
+        ["zhuyin"],
+        [("pitch_graph", "grouped")],
     ]
 
     html = ""
@@ -49,8 +38,10 @@ def main():
     )
     html += "</body>\n</html>"
 
-    with open("demo_e.html", "w", encoding="utf-8") as file:
+    output_path = os.path.join(chromapinyin.get_output_dir(), "demo_e.html")
+    with open(output_path, "w", encoding="utf-8") as file:
         file.write(html)
 
 
-main()
+if __name__ == "__main__":
+    main()

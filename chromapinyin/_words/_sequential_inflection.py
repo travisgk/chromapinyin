@@ -53,8 +53,14 @@ def apply_rule(inflection_groups, stay_inflection, to_inflection):
             if word[j] != UNDETERMINED:
                 continue
 
-            if (i == len(markup_clause) - 1 and j == len(word) - 1) or (
-                j + 1 < len(word) and word[j + 1] != UNDETERMINED
+            if (
+                (i == len(markup_clause) - 1 and j == len(word) - 1)
+                or (j + 1 < len(word) and word[j + 1] != UNDETERMINED)
+                or (
+                    j + 1 == len(word)
+                    and i + 1 < len(markup_clause)
+                    and markup_clause[i + 1][0] != UNDETERMINED
+                )
             ):
                 # the UNDETERMINED occurrence is at the very end of the clause,
                 # or the UNDETERMINED occurrence is not at the end of the <word>

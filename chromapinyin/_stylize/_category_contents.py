@@ -19,7 +19,7 @@ from chromapinyin._syllable._vowel_chars import (
 from ._color_scheme import get_inflection_color_style, get_inflection_img_color_style
 from ._formatting_helper import *
 from ._graphics._pitch_graphs import inflection_to_graph_path
-from ._res_directories import get_handwriting_gifs_path
+from ._res_directories import get_output_dir, get_local_handwriting_gifs_path
 from ._table_css import *
 
 _SIMPLIFY_SPOKEN_TONE = {
@@ -44,9 +44,7 @@ def return_hanzi_contents(syllable, category, use_css, colspan, vertical):
     alignment = syllable["alignment"] if category_is_grouped else "center"
 
     # opens the <td> element.
-    td_styling_classes = [
-        category_to_td_style(category_name),
-    ]
+    td_styling_classes = [category_to_td_style(category_name)]
     if vertical:
         td_styling_classes.append(return_td_align_style(alignment, vertical))
     td_styling = embed_styling(td_styling_classes, use_css)
@@ -97,12 +95,7 @@ def return_pinyin_contents(syllable, category, use_css, colspan, vertical, add_p
     span_styling = None
     if not category_is_tuple or "no_color" not in category:
         color_css = get_inflection_color_style(syllable["inflection_num"])
-        span_styling = embed_styling(
-            [
-                color_css,
-            ],
-            use_css,
-        )
+        span_styling = embed_styling([color_css], use_css)
 
     # determines the pinyin to display.
     pinyin = syllable["pinyin"]
@@ -151,12 +144,7 @@ def return_zhuyin_contents(
     result += HTML_line(f"<div {div_styling}>", 1)
 
     # opens the nested <table> element.
-    table_styling = embed_styling(
-        [
-            CHROMA_TABLE_NESTED,
-        ],
-        use_css,
-    )
+    table_styling = embed_styling([CHROMA_TABLE_NESTED], use_css)
     result += HTML_line(f"<table {table_styling}>", 1)
 
     # opens the nested <tr> and <td> elements.
@@ -166,9 +154,7 @@ def return_zhuyin_contents(
     #
     if vertical_zhuyin:
         root_styling = embed_styling(
-            [
-                get_content_style("CHROMA_TD_NESTED_VERTICAL_ZHUYIN_ROOT"),
-            ],
+            [get_content_style("CHROMA_TD_NESTED_VERTICAL_ZHUYIN_ROOT")],
             use_css,
         )
         result += HTML_line(f"<td {root_styling}>", 1)
@@ -207,18 +193,12 @@ def return_zhuyin_contents(
         uses_prefix = True
         if vertical_zhuyin:
             offset_styling = embed_styling(
-                [
-                    CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET,
-                ],
-                use_css,
+                [CHROMA_VERTICAL_ZHUYIN_PREFIX_OFFSET], use_css
             )
             span_line += f"<span {offset_styling}>"
         else:
             offset_styling = embed_styling(
-                [
-                    CHROMA_INLINE_ZHUYIN_PREFIX_OFFSET,
-                ],
-                use_css,
+                [CHROMA_INLINE_ZHUYIN_PREFIX_OFFSET], use_css
             )
             span_line += f"<span {offset_styling}>"
 
@@ -316,12 +296,7 @@ def return_ipa_contents(syllable, category, use_css, colspan, vertical, add_punc
     span_styling = None
     if not category_is_tuple or "no_color" not in category:
         color_css = get_inflection_color_style(syllable["inflection_num"])
-        span_styling = embed_styling(
-            [
-                color_css,
-            ],
-            use_css,
-        )
+        span_styling = embed_styling([color_css], use_css)
 
     root = syllable["ipa_root"]
     suffix = syllable["ipa_suffix"]
@@ -361,20 +336,13 @@ def return_pitch_graph_contents(syllable, category, use_css, colspan, vertical):
             image_alignment = "center"
 
     # opens the <td> element.
-    td_styling_classes = [
-        category_to_td_style(category_name),
-    ]
+    td_styling_classes = [category_to_td_style(category_name)]
     td_styling_classes.append(return_td_align_style(alignment, vertical))
     td_styling = embed_styling(td_styling_classes, use_css)
     result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
     image_stylings = embed_styling(
-        [
-            get_content_style(
-                "CHROMA_IMG_PITCH_GRAPH",
-            ),
-        ],
-        use_css,
+        [get_content_style("CHROMA_IMG_PITCH_GRAPH")], use_css
     )
 
     inflection_num = syllable["inflection_num"]
@@ -393,8 +361,8 @@ def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
     # gets the GIF path from the hex encoding of the hanzi unicode.
     category_is_tuple = isinstance(category, tuple)
     hanzi_hex = hex(ord(syllable["hanzi"]))[2:]
-    gif_path = os.path.join(get_handwriting_gifs_path(), f"{hanzi_hex}.gif")
-    if not os.path.exists(gif_path):
+    gif_path = os.path.join(get_local_handwriting_gifs_path(), f"{hanzi_hex}.gif")
+    if not os.path.exists(os.path.join(get_output_dir(), gif_path)):
         return HTML_line("<td></td>")
 
     category_name = category[0] if category_is_tuple else category
@@ -402,27 +370,23 @@ def return_handwriting_contents(syllable, category, use_css, colspan, vertical):
     alignment = syllable["alignment"] if category_is_grouped else "center"
 
     # opens the <td> element.
-    td_styling_classes = [
-        category_to_td_style(category_name),
-    ]
+    td_styling_classes = [category_to_td_style(category_name)]
     td_styling_classes.append(return_td_align_style(alignment, vertical))
     td_styling = embed_styling(td_styling_classes, use_css)
     result = HTML_line(f"<td {colspan_str(colspan)}{td_styling}>", 1)
 
     # gets the coloring style for the image.
-    img_classes = [
-        get_content_style("CHROMA_IMG_HANDWRITING"),
-    ]
+    img_classes = [get_content_style("CHROMA_IMG_HANDWRITING")]
     black_background = (
         not use_css and category_is_tuple and "night_mode_GIFs" in category
     )
+
+    if not category_is_tuple or "no_color" not in category:
+        tone_num = syllable["inflection_num"]
+    else:
+        tone_num = PUNCTUATION_TONE_NUM
     color_css = get_inflection_img_color_style(
-        (
-            syllable["inflection_num"]
-            if not category_is_tuple or "no_color" not in category
-            else PUNCTUATION_TONE_NUM
-        ),
-        white_background=not black_background,
+        tone_num, white_background=not black_background
     )
     img_classes.append(color_css)
     img_styling = embed_styling(img_classes, use_css)

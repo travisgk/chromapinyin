@@ -232,7 +232,7 @@ chromapinyin.color_scheme.set_inflection_to_RGB(
     LOW_COLOR=(0, 0, 255),
     FALLING_COLOR=(255, 0, 0),
     NEUTRAL_COLOR=(127, 127, 127),
-    NEUTRAL_INTERPOLATION=0.2 # 0.0 for full neutral color.
+    NEUTRAL_INTERPOLATION=0.2, # 0.0 for full neutral color.
 )
 ```
 

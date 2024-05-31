@@ -52,8 +52,8 @@ def main():
 
     # defines the 2D table of the syllable aspects to display per syllable.
     categories = [
-        ["hanzi", "vertical_zhuyin",],
-        [("pinyin", "number_tones",), ("ipa", "no_tones"),],
+        ["hanzi", "vertical_zhuyin"],
+        [("pinyin", "number_tones"), ("ipa", "no_tones")],
     ]
 
     html = ""
@@ -68,7 +68,7 @@ def main():
         use_css=False,
         vertical=False,
         hide_clause_breaks=False,
-        max_n_line_syllables=999
+        max_n_line_syllables=999,
     )
     html += "</body>\n</html>"
 
@@ -161,9 +161,9 @@ If this is undesired, ```chromapinyin.create_stylized_sentence(...)``` can be ca
 The following categories 2D table is used for this [demo](https://github.com/travisgk/chromapinyin/blob/main/demo_c.py):
 ```
 categories = [
-    ["hanzi", "vertical_zhuyin", "pinyin",],
-    ["zhuyin", "blank", ("ipa", "no_color", "no_tones",),],
-    [("handwriting", "night_mode_GIFs",),],
+    ["hanzi", "vertical_zhuyin", "pinyin"],
+    ["zhuyin", "blank", ("ipa", "no_color", "no_tones")],
+    [("handwriting", "night_mode_GIFs")],
 ]
 ```
 
